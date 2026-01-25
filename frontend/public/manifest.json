@@ -1,0 +1,16 @@
+{
+    "name": "T-Learning",
+    "short_name": "T-Learn",
+    "description": "Modułowa platforma nauczania online",
+    "start_url": "/",
+    "display": "standalone",
+    "background_color": "#ffffff",
+    "theme_color": "#000000",
+    "icons": [
+        {
+            "src": "/public/icons/ios/512.png",
+            "sizes": "512x512",
+            "type": "image/png"
+        }
+    ]
+}
