@@ -1,6 +1,6 @@
 {
   "name": "backend",
-  "module": "index.ts",
+  "module": "src/index.ts",
   "type": "module",
   "private": true,
   "devDependencies": {
@@ -8,6 +8,11 @@
   },
   "peerDependencies": {
     "typescript": "^5"
+  },
+  "scripts": {
+    "dev": "bun --hot src/index.ts",
+    "build": "bun build src/index.ts --target=bun --outdir=dist",
+    "start": "bun dist/index.js"
   },
   "dependencies": {
     "@elysiajs/cookie": "^0.8.0",

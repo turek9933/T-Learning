@@ -1,15 +1,22 @@
-# backend
+# T-Learning (Backend)
+Backend platformy edukacyjnej T-Learning. Zbudowany z: Bun; Elysia; Better Auth; PostgresSQL
 
-To install dependencies:
+## Spis treści
+- [Wymagania](#Wymagania)
 
+## Wymagania
+- [Docker Desktop](https://www.docker.com/products/docker-desktop/) (Windows)
+- [Docker Engine](https://docs.docker.com/engine/) + [Docker Compose](https://docs.docker.com/compose/) (Linux)
+
+## Instalacja
+
+1. Sklonuj repozytorium do wybranego folderu (lub pobierz i wypakuj w wybranym folderze)
 ```bash
-bun install
+git clone https://github.com/turek9933/T-Learning
 ```
+2. Edytuj trzy pliki zmiennych środowiskowych ```.env.example``` i zapisz je jako ```.env.```. Znajdują się one w:
+- T-Learning/.env.example
+- T-Learning/backend/.env.example (Min. zmian: BETTER_AUTH_SECRET, GOOGLE_CLIENT_ID, )
+- T-Learning/frontend/.env.example
 
-To run:
-
-```bash
-bun run index.ts
-```
-
-This project was created using `bun init` in bun v1.3.6. [Bun](https://bun.com) is a fast all-in-one JavaScript runtime.
+3. 

@@ -42,17 +42,36 @@ export interface WorkspaceSettings {
 }
 
 
+export const accounts = pgTable('accounts', {
+    id: uuid('id').defaultRandom().primaryKey(),
+    userId: uuid('user_id').references(() => users.id, { onDelete: 'cascade' }).notNull(),
+    accountId: text('account_id').notNull(),
+    providerId: text('provider_id').notNull(),
+    password: text('password'),
+    accessToken: text('access_token'),
+    refreshToken: text('refresh_token'),
+    expiresAt: timestamp('expires_at'),
+});
+
 export const users = pgTable('users', {
     id: uuid('id').defaultRandom().primaryKey(),
     email: text('email').notNull().unique(),
-    password: text('password').notNull(),
+    emailVerified: boolean('email_verified').default(false),
     firstName: text('first_name'),
     lastName: text('last_name'),
     avatarUrl: text('avatar_url'),
     createdAt: timestamp('created_at').defaultNow().notNull(),
     updatedAt: timestamp('updated_at').defaultNow().notNull(),
-    lastLogin: timestamp('last_login'),
     active: boolean('active'),
+});
+
+export const sessions = pgTable('sessions', {
+    id: text('id').primaryKey(),
+    token: text('token').notNull(),
+    userId: uuid('user_id').references(() => users.id, { onDelete: 'cascade' }).notNull(),
+    expiresAt: timestamp('expires_at').notNull(),
+    ipAddress: text('ip_address'),
+    userAgent: text('user_agent'),
 });
 
 export const workspaces = pgTable('workspaces', {

@@ -1,6 +1,12 @@
-import { drizzle } from 'drizzle-orm/postgres-js';
-import postgres from 'postgres';
+import { Elysia } from 'elysia'
+import { auth } from '@/auth/config'
 
-const connectionString = process.env.DATABASE_URL!;
-const client = postgres(connectionString);
-export const db = drizzle(client);
+
+
+const app = new Elysia()
+    .all('/api/auth/*', async ({request}) => {
+        return auth.handler(request);
+    })
+    .listen(process.env.PORT!);
+
+console.log(`Elysia is running at ${app.server?.hostname}:${app.server?.port}`);
