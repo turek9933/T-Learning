@@ -11,8 +11,26 @@
   },
   "scripts": {
     "dev": "bun --hot src/index.ts",
+    "dev:watch": "bun watch src/index.ts",
     "build": "bun build src/index.ts --target=bun --outdir=dist",
-    "start": "bun dist/index.js"
+    "start": "bun dist/index.js",
+
+    "db:generate": "drizzle-kit generate",
+    "db:migrate": "bun drizzle-kit migrate",
+    "db:push": "drizzle-kit push",
+    "db:pull": "drizzle-kit pull",
+    "db:seed": "drizzle-kit seed",
+
+    "docker:up": "docker-compose up -d ",
+    "docker:down": "docker-compose down",
+    "docker:logs": "docker-compose logs -f",
+    "docker:restart": "docker-compose restart",
+    "docker:rebuild": "docker-compose up -d --build",
+    "docker:clean": "docker-compose down -v && docker system prune -f",
+
+    "typecheck": "tsc --noEmit",
+    "clean": "rm -rf dist node_modules",
+    "setup": "bun install && bun db:push"
   },
   "dependencies": {
     "@elysiajs/cookie": "^0.8.0",
