@@ -1,11 +1,18 @@
 {
-    "navbar": {
-        "changeLanguage": "Zmień jezyk",
-        "changeTheme": "Zmień motyw",
-        "light": "Jasny",
-        "dark": "Ciemny",
-        "accessible": "Dostępny"
-    },
+  "notFound": {
+    "title": "Nie znaleziono",
+    "description": "Strona, która szukasz, nie została odnaleziona",
+    "button": "Powrót do strony głównej"
+  },
+  "navbar": {
+    "changeLanguage": "Zmień jezyk",
+    "changeTheme": "Zmień motyw",
+    "light": "Jasny",
+    "dark": "Ciemny",
+    "accessible": "Dostępny",
+    "login":"Zaloguj się",
+    "toggleMenu": "Przełącz menu"
+  },
   "validation": {
     "required": "To pole jest wymagane",
     "invalidEmail": "Podaj poprawny adres email",

@@ -1,11 +1,18 @@
 {
-    "navbar": {
-        "changeLanguage": "Change language",
-        "changeTheme": "Change theme",
-        "light": "Light",
-        "dark": "Dark",
-        "accessible": "Accessible"
-    },
+  "notFound": {
+    "title": "Not found",
+    "description": "The page you are looking for has not been found",
+    "button": "Return to the main page"
+  },
+  "navbar": {
+    "changeLanguage": "Change language",
+    "changeTheme": "Change theme",
+    "light": "Light",
+    "dark": "Dark",
+    "accessible": "Accessible",
+    "login":"Log in",
+    "toggleMenu": "Toggle menu"
+  },
   "validation": {
     "required": "This field is required",
     "invalidEmail": "Please enter a valid email address",

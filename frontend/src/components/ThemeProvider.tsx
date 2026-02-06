@@ -6,6 +6,7 @@ type Theme = "light" | "dark" | "accessible";
 interface ThemeContextType {
     theme: Theme;
     setTheme: (theme: Theme) => void;
+    mounted: boolean;
 }
 
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
@@ -19,7 +20,7 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
         setMounted(true);
         const savedTheme = localStorage.getItem("theme") as Theme | null;
 
-        if (savedTheme && ["light", "dark", "contrast"].includes(savedTheme)) {
+        if (savedTheme && ["light", "dark", "accessible"].includes(savedTheme)) {
             setThemeState(savedTheme);
             applyTheme(savedTheme);
         } else {
@@ -36,17 +37,13 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
     const applyTheme = (theme: Theme) => {
         const root = document.documentElement;
 
-        root.classList.remove("light", "dark", "contrast");
+        root.classList.remove("light", "dark", "accessible");
 
         root.classList.add(theme);
     };
 
-    if (!mounted) {
-        return <>{children}</>;
-    }
-
     return (
-        <ThemeContext.Provider value={{ theme, setTheme }}>
+        <ThemeContext.Provider value={{ theme, setTheme, mounted }}>
             {children}
         </ThemeContext.Provider>
     );

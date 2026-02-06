@@ -1,9 +1,6 @@
 import type { Metadata } from "next";
 import { Outfit, Livvic, Atkinson_Hyperlegible } from "next/font/google";
-import { NextIntlClientProvider } from "next-intl";
-import { getMessages } from "next-intl/server";
-import { routing } from "@/i18n/routing";
-import NotFound from "./not-found";
+import { Providers } from "@/components/Providers";
 import '@/app/globals.css';
 
 const outfit = Outfit({
@@ -47,10 +44,6 @@ export const metadata: Metadata = {
   
   manifest: "/manifest.json",
   
-  icons: {
-    icon: "/favicon.ico",
-    apple: "/apple-touch-icon.png",
-  },
   
   openGraph: {
     type: "website",
@@ -67,28 +60,13 @@ export const metadata: Metadata = {
   },
 };
 
-export function generateStaticParams() {
-  return routing.locales.map((locale) => ({ locale }));
-}
-
 export default async function RootLayout({
   children,
-  params,
 }: {
   children: React.ReactNode;
-  params: Promise<{ locale: string }>;
 }) {
-  const { locale } = await params;
-
-  if (!routing.locales.includes(locale as any)) {
-    NotFound();
-  }
-
-  const messages = await getMessages();
-
   return (
-    <html 
-      lang={locale} 
+    <html
       suppressHydrationWarning
       className={`${outfit.variable} ${livvic.variable} ${atkinsonHyperlegible.variable}`}
     >
@@ -102,9 +80,9 @@ export default async function RootLayout({
         <meta name="mobile-web-app-capable" content="yes" />
       </head>
       <body className="antialiased font-body">
-        <NextIntlClientProvider messages={messages}>
+        <Providers>
           {children}
-        </NextIntlClientProvider>
+        </Providers>
       </body>
     </html>
   );
