@@ -11,7 +11,7 @@ export default async function NotFound() {
             <h1 className="text-6xl md:text-8xl font-title font-bold text-text-secondary mb-4">
                 404
             </h1>
-            <h2 className="text-2xl md:text-3xl font-title font-bold text-text-primary mb-8">
+            <h2 className="text-2xl md:text-3xl font-title font-bold text-text mb-8">
                 {t("title")}
             </h2>
 
@@ -20,7 +20,7 @@ export default async function NotFound() {
             </p>
 
             <Button asChild size="lg">
-                <Link href="/" className="bg-surface hover:bg-surface-elevated text-text">
+                <Link href="/" className="bg-bg hover:bg-bg-hover text-text">
                     {t("button")}
                 </Link>
             </Button>

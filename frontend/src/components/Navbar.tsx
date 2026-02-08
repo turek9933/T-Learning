@@ -19,13 +19,13 @@ export function Navbar() {
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
     
     return (
-    <nav className="sticky top-0 w-full border-b border-border bg-surface backdrop-blur">
+    <nav className="sticky top-0 w-full border-b border-border bg-bg backdrop-blur">
         <div className="container flex h-16 items-center justify-between">
             <Link 
             href="/" 
             className="flex items-center gap-2 hover:opacity-80 transition-opacity"
             >
-                <span className="font-title font-bold text-xl text-text-primary">
+                <span className="font-title font-bold text-xl text-text">
                     T-Learning
                 </span>
             </Link>
@@ -40,17 +40,17 @@ export function Navbar() {
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="end">
                         <DropdownMenuItem asChild>
-                            <Link href={pathname} locale="pl" className="w-full cursor-pointer">
+                            <Link href={pathname} locale="pl" className="w-full cursor-pointer text-text">
                                 Polski 🇵🇱
                             </Link>
                         </DropdownMenuItem>
                         <DropdownMenuItem asChild>
-                            <Link href={pathname} locale="en" className="w-full cursor-pointer">
+                            <Link href={pathname} locale="en" className="w-full cursor-pointer text-text">
                                 English 🇬🇧
                             </Link>
                         </DropdownMenuItem>
                         <DropdownMenuItem asChild>
-                            <Link href={pathname} locale="it" className="w-full cursor-pointer">
+                            <Link href={pathname} locale="it" className="w-full cursor-pointer text-text">
                                 Italiano 🇮🇹
                             </Link>
                         </DropdownMenuItem>
@@ -82,7 +82,7 @@ export function Navbar() {
                     </DropdownMenuContent>
                 </DropdownMenu>
                 
-                <Button asChild size="sm" className="bg-surface-subtle hover:bg-surface-elevated text-text">
+                <Button asChild size="sm" className="bg-bg-card hover:bg-bg-hover text-text">
                     <Link href="/login">{t("login")}</Link>
                 </Button>
             </div>
@@ -104,7 +104,7 @@ export function Navbar() {
         </div>
 
         {mobileMenuOpen && (
-            <div className="md:hidden border-t border-border bg-surface">
+            <div className="md:hidden border-t border-border bg-bg">
                 <div className="container py-4 space-y-4">
                     <div className="space-y-2">
                         <p className="text-sm font-medium text-text-muted px-2">
@@ -117,7 +117,7 @@ export function Navbar() {
                             asChild
                             onClick={() => setMobileMenuOpen(false)}
                             >
-                                <Link href={pathname} locale="pl">
+                                <Link href={pathname} locale="pl" className="text-text">
                                     Polski 🇵🇱
                                 </Link>
                             </Button>
@@ -127,7 +127,7 @@ export function Navbar() {
                             asChild
                             onClick={() => setMobileMenuOpen(false)}
                             >
-                                <Link href={pathname} locale="en">
+                                <Link href={pathname} locale="en" className="text-text">
                                     English 🇬🇧
                                 </Link>
                             </Button>
@@ -137,7 +137,7 @@ export function Navbar() {
                             asChild
                             onClick={() => setMobileMenuOpen(false)}
                             >
-                                <Link href={pathname} locale="it">
+                                <Link href={pathname} locale="it" className="text-text">
                                     Italiano 🇮🇹
                                 </Link>
                             </Button>
@@ -185,7 +185,7 @@ export function Navbar() {
                         </div>
                     </div>
 
-                    <Button asChild className="w-full bg-surface-subtle hover:bg-surface-elevated text-text" size="lg">
+                    <Button asChild className="w-full bg-bg-card hover:bg-bg-hover text-text" size="lg">
                         <Link href="/login" onClick={() => setMobileMenuOpen(false)}>
                             {t("login")}
                         </Link>

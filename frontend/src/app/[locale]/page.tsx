@@ -13,10 +13,10 @@ export default async function LandingPage() {
             <div className="flex flex-col items-center text-center max-w-4xl mx-auto">
                 <div className="mb-8 animate-fade-in">
                     <div className="flex items-center justify-center gap-2">
-                        <div className="w-12 h-12 md:w-16 md:h-16 bg-surface rounded-lg flex items-center justify-center">
+                        <div className="w-12 h-12 md:w-16 md:h-16 bg-bg rounded-lg flex items-center justify-center">
                             <span className="text-3xl md:text-4xl font-title font-bold text-primary">T</span>
                         </div>
-                        <h1 className="text-3xl md:text-4xl lg:text-5xl font-title font-bold text-text-primary">
+                        <h1 className="text-3xl md:text-4xl lg:text-5xl font-title font-bold text-text bg-test-A">
                             T-Learning
                         </h1>
                     </div>
@@ -34,7 +34,7 @@ export default async function LandingPage() {
                     <Button 
                     asChild 
                     size="lg" 
-                    className="bg-primary hover:bg-primary-hover text-primary-contrast w-auto "
+                    className="bg-primary hover:bg-primary-hover text-text-contrast w-auto "
                     >
                         <Link href="/login">
                             {tAuth("login")}
@@ -44,7 +44,7 @@ export default async function LandingPage() {
                     asChild 
                     variant="outline" 
                     size="lg"
-                    className="border-border hover:bg-surface-elevated w-auto"
+                    className="border-border hover:bg-bg-card w-auto"
                     >
                         <a href="#about">
                             {t("learnMore")}
@@ -109,7 +109,7 @@ export default async function LandingPage() {
         </section>
 
         <section className="py-6 lg:py-10 container">
-            <div className="max-w-3xl mx-auto text-center bg-surface border border-border rounded-2xl p-8 lg:p-12">
+            <div className="max-w-3xl mx-auto text-center bg-bg border border-border rounded-2xl p-8 lg:p-12">
                 <h3 className="text-xl lg:text-2xl font-title font-bold mb-2 text-text">
                     {t("callToAction")}
                 </h3>
@@ -120,7 +120,7 @@ export default async function LandingPage() {
                     <Button
                     asChild 
                     size="lg"
-                    className="bg-primary hover:bg-primary-hover text-primary-contrast w-auto"
+                    className="bg-primary hover:bg-primary-hover text-text-contrast w-auto"
                     >
                         <Link href="/register">
                             {t("register")}
@@ -130,7 +130,7 @@ export default async function LandingPage() {
                     asChild 
                     variant="outline" 
                     size="lg"
-                    className="border-border hover:bg-surface-elevated w-auto"
+                    className="border-border hover:bg-bg-card w-auto"
                     >
                         <Link href="/login">
                             {t("login")}
@@ -174,7 +174,7 @@ function FeatureCard({
     description: string;
 }) {
     return (
-    <div className="bg-surface border-2 border-border rounded-lg p-4 hover:border-border-subtle transition-all duration-400">
+    <div className="bg-bg border-2 border-border rounded-lg p-4 hover:border-border-subtle transition-all duration-400">
         <div className="w-12 h-12 bg-primary-subtle rounded-lg flex items-center justify-center text-primary mb-2">
             {icon}
         </div>
