@@ -7,8 +7,6 @@
   --font-title: var(--font-heading), sans-serif;
   --font-body: var(--font-body), sans-serif;
   --font-accessible: var(--font-accessible), sans-serif;
-
-  --color-test: red;
   
   --color-primary: var(--primary-default);
   --color-primary-hover: var(--primary-hover);

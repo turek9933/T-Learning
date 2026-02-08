@@ -1,4 +1,19 @@
 {
+  "common": {
+    "appName": "T-Lerning",
+    "or": "o",
+    "loading": "Caricamento...",
+    "error": "Errore",
+    "success": "Successo",
+    "cancel": "Annulla",
+    "save": "Salva",
+    "delete": "Elimina",
+    "edit": "Modifica",
+    "close": "Chiudi",
+    "back": "Indietro",
+    "next": "Avanti",
+    "submit": "Invia"
+  },
   "notFound": {
     "title": "Non trovato",
     "description": "La pagina che stai cercando non esiste",
@@ -20,21 +35,6 @@
     "passwordsMustMatch": "Le password devono corrispondere",
     "nameTooShort": "Il nome deve contenere almeno 2 caratteri",
     "selectRole": "Seleziona un ruolo"
-  },
-  "common": {
-    "appName": "T-Lerning",
-    "or": "o",
-    "loading": "Caricamento...",
-    "error": "Errore",
-    "success": "Successo",
-    "cancel": "Annulla",
-    "save": "Salva",
-    "delete": "Elimina",
-    "edit": "Modifica",
-    "close": "Chiudi",
-    "back": "Indietro",
-    "next": "Avanti",
-    "submit": "Invia"
   },
   "auth": {
     "login": "Accedi",
@@ -67,7 +67,7 @@
     "heroSubtitle": "Un'alternativa intuitiva, leggera ed efficiente alle piattaforme educative complesse",
     "getStarted": "Inizia",
     "learnMore": "Scopri di più",
-    "aboutTitle": "Cos'è T-Lerning?",
+    "aboutTitle": "Cos'è T-Learning?",
     "aboutDescription": "T-Lerning è una Progressive Web App progettata per gestire varie forme di educazione online. La piattaforma combina le funzionalità di un Learning Management System con strumenti di comunicazione, consentendo un insegnamento flessibile sia individuale che di gruppo.",
     "featuresTitle": "Perché T-Lerning?",
     "feature1Title": "Interfaccia intuitiva",
@@ -81,6 +81,14 @@
     "feature5Title": "Multipiattaforma",
     "feature5Description": "Funzionamento fluido su diversi dispositivi",
     "feature6Title": "Senza pubblicità",
-    "feature6Description": "Concentrati sull'apprendimento, non sulle pubblicità"
+    "feature6Description": "Concentrati sull'apprendimento, non sulle pubblicità",
+    "callToAction": "Pronto per un'esperienza educativa migliore?",
+    "callToActionDescription": "Unisciti alla piattaforma T-Lerning",
+    "register": "Unisciti ora",
+    "login": "Continua l'apprendimento",
+    "copyright": "Copyright © 2026 T-Learning. Tutti i diritti riservati.",
+    "privacyPolicy": "Informativa sulla privacy",
+    "terms": "Termini di utilizzo",
+    "contact": "Contattaci"
   }
 }

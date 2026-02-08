@@ -185,7 +185,7 @@ export function Navbar() {
                         </div>
                     </div>
 
-                    <Button asChild className="w-full bg-surface hover:bg-surface-elevated text-text" size="lg">
+                    <Button asChild className="w-full bg-surface-subtle hover:bg-surface-elevated text-text" size="lg">
                         <Link href="/login" onClick={() => setMobileMenuOpen(false)}>
                             {t("login")}
                         </Link>

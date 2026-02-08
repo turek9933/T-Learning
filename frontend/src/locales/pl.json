@@ -1,4 +1,19 @@
 {
+  "common": {
+    "appName": "T-Learning",
+    "or": "lub",
+    "loading": "Ładowanie...",
+    "error": "Błąd",
+    "success": "Sukces",
+    "cancel": "Anuluj",
+    "save": "Zapisz",
+    "delete": "Usuń",
+    "edit": "Edytuj",
+    "close": "Zamknij",
+    "back": "Wstecz",
+    "next": "Dalej",
+    "submit": "Wyślij"
+  },
   "notFound": {
     "title": "Nie znaleziono",
     "description": "Strona, która szukasz, nie została odnaleziona",
@@ -21,21 +36,6 @@
     "nameTooShort": "Dane muszą mieć co najmniej 2 znaki",
     "selectRole": "Wybierz rolę"
   },
-  "common": {
-    "appName": "T-Lerning",
-    "or": "lub",
-    "loading": "Ładowanie...",
-    "error": "Błąd",
-    "success": "Sukces",
-    "cancel": "Anuluj",
-    "save": "Zapisz",
-    "delete": "Usuń",
-    "edit": "Edytuj",
-    "close": "Zamknij",
-    "back": "Wstecz",
-    "next": "Dalej",
-    "submit": "Wyślij"
-  },
   "auth": {
     "login": "Zaloguj się",
     "register": "Zarejestruj się",
@@ -54,9 +54,9 @@
     "student": "Uczeń",
     "teacher": "Nauczyciel",
     "loginTitle": "Witaj ponownie",
-    "loginSubtitle": "Zaloguj się do swojego konta T-Lerning",
+    "loginSubtitle": "Zaloguj się do swojego konta T-Learning",
     "registerTitle": "Stwórz konto",
-    "registerSubtitle": "Dołącz do platformy T-Lerning",
+    "registerSubtitle": "Dołącz do platformy T-Learning",
     "resetPasswordTitle": "Resetuj hasło",
     "resetPasswordSubtitle": "Wyślemy link do zresetowania hasła na Twój email",
     "sendResetLink": "Wyślij link resetujący",
@@ -67,9 +67,9 @@
     "heroSubtitle": "Intuicyjna, lekka i wydajna alternatywa dla rozbudowanych platform edukacyjnych",
     "getStarted": "Rozpocznij",
     "learnMore": "Dowiedz się więcej",
-    "aboutTitle": "Czym jest T-Lerning?",
-    "aboutDescription": "T-Lerning to aplikacja webowa typu Progressive Web App dedykowana do zarządzania różnorodnymi formami nauczania online. Platforma łączy funkcjonalności Learning Management System z narzędziami komunikacyjnymi, umożliwiając elastyczne prowadzenie zajęć indywidualnych jak i grupowych.",
-    "featuresTitle": "Dlaczego T-Lerning?",
+    "aboutTitle": "Czym jest T-Learning?",
+    "aboutDescription": "T-Learning to aplikacja webowa typu Progressive Web App dedykowana do zarządzania różnorodnymi formami nauczania online. Platforma łączy funkcjonalności Learning Management System z narzędziami komunikacyjnymi, umożliwiając elastyczne prowadzenie zajęć indywidualnych jak i grupowych.",
+    "featuresTitle": "Dlaczego T-Learning?",
     "feature1Title": "Intuicyjny interfejs",
     "feature1Description": "Prosty w obsłudze, bez przytłaczających funkcji",
     "feature2Title": "Wsparcie offline",
@@ -81,6 +81,14 @@
     "feature5Title": "Działanie wieloplatformowe",
     "feature5Description": "Płynne działanie na różnych urządzeniach",
     "feature6Title": "Bez reklam",
-    "feature6Description": "Skoncentruj się na nauce, nie na reklamach"
+    "feature6Description": "Skoncentruj się na nauce, nie na reklamach",
+    "callToAction": "Gotowy na lepsze doświadczenie edukacyjne?",
+    "callToActionDescription": "Dołącz do platformy T-Learning",
+    "register": "Dołącz teraz",
+    "login": "Kontynuuj naukę",
+    "copyright": "Copyright © 2026 T-Learning. Wszelkie prawa zastrzeżone.",
+    "privacyPolicy": "Polityka prywatności",
+    "terms": "Warunki korzystania",
+    "contact": "Kontakt"
   }
 }

@@ -1,4 +1,19 @@
 {
+  "common": {
+    "appName": "T-Lerning",
+    "or": "or",
+    "loading": "Loading...",
+    "error": "Error",
+    "success": "Success",
+    "cancel": "Cancel",
+    "save": "Save",
+    "delete": "Delete",
+    "edit": "Edit",
+    "close": "Close",
+    "back": "Back",
+    "next": "Next",
+    "submit": "Submit"
+  },
   "notFound": {
     "title": "Not found",
     "description": "The page you are looking for has not been found",
@@ -20,21 +35,6 @@
     "passwordsMustMatch": "Passwords must match",
     "nameTooShort": "Name must be at least 2 characters",
     "selectRole": "Please select a role"
-  },
-  "common": {
-    "appName": "T-Lerning",
-    "or": "or",
-    "loading": "Loading...",
-    "error": "Error",
-    "success": "Success",
-    "cancel": "Cancel",
-    "save": "Save",
-    "delete": "Delete",
-    "edit": "Edit",
-    "close": "Close",
-    "back": "Back",
-    "next": "Next",
-    "submit": "Submit"
   },
   "auth": {
     "login": "Log in",
@@ -67,7 +67,7 @@
     "heroSubtitle": "An intuitive, lightweight, and efficient alternative to complex educational platforms",
     "getStarted": "Get started",
     "learnMore": "Learn more",
-    "aboutTitle": "What is T-Lerning?",
+    "aboutTitle": "What is T-Learning?",
     "aboutDescription": "T-Lerning is a Progressive Web App designed for managing various forms of online education. The platform combines Learning Management System functionality with communication tools, enabling flexible individual and group teaching.",
     "featuresTitle": "Why T-Lerning?",
     "feature1Title": "Intuitive interface",
@@ -81,6 +81,14 @@
     "feature5Title": "Cross-platform",
     "feature5Description": "Smooth operation on different devices",
     "feature6Title": "Ad-free",
-    "feature6Description": "Focus on learning, not on ads"
+    "feature6Description": "Focus on learning, not on ads",
+    "callToAction": "Ready for better educational experience?",
+    "callToActionDescription": "Join the T-Lerning platform",
+    "register": "Join now",
+    "login": "Continue learning",
+    "copyright": "Copyright © 2026 T-Learning. All rights reserved.",
+    "privacyPolicy": "Privacy Policy",
+    "terms": "Terms of Use",
+    "contact": "Contact"
   }
 }
