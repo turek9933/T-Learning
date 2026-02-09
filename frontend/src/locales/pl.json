@@ -37,7 +37,21 @@
     "selectRole": "Wybierz rolę"
   },
   "auth": {
-    "login": "Zaloguj się",
+    "login": {
+      "title": "Witaj ponownie",
+      "subtitle": "Zaloguj się do swojego konta T-Learning",
+      "email": "Email",
+      "emailPlaceholder": "Wpisz tutaj swojego emaila",
+      "password": "Hasło",
+      "passwordPlaceholder": "Wpisz tutaj swoje hasło",
+      "rememberMe": "Zapamiętaj mnie",
+      "forgotPassword": "Zapomniałeś hasła?",
+      "login": "Zaloguj się",
+      "loggingIn": "Logowanie...",
+      "noAccount": "Nie masz konta?",
+      "register": "Zarejestruj się",
+      "goBack": "Powrót do strony głównej"
+    },
     "register": "Zarejestruj się",
     "logout": "Wyloguj się",
     "forgotPassword": "Zapomniałeś hasła?",

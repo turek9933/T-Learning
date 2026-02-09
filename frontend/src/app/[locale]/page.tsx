@@ -2,25 +2,17 @@ import { getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/routing";
 import { Button } from "@/components/ui/button";
 import { Layers, CreditCard, MonitorSmartphone, Zap, Shield, Wifi } from "lucide-react";
+import { PageContainer } from "@/components/ui/PageContainer";
+import { Banner } from "@/components/ui/Banner";
 
 export default async function LandingPage() {
     const t = await getTranslations("landing");
-    const tAuth = await getTranslations("auth");
     
     return (
-    <div className="min-h-screen">
+    <PageContainer>
         <section className="py-4 lg:py-12 container">
             <div className="flex flex-col items-center text-center max-w-4xl mx-auto">
-                <div className="mb-8 animate-fade-in">
-                    <div className="flex items-center justify-center gap-2">
-                        <div className="w-12 h-12 md:w-16 md:h-16 bg-bg rounded-lg flex items-center justify-center">
-                            <span className="text-3xl md:text-4xl font-title font-bold text-primary">T</span>
-                        </div>
-                        <h1 className="text-3xl md:text-4xl lg:text-5xl font-title font-bold text-text bg-test-A">
-                            T-Learning
-                        </h1>
-                    </div>
-                </div>
+                <Banner />
 
                 <h2 className="text-2xl md:text-4xl lg:text-5xl font-title font-bold mb-6 text-text">
                     {t("heroTitle")}
@@ -37,7 +29,7 @@ export default async function LandingPage() {
                     className="bg-primary hover:bg-primary-hover text-text-contrast w-auto "
                     >
                         <Link href="/login">
-                            {tAuth("login")}
+                            {t("login")}
                         </Link>
                     </Button>
                     <Button 
@@ -140,7 +132,7 @@ export default async function LandingPage() {
             </div>
         </section>
 
-        <footer className="border-t border-border mt-16">
+        <footer className="border-t border-border mt-16 w-full">
             <div className="container py-4">
                 <div className="flex flex-col justify-between items-center gap-2">
                     <p className="text-sm text-text-muted text-center">
@@ -160,7 +152,7 @@ export default async function LandingPage() {
                 </div>
             </div>
       </footer>
-    </div>
+    </PageContainer>
   );
 }
 

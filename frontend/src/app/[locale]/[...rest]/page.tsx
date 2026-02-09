@@ -20,7 +20,7 @@ export default async function NotFound() {
             </p>
 
             <Button asChild size="lg">
-                <Link href="/" className="bg-bg hover:bg-bg-hover text-text">
+                <Link href="/" className="bg-bg hover:bg-bg-hover text-text-contrast">
                     {t("button")}
                 </Link>
             </Button>

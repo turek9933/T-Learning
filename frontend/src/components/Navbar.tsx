@@ -23,7 +23,7 @@ export function Navbar() {
         <div className="container flex h-16 items-center justify-between">
             <Link 
             href="/" 
-            className="flex items-center gap-2 hover:opacity-80 transition-opacity"
+            className="flex items-center gap-2 hover:opacity-80 transition-opacity rounded"
             >
                 <span className="font-title font-bold text-xl text-text">
                     T-Learning
