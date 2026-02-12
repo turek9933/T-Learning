@@ -131,10 +131,10 @@
     --bg-contrast: var(--gray-700);
 
     --border-default: var(--gray-300);
-    --borders-subtle: var(--gray-200);
-    --borders-hover: var(--gray-500);
-    --borders-focus: var(--green-500);
-    --borders-error: var(--red-500);
+    --border-subtle: var(--gray-200);
+    --border-hover: var(--gray-500);
+    --border-focus: var(--green-500);
+    --border-error: var(--red-500);
     
     --text-primary: var(--gray-800);
     --text-secondary: var(--gray-600);
@@ -178,10 +178,10 @@
     --bg-contrast: var(--gray-200);
 
     --border-default: var(--gray-600);
-    --borders-subtle: var(--gray-700);
-    --borders-hover: var(--gray-400);
-    --borders-focus: var(--green-300);
-    --borders-error: var(--red-300);
+    --border-subtle: var(--gray-700);
+    --border-hover: var(--gray-400);
+    --border-focus: var(--green-300);
+    --border-error: var(--red-300);
 
     --text-primary: var(--gray-100);
     --text-secondary: var(--gray-300);
@@ -227,8 +227,8 @@
     --border-default: var(--gray-100);
     --border-subtle: var(--gray-300);
     --border-hover: var(--yellow-500);
-    --borders-focus: var(--yellow-300);
-    --borders-error: var(--red-300);
+    --border-focus: var(--yellow-300);
+    --border-error: var(--red-300);
 
     --text-primary: var(--gray-100);
     --text-secondary: var(--gray-200);
