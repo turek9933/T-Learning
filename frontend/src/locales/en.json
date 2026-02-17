@@ -50,7 +50,8 @@
       "loggingIn": "Logging in...",
       "noAccount": "Don't have an account?",
       "register": "Sign up",
-      "goBack": "Go back to the main page"
+      "goBack": "Go back to the main page",
+      "loginSuccess": "Login successful"
     },
     "register": {
       "title": "Create account",
@@ -69,7 +70,8 @@
       "alreadyHaveAccount": "Already have an account?",
       "register": "Sign up",
       "registering": "Registering...",
-      "goBack": "Go back to the main page"
+      "goBack": "Go back to the main page",
+      "registerSuccess": "Registration successful"
     },
     "logout": "Log out",
     "forgotPassword": "Forgot password?",

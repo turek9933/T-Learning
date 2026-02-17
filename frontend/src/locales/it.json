@@ -50,7 +50,8 @@
       "loggingIn": "Accesso in corso...",
       "noAccount": "Non hai un account?",
       "register": "Registrati",
-      "goBack": "Torna alla homepage"
+      "goBack": "Torna alla homepage",
+      "loginSuccess": "Accesso avvenuto con successo"
     },
     "register": {
       "title": "Crea un account",
@@ -69,7 +70,8 @@
       "alreadyHaveAccount": "Hai gia un account?",
       "register": "Registrati",
       "registering": "Registrazione in corso...",
-      "goBack": "Torna alla homepage"
+      "goBack": "Torna alla homepage",
+      "registerSuccess": "Registrazione avvenuta con successo"
     },
     "logout": "Esci",
     "forgotPassword": "Password dimenticata?",

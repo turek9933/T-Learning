@@ -4,16 +4,13 @@ import { Link } from "@/i18n/routing";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import { Mail, Lock, MoveLeft } from "lucide-react";
-import { toast } from "react-toastify";
+import { customToast } from "@/lib/customToast";
 import { PageContainer } from "@/components/ui/PageContainer";
 import { Banner } from "@/components/ui/Banner";
-import { useMessages } from "next-intl";
 import { InputGroup, InputGroupInput, InputGroupAddon } from "@/components/ui/input-group";
 import { Checkbox } from "@/components/ui/checkbox";
 
 export default function LoginForm() {
-  const messages = useMessages();
-
   const t = useTranslations("auth.login");
 
   const [email, setEmail] = useState("");
@@ -26,23 +23,22 @@ export default function LoginForm() {
   const authenticateUser = async (email: string, password: string) => {
     // waits 1000 ms
     await new Promise((resolve) => setTimeout(resolve, 1000));
-    throw new Error();
+    // throw new Error();
     // TODO implement authentication in context
   };
 
+  function toggleRememberMe () {
+    setRememberMe(!rememberMe);
+  }
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
 
     try {
-      toast.success("Zalogowano pomyślnie")
-
-      toast.info("info");
-      toast.warning("wa");
       await authenticateUser(email, password);
-      setError(true);
+      customToast.success(t("loginSuccess"));
     } catch (err) {
-        // toast.error("error");
+      customToast.error("Login error");
     } finally {
         setError(false);
         setLoading(false);
@@ -109,7 +105,7 @@ export default function LoginForm() {
                 <Checkbox
                 id="remember"
                 checked={rememberMe}
-                onCheckedChange={setRememberMe}
+                onCheckedChange={toggleRememberMe}
                 className="cursor-pointer w-4 h-4 focus:ring-primary focus:ring-offset-4"
                 />
                 <span className="text-sm text-text-secondary">

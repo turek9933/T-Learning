@@ -50,7 +50,8 @@
       "loggingIn": "Logowanie...",
       "noAccount": "Nie masz konta?",
       "register": "Zarejestruj się",
-      "goBack": "Powrót do strony głównej"
+      "goBack": "Powrót do strony głównej",
+      "loginSuccess": "Zalogowano pomyslnie"
     },
     "register": {
       "title": "Stwórz konto",
@@ -69,7 +70,8 @@
       "alreadyHaveAccount": "Masz już konto?",
       "register": "Zarejestruj się",
       "registering": "Rejestracja...",
-      "goBack": "Powrót do strony głównej"
+      "goBack": "Powrót do strony głównej",
+      "registerSuccess": "Rejestracja zakonczona pomyslnie"
     },
     "logout": "Wyloguj się",
     "forgotPassword": "Zapomniałeś hasła?",

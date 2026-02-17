@@ -4,16 +4,13 @@ import { Link } from "@/i18n/routing";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import { Mail, Lock, MoveLeft, UserPen } from "lucide-react";
-import { toast } from "sonner";
 import { PageContainer } from "@/components/ui/PageContainer";
 import { Banner } from "@/components/ui/Banner";
 import { useMessages } from "next-intl";
 import { InputGroup, InputGroupInput, InputGroupAddon } from "@/components/ui/input-group";
-import { Checkbox } from "@/components/ui/checkbox";
+import { customToast } from "@/lib/customToast";
 
 export default function RegisterForm() {
-  const messages = useMessages();
-
   const t = useTranslations("auth.register");
 
   const [firstName, setFirstName] = useState("");
@@ -38,9 +35,9 @@ export default function RegisterForm() {
 
     try {
       await registerUser(email, password);
-      setError(true);
+      customToast.success(t("registerSuccess"));
     } catch (err) {
-        toast.error(t("changeLanguage"));
+      customToast.error("Register error");
     } finally {
       setError(false);
       setLoading(false);
