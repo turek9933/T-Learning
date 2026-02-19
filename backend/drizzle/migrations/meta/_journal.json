@@ -15,6 +15,13 @@
       "when": 1769783188741,
       "tag": "0001_mushy_blazing_skull",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1771462781135,
+      "tag": "0002_brown_wendell_vaughn",
+      "breakpoints": true
     }
   ]
 }

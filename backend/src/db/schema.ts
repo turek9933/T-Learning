@@ -1,4 +1,9 @@
-import { boolean, integer, jsonb, numeric, pgEnum, pgTable, text, timestamp, uuid } from "drizzle-orm/pg-core";
+import { relations } from "drizzle-orm";
+import { 
+    boolean, integer, jsonb, numeric, text, timestamp, uuid,
+    pgEnum, pgTable,
+    index 
+} from "drizzle-orm/pg-core";
 
 
 export const workspaceMemberRoleEnum = pgEnum('workspace_member_role', [
@@ -41,38 +46,93 @@ export interface WorkspaceSettings {
     }
 }
 
-
-export const accounts = pgTable('accounts', {
-    id: uuid('id').defaultRandom().primaryKey(),
-    userId: uuid('user_id').references(() => users.id, { onDelete: 'cascade' }).notNull(),
-    accountId: text('account_id').notNull(),
-    providerId: text('provider_id').notNull(),
-    password: text('password'),
-    accessToken: text('access_token'),
-    refreshToken: text('refresh_token'),
-    expiresAt: timestamp('expires_at'),
-});
+//
+// Authentication tables
+// 
 
 export const users = pgTable('users', {
-    id: uuid('id').defaultRandom().primaryKey(),
+    id: text('id').primaryKey(),
+    name: text('name').notNull(),
     email: text('email').notNull().unique(),
-    emailVerified: boolean('email_verified').default(false),
-    firstName: text('first_name'),
-    lastName: text('last_name'),
-    avatarUrl: text('avatar_url'),
+    emailVerified: boolean('email_verified').default(false).notNull(),
+    avatarUrl: text('avatar_url'),// This field is putten by the betterAuth provider, if changes happens here you need to update betterAuth config
     createdAt: timestamp('created_at').defaultNow().notNull(),
-    updatedAt: timestamp('updated_at').defaultNow().notNull(),
-    active: boolean('active'),
+    updatedAt: timestamp('updated_at')
+        .defaultNow()
+        .$onUpdate(() => new Date())
+        .notNull(),
 });
 
 export const sessions = pgTable('sessions', {
     id: text('id').primaryKey(),
-    token: text('token').notNull(),
-    userId: uuid('user_id').references(() => users.id, { onDelete: 'cascade' }).notNull(),
     expiresAt: timestamp('expires_at').notNull(),
+    token: text('token').notNull().unique(),
+    createdAt: timestamp('created_at').defaultNow().notNull(),
+    updatedAt: timestamp('updated_at')
+        .$onUpdate(() => new Date())
+        .notNull(),
     ipAddress: text('ip_address'),
     userAgent: text('user_agent'),
-});
+    userId: uuid('user_id').references(() => users.id, { onDelete: 'cascade' }).notNull(),
+    },
+    (table) => [index('sessions_userId_idx').on(table.userId)]
+);
+
+export const accounts = pgTable('accounts', {
+    id: text('id').primaryKey(),
+    accountId: text('account_id').notNull(),// Provided by Google or it's userId if it's a local account
+    providerId: text('provider_id').notNull(),
+    userId: uuid('user_id').references(() => users.id, { onDelete: 'cascade' }).notNull(),
+    accessToken: text('access_token'),
+    refreshToken: text('refresh_token'),
+    idToken: text("id_token"),
+    accessTokenExpiresAt: timestamp('access_token_expires_at'),
+    refreshTokenExpiresAt: timestamp('refresh_token_expires_at'),
+    scope: text('scope'),// Credentials provided by Google
+    password: text('password'),
+    createdAt: timestamp('created_at').defaultNow().notNull(),
+    updatedAt: timestamp('updated_at')
+        .$onUpdate(() => new Date())
+        .notNull(),
+    },
+    (table) => [index('accounts_userId_idx').on(table.userId)]
+);
+
+export const verifications = pgTable('verifications', {
+    id: text('id').primaryKey(),
+    identifier: text('identifier').notNull(),
+    value: text('value').notNull(),
+    expiresAt: timestamp('expires_at').notNull(),
+    createdAt: timestamp('created_at').defaultNow().notNull(),
+    updatedAt: timestamp('updated_at')
+        .defaultNow()
+        .$onUpdate(() => new Date())
+        .notNull(),
+})
+
+// 
+// Authentication relationships
+//
+
+export const userRelations = relations(users, ({ many }) => ({
+    sessions: many(sessions),
+    accounts: many(accounts),
+}));
+
+export const sessionRelations = relations(sessions, ({ one }) => ({
+    user: one(users, {
+        fields: [sessions.userId],
+        references: [users.id],
+    }),
+}));
+
+export const accountRelations = relations(accounts, ({ one }) => ({
+    user: one(users, {
+        fields: [accounts.userId],
+        references: [users.id],
+    }),
+}));
+
 
 export const workspaces = pgTable('workspaces', {
     id: uuid('id').defaultRandom().primaryKey(),

@@ -1,8 +1,6 @@
 import { Elysia } from 'elysia'
 import { auth } from '@/auth/config'
 
-
-
 const app = new Elysia()
     .all('/api/auth/*', async ({request}) => {
         return auth.handler(request);
