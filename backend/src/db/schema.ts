@@ -73,7 +73,7 @@ export const sessions = pgTable('sessions', {
         .notNull(),
     ipAddress: text('ip_address'),
     userAgent: text('user_agent'),
-    userId: uuid('user_id').references(() => users.id, { onDelete: 'cascade' }).notNull(),
+    userId: text('user_id').references(() => users.id, { onDelete: 'cascade' }).notNull(),
     },
     (table) => [index('sessions_userId_idx').on(table.userId)]
 );
@@ -82,7 +82,7 @@ export const accounts = pgTable('accounts', {
     id: text('id').primaryKey(),
     accountId: text('account_id').notNull(),// Provided by Google or it's userId if it's a local account
     providerId: text('provider_id').notNull(),
-    userId: uuid('user_id').references(() => users.id, { onDelete: 'cascade' }).notNull(),
+    userId: text('user_id').references(() => users.id, { onDelete: 'cascade' }).notNull(),
     accessToken: text('access_token'),
     refreshToken: text('refresh_token'),
     idToken: text("id_token"),
@@ -149,7 +149,7 @@ export const workspaces = pgTable('workspaces', {
 
 export const workspaceMembers = pgTable('workspace_members', {
     id: uuid('id').defaultRandom().primaryKey(),
-    userId: uuid('user_id').references(() => users.id, { onDelete: 'cascade' }).notNull(),
+    userId: text('user_id').references(() => users.id, { onDelete: 'cascade' }).notNull(),
     workspaceId: uuid('workspace_id').references(() => workspaces.id, { onDelete: 'cascade'}).notNull(),
     role: workspaceMemberRoleEnum('role').notNull().default('member'),
     status: workspaceMemberStatusEnum('status').notNull().default('active'),
@@ -160,7 +160,7 @@ export const workspaceMembers = pgTable('workspace_members', {
 
 export const posts = pgTable('posts', {
     id: uuid('id').defaultRandom().primaryKey(),
-    userId: uuid('user_id').references(() => users.id, { onDelete: 'set null' }),
+    userId: text('user_id').references(() => users.id, { onDelete: 'set null' }),
     workspaceId: uuid('workspace_id').references(() => workspaces.id, { onDelete: 'cascade' }).notNull(),
     content: text('content').notNull(),
     pinned: boolean('pinned'),
