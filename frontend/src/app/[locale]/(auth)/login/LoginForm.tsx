@@ -9,6 +9,7 @@ import { PageContainer } from "@/components/ui/PageContainer";
 import { Banner } from "@/components/ui/Banner";
 import { InputGroup, InputGroupInput, InputGroupAddon } from "@/components/ui/input-group";
 import { Checkbox } from "@/components/ui/checkbox";
+import { authClient } from "@/lib/auth-client";
 
 export default function LoginForm() {
   const t = useTranslations("auth.login");
@@ -17,33 +18,38 @@ export default function LoginForm() {
   const [password, setPassword] = useState("");
   const [rememberMe, setRememberMe] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(false);
+  const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
 
-  //TODO
-  const authenticateUser = async (email: string, password: string) => {
-    // waits 1000 ms
-    await new Promise((resolve) => setTimeout(resolve, 1000));
-    // throw new Error();
-    // TODO implement authentication in context
-  };
-
-  function toggleRememberMe () {
-    setRememberMe(!rememberMe);
-  }
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
 
-    try {
-      await authenticateUser(email, password);
-      customToast.success(t("loginSuccess"));
-    } catch (err) {
-      customToast.error("Login error");
-    } finally {
-        setError(false);
-        setLoading(false);
-    }
-  };
+    const { error } = await authClient.signIn.email({
+      email,
+      password,
+      rememberMe: rememberMe,
+      callbackURL: "/dashboard"
+    }, {
+      onSuccess: () => {
+        customToast.success(t("loginSuccess"));
+      },
+      onError: (context) => {
+        console.log(context);
+        if (context.error.code === "INVALID_EMAIL_OR_PASSWORD") {
+          setFieldErrors({ emailOrPassword: t("errorEmailOrPassword") });
+          customToast.error(t("errorEmailOrPassword"));
+        } else {
+          customToast.error(context.error.message);
+        }
+      }
+    });
+
+    setLoading(false);
+  }
+
+  function toggleRememberMe () {
+    setRememberMe(!rememberMe);
+  }
 
   return (
     <PageContainer>
@@ -64,7 +70,7 @@ export default function LoginForm() {
               <label htmlFor="email" className="block text-sm font-normal text-text mb-2">
                 {t("email")}
               </label>
-                <InputGroup className="bg-bg-muted py-6">
+                <InputGroup className={`bg-bg-muted py-6 ${fieldErrors.email ? "ring-2 ring-error border-error" : ""}`}>
                   <InputGroupInput
                   id="email"
                   type="email"
@@ -84,7 +90,7 @@ export default function LoginForm() {
               <label htmlFor="password" className="block text-sm font-normal text-text mb-2">
                 {t("password")}
               </label>
-              <InputGroup className="bg-bg-muted py-6">
+              <InputGroup className={`bg-bg-muted py-6 ${fieldErrors.email ? "ring-2 ring-error border-error" : ""}`}>
                 <InputGroupInput
                 id="password"
                 type="password"
@@ -98,6 +104,8 @@ export default function LoginForm() {
                   <Lock className="w-5 h-5 text-text-muted"/>
                 </InputGroupAddon>
               </InputGroup>
+
+              {fieldErrors.emailOrPassword && <p className="text-error text-sm mt-2">{fieldErrors.emailOrPassword}</p>}
             </div>
 
             <div className="flex items-center justify-between">

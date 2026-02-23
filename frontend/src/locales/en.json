@@ -51,7 +51,8 @@
       "noAccount": "Don't have an account?",
       "register": "Sign up",
       "goBack": "Go back to the main page",
-      "loginSuccess": "Login successful"
+      "loginSuccess": "Login successful",
+      "errorEmailOrPassword": "Invalid email or password"
     },
     "register": {
       "title": "Create account",
@@ -71,7 +72,11 @@
       "register": "Sign up",
       "registering": "Registering...",
       "goBack": "Go back to the main page",
-      "registerSuccess": "Registration successful"
+      "registerSuccess": "Registration successful",
+      "errorEmailTaken": "Email already taken",
+      "errorPasswordMatch": "Passwords do not match",
+      "errorPasswordTooShort": "Password too short - minimum 10 characters",
+      "errorRegister": "Registration failed"
     },
     "logout": "Log out",
     "forgotPassword": "Forgot password?",

@@ -51,7 +51,8 @@
       "noAccount": "Non hai un account?",
       "register": "Registrati",
       "goBack": "Torna alla homepage",
-      "loginSuccess": "Accesso avvenuto con successo"
+      "loginSuccess": "Accesso avvenuto con successo",
+      "errorEmailOrPassword": "Email o password errata"
     },
     "register": {
       "title": "Crea un account",
@@ -71,7 +72,11 @@
       "register": "Registrati",
       "registering": "Registrazione in corso...",
       "goBack": "Torna alla homepage",
-      "registerSuccess": "Registrazione avvenuta con successo"
+      "registerSuccess": "Registrazione avvenuta con successo",
+      "errorEmailTaken": "Questa email viene gia utilizzata",
+      "errorPasswordMatch": "Le password non corrispondono",
+      "errorPasswordTooShort": "La password deve contenere almeno 10 caratteri",
+      "errorRegister": "Registrazione fallita"
     },
     "logout": "Esci",
     "forgotPassword": "Password dimenticata?",

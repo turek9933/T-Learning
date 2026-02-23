@@ -29,11 +29,11 @@ export function useValidationSchemas() {
 
       password: z
         .string({ message: t("required") })
-        .min(10, { message: t("passwordTooShort") }),
+        .min(Number(process.env.NEXT_PUBLIC_PASSWORD_MIN_LENGTH) ?? 10, { message: t("passwordTooShort") }),
 
       confirmPassword: z
         .string({ message: t("required") })
-        .min(10, { message: t("required") }),
+        .min(Number(process.env.NEXT_PUBLIC_PASSWORD_MIN_LENGTH) ?? 10, { message: t("required") }),
     })
     .refine((data) => data.password === data.confirmPassword, {
       message: t("passwordsMustMatch"),

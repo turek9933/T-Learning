@@ -51,7 +51,8 @@
       "noAccount": "Nie masz konta?",
       "register": "Zarejestruj się",
       "goBack": "Powrót do strony głównej",
-      "loginSuccess": "Zalogowano pomyslnie"
+      "loginSuccess": "Zalogowano pomyslnie",
+      "errorEmailOrPassword": "Niepoprawny email lub hasło"
     },
     "register": {
       "title": "Stwórz konto",
@@ -71,7 +72,11 @@
       "register": "Zarejestruj się",
       "registering": "Rejestracja...",
       "goBack": "Powrót do strony głównej",
-      "registerSuccess": "Rejestracja zakonczona pomyslnie"
+      "registerSuccess": "Rejestracja zakonczona pomyslnie",
+      "errorEmailTaken": "Ten email jest już zarejestrowany",
+      "errorPasswordMatch": "Hasła nie zgadzają sie",
+      "errorPasswordTooShort": "Hasło jest za krótkie - minimum 10 znaków",
+      "errorRegister": "Rejestracja nie powiodła sie"
     },
     "logout": "Wyloguj się",
     "forgotPassword": "Zapomniałeś hasła?",
