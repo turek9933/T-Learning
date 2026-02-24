@@ -150,6 +150,18 @@ export default function LoginForm() {
               </Link>
             </p>
           </div>
+
+          <div className="mt-6 text-center">
+            <p className="text-sm text-text-secondary">
+              {t("forgotPassword")}{"\t"}
+              <Link
+              href="/forgot-password"
+              className="text-primary hover:text-primary-hover font-medium rounded"
+              >
+                {t("forgotPassword")}
+              </Link>
+            </p>
+          </div>
         </div>
 
         <div className="mt-6 text-center items-center">

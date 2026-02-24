@@ -1,6 +1,6 @@
 {
   "common": {
-    "appName": "T-Lerning",
+    "appName": "T-Learning",
     "or": "or",
     "loading": "Loading...",
     "error": "Error",
@@ -46,6 +46,7 @@
       "passwordPlaceholder": "Enter your password here",
       "rememberMe": "Remember me",
       "forgotPassword": "Forgot password?",
+      "resetPassword": "Reset password",
       "login": "Log in",
       "loggingIn": "Logging in...",
       "noAccount": "Don't have an account?",
@@ -79,8 +80,16 @@
       "errorRegister": "Registration failed"
     },
     "logout": "Log out",
-    "forgotPassword": "Forgot password?",
-    "resetPassword": "Reset password",
+    "forgotPassword": {
+      "title": "Reset password",
+      "subtitle": "Provide your email and we'll send you a password reset link",
+      "email": "Email",
+      "emailPlaceholder": "Enter your email here",
+      "submit": "Reset password",
+      "success": "Password reset link was sent to your email",
+      "error": "Failed to generate password reset link",
+      "backToLogin": "Back to login"
+    },
     "newPassword": "New password",
     "email": "Email",
     "password": "Password",

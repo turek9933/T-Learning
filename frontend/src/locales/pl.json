@@ -46,6 +46,7 @@
       "passwordPlaceholder": "Wpisz tutaj swoje hasło",
       "rememberMe": "Zapamiętaj mnie",
       "forgotPassword": "Zapomniałeś hasła?",
+      "resetPassword": "Zresetuj hasło",
       "login": "Zaloguj się",
       "loggingIn": "Logowanie...",
       "noAccount": "Nie masz konta?",
@@ -78,9 +79,18 @@
       "errorPasswordTooShort": "Hasło jest za krótkie - minimum 10 znaków",
       "errorRegister": "Rejestracja nie powiodła sie"
     },
+    
     "logout": "Wyloguj się",
-    "forgotPassword": "Zapomniałeś hasła?",
-    "resetPassword": "Resetuj hasło",
+    "forgotPassword": {
+      "title": "Resetuj hasło",
+      "subtitle": "Podaj swoję email, aby zresetować hasło",
+      "email": "Email",
+      "emailPlaceholder": "Wpisz tutaj swojego emaila",
+      "submit": "Zresetuj hasło",
+      "success": "Link do zresetowania hasła został wysłany na email",
+      "error": "Nie udało się wygenerować linku do zresetowania hasła",
+      "goBack": "Powrót do strony głównej"
+    },
     "newPassword": "Nowe hasło",
     "email": "Email",
     "password": "Hasło",

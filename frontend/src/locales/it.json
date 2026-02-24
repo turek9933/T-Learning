@@ -1,6 +1,6 @@
 {
   "common": {
-    "appName": "T-Lerning",
+    "appName": "T-Learning",
     "or": "o",
     "loading": "Caricamento...",
     "error": "Errore",
@@ -46,6 +46,7 @@
       "passwordPlaceholder": "Inserisci qui la tua password",
       "rememberMe": "Ricordami",
       "forgotPassword": "Password dimenticata?",
+      "resetPassword": "Reimposta password",
       "login": "Accedi",
       "loggingIn": "Accesso in corso...",
       "noAccount": "Non hai un account?",
@@ -79,8 +80,16 @@
       "errorRegister": "Registrazione fallita"
     },
     "logout": "Esci",
-    "forgotPassword": "Password dimenticata?",
-    "resetPassword": "Reimposta password",
+    "forgotPassword": {
+      "title": "Reimposta password",
+      "subtitle": "Invieremo un link per reimpostare la password alla tua email",
+      "email": "Email",
+      "emailPlaceholder": "Inserisci qui la tua email",
+      "submit": "Invia link di reimpostazione",
+      "success": "Link per reimpostare la password inviato alla tua email",
+      "error": "Impossibile generare il link per reimpostare la password",
+      "backToLogin": "Torna al login"
+    },
     "newPassword": "Nuova password",
     "email": "Email",
     "password": "Password",
