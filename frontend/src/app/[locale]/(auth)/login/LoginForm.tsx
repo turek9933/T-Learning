@@ -3,13 +3,14 @@ import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/routing";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
-import { Mail, Lock, MoveLeft } from "lucide-react";
+import { Mail, Lock, MoveLeft, Eye, EyeOff } from "lucide-react";
 import { customToast } from "@/lib/customToast";
 import { PageContainer } from "@/components/ui/PageContainer";
 import { Banner } from "@/components/ui/Banner";
-import { InputGroup, InputGroupInput, InputGroupAddon } from "@/components/ui/input-group";
+import { InputGroup, InputGroupInput, InputGroupAddon, InputGroupButton } from "@/components/ui/input-group";
 import { Checkbox } from "@/components/ui/checkbox";
 import { authClient } from "@/lib/auth-client";
+import GoogleIcon from "@/components/ui/GoogleIcon";
 
 export default function LoginForm() {
   const t = useTranslations("auth.login");
@@ -19,31 +20,57 @@ export default function LoginForm() {
   const [rememberMe, setRememberMe] = useState(false);
   const [loading, setLoading] = useState(false);
   const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
+  const [showPassword, setShowPassword] = useState(false);
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
 
-    const { error } = await authClient.signIn.email({
-      email,
-      password,
-      rememberMe: rememberMe,
-      callbackURL: "/dashboard"
-    }, {
-      onSuccess: () => {
-        customToast.success(t("loginSuccess"));
-      },
-      onError: (context) => {
-        console.log(context);
-        if (context.error.code === "INVALID_EMAIL_OR_PASSWORD") {
-          setFieldErrors({ emailOrPassword: t("errorEmailOrPassword") });
-          customToast.error(t("errorEmailOrPassword"));
-        } else {
+    try {
+      const { error } = await authClient.signIn.email({
+        email,
+        password,
+        rememberMe: rememberMe,
+        callbackURL: "/dashboard"
+      }, {
+        onSuccess: () => {
+          customToast.success(t("loginSuccess"));
+        },
+        onError: (context) => {
+          if (context.error.code === "INVALID_EMAIL_OR_PASSWORD") {
+            setFieldErrors({ emailOrPassword: t("errorEmailOrPassword") });
+            customToast.error(t("errorEmailOrPassword"));
+          } else {
+            customToast.error(context.error.message);
+          }
+        }
+      });
+    } catch (error) {
+      console.error(error);
+      customToast.error(t("errorLogin"));
+    }
+
+    setLoading(false);
+  }
+
+  const handleLoginWithGoogle = async () => {
+    setLoading(true);
+    try {
+      await authClient.signIn.social({
+        provider: "google",
+        callbackURL: `${process.env.NEXT_PUBLIC_APP_URL}/dashboard`,
+      }, {
+        onSuccess: () => {
+          customToast.success(t("loginSuccess"));
+        },
+        onError: (context) => {
           customToast.error(context.error.message);
         }
-      }
-    });
-
+      });
+    } catch (error) {
+      console.error(error);
+      customToast.error(t("errorLogin"));
+    }
     setLoading(false);
   }
 
@@ -93,7 +120,7 @@ export default function LoginForm() {
               <InputGroup className={`bg-bg-muted py-6 ${fieldErrors.email ? "ring-2 ring-error border-error" : ""}`}>
                 <InputGroupInput
                 id="password"
-                type="password"
+                type={showPassword ? "text" : "password"}
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder={t("passwordPlaceholder")}
@@ -102,6 +129,15 @@ export default function LoginForm() {
                 />
                 <InputGroupAddon>
                   <Lock className="w-5 h-5 text-text-muted"/>
+                </InputGroupAddon>
+                <InputGroupAddon align="inline-end">
+                  <InputGroupButton size="sm" onClick={() => setShowPassword(!showPassword)}>
+                  { showPassword ?
+                  <Eye className="w-5 h-5 text-text-muted"/>
+                  :
+                  <EyeOff className="w-5 h-5 text-text-muted"/>
+                  }
+                  </InputGroupButton>
                 </InputGroupAddon>
               </InputGroup>
 
@@ -139,7 +175,28 @@ export default function LoginForm() {
             </Button>
           </form>
 
-          <div className="mt-6 text-center">
+
+          <div className="flex items-center justify-center mt-6 gap-2">
+            <div className="h-px w-full bg-border"></div>
+            <span className="text-sm text-text-secondary">
+              {t("or")}
+              </span>
+            <div className="h-px w-full bg-border"></div>
+          </div>
+
+          <div className="flex items-center justify-center mt-2">
+            <Button
+              id="login-google-button"
+              type="button"
+              disabled={loading}
+              className="bg-transparent border border-2 border-primary text-primary hover:bg-primary focus:bg-primary py-1"
+              onClick={handleLoginWithGoogle}
+              >
+                <GoogleIcon />
+            </Button>
+          </div>
+
+          <div className="mt-4 text-center">
             <p className="text-sm text-text-secondary">
               {t("noAccount")}{"\t"}
               <Link
@@ -147,18 +204,6 @@ export default function LoginForm() {
               className="text-primary hover:text-primary-hover font-medium rounded"
               >
                 {t("register")}
-              </Link>
-            </p>
-          </div>
-
-          <div className="mt-6 text-center">
-            <p className="text-sm text-text-secondary">
-              {t("forgotPassword")}{"\t"}
-              <Link
-              href="/forgot-password"
-              className="text-primary hover:text-primary-hover font-medium rounded"
-              >
-                {t("forgotPassword")}
               </Link>
             </p>
           </div>

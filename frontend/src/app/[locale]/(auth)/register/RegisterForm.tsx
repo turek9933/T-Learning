@@ -3,10 +3,10 @@ import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/routing";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
-import { Mail, Lock, MoveLeft, UserPen } from "lucide-react";
+import { Mail, Lock, MoveLeft, UserPen, EyeOff, Eye } from "lucide-react";
 import { PageContainer } from "@/components/ui/PageContainer";
 import { Banner } from "@/components/ui/Banner";
-import { InputGroup, InputGroupInput, InputGroupAddon } from "@/components/ui/input-group";
+import { InputGroup, InputGroupInput, InputGroupAddon, InputGroupButton } from "@/components/ui/input-group";
 import { customToast } from "@/lib/customToast";
 import { authClient } from "@/lib/auth-client";
 import { useRouter } from "@/i18n/routing";
@@ -22,7 +22,8 @@ export default function RegisterForm() {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
-
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const handleRegisterUser = async (e: React.FormEvent) => {
     e.preventDefault();
     setFieldErrors({});
@@ -147,7 +148,7 @@ export default function RegisterForm() {
               <InputGroup className={`bg-bg-muted py-6 ${fieldErrors.password ? "ring-2 ring-error border-error" : ""}`}>
                 <InputGroupInput
                 id="password"
-                type="password"
+                type={showPassword ? "text" : "password"}
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder={t("passwordPlaceholder")}
@@ -156,6 +157,15 @@ export default function RegisterForm() {
                 />
                 <InputGroupAddon>
                   <Lock className="w-5 h-5 text-text-muted"/>
+                </InputGroupAddon>
+                <InputGroupAddon align="inline-end">
+                  <InputGroupButton size="sm" onClick={() => setShowPassword(!showPassword)}>
+                  { showPassword ?
+                  <Eye className="w-5 h-5 text-text-muted"/>
+                  :
+                  <EyeOff className="w-5 h-5 text-text-muted"/>
+                  }
+                  </InputGroupButton>
                 </InputGroupAddon>
               </InputGroup>
               {fieldErrors.password && <p className="text-error text-sm mt-2">{fieldErrors.password}</p>}
@@ -168,7 +178,7 @@ export default function RegisterForm() {
               <InputGroup className={`bg-bg-muted py-6 ${fieldErrors.password ? "ring-2 ring-error border-error" : ""}`}>
                 <InputGroupInput
                 id="confirm-password"
-                type="password"
+                type={showConfirmPassword ? "text" : "password"}
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
                 placeholder={t("confirmPasswordPlaceholder")}
@@ -177,6 +187,15 @@ export default function RegisterForm() {
                 />
                 <InputGroupAddon>
                   <Lock className="w-5 h-5 text-text-muted"/>
+                </InputGroupAddon>
+                <InputGroupAddon align="inline-end">
+                  <InputGroupButton size="sm" onClick={() => setShowConfirmPassword(!showConfirmPassword)}>
+                  { showConfirmPassword ?
+                  <Eye className="w-5 h-5 text-text-muted"/>
+                  :
+                  <EyeOff className="w-5 h-5 text-text-muted"/>
+                  }
+                  </InputGroupButton>
                 </InputGroupAddon>
               </InputGroup>
             </div>

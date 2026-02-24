@@ -53,7 +53,9 @@
       "register": "Zarejestruj się",
       "goBack": "Powrót do strony głównej",
       "loginSuccess": "Zalogowano pomyslnie",
-      "errorEmailOrPassword": "Niepoprawny email lub hasło"
+      "errorEmailOrPassword": "Niepoprawny email lub hasło",
+      "errorLogin": "Logowanie nie powiodło sie",
+      "or": "lub"
     },
     "register": {
       "title": "Stwórz konto",
@@ -89,6 +91,21 @@
       "submit": "Zresetuj hasło",
       "success": "Link do zresetowania hasła został wysłany na email",
       "error": "Nie udało się wygenerować linku do zresetowania hasła",
+      "goBack": "Powrót do strony głównej"
+    },
+    "resetPassword": {
+      "title": "Resetuj hasło",
+      "subtitle": "Podaj nowe hasło",
+      "errorToken": "Link resetowania hasła jest nieprawidłowy",
+      "error": "Nie udało się zresetować hasła",
+      "errorPasswordMatch": "Hasła nie zgadzają sie",
+      "errorPasswordTooShort": "Hasło jest za krótkie - minimum 10 znaków",
+      "success": "Hasło zostało zresetowane",
+      "password": "Hasło",
+      "passwordPlaceholder": "Wpisz tutaj swoje hasło",
+      "confirmPassword": "Potwierdź hasło",
+      "confirmPasswordPlaceholder": "Wpisz ponownie swoje hasło",
+      "submit": "Zresetuj hasło",
       "goBack": "Powrót do strony głównej"
     },
     "newPassword": "Nowe hasło",

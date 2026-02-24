@@ -53,7 +53,9 @@
       "register": "Registrati",
       "goBack": "Torna alla homepage",
       "loginSuccess": "Accesso avvenuto con successo",
-      "errorEmailOrPassword": "Email o password errata"
+      "errorEmailOrPassword": "Email o password errata",
+      "errorLogin": "Accesso fallito",
+      "or": "o"
     },
     "register": {
       "title": "Crea un account",
@@ -88,7 +90,22 @@
       "submit": "Invia link di reimpostazione",
       "success": "Link per reimpostare la password inviato alla tua email",
       "error": "Impossibile generare il link per reimpostare la password",
-      "backToLogin": "Torna al login"
+      "goBack": "Torna alla homepage"
+    },
+    "resetPassword": {
+      "title": "Reimposta password",
+      "subtitle": "Inserisci la nuova password",
+      "errorToken": "Link per reimpostare la password non valido",
+      "error": "Impossibile reimpostare la password",
+      "errorPasswordMatch": "Le password non corrispondono",
+      "errorPasswordTooShort": "La password deve contenere almeno 10 caratteri",
+      "success": "Password reimpostata con successo",
+      "password": "Password",
+      "passwordPlaceholder": "Inserisci qui la tua password",
+      "confirmPassword": "Conferma password",
+      "confirmPasswordPlaceholder": "Conferma la tua password",
+      "submit": "Reimposta password",
+      "goBack": "Torna alla homepage"
     },
     "newPassword": "Nuova password",
     "email": "Email",

@@ -101,5 +101,4 @@ export default function ForgotPasswordForm({ titleProp, subtitleProp, emailProp,
       </div>
     </PageContainer>
     )
-
 }

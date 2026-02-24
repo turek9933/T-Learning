@@ -53,7 +53,9 @@
       "register": "Sign up",
       "goBack": "Go back to the main page",
       "loginSuccess": "Login successful",
-      "errorEmailOrPassword": "Invalid email or password"
+      "errorEmailOrPassword": "Invalid email or password",
+      "errorLogin": "Login failed",
+      "or": "or"
     },
     "register": {
       "title": "Create account",
@@ -88,7 +90,22 @@
       "submit": "Reset password",
       "success": "Password reset link was sent to your email",
       "error": "Failed to generate password reset link",
-      "backToLogin": "Back to login"
+      "goBack": "Go back to the main page"
+    },
+    "resetPassword": {
+      "title": "Reset password",
+      "subtitle": "Enter your new password",
+      "errorToken": "Password reset link is invalid",
+      "error": "Failed to reset password",
+      "errorPasswordMatch": "Passwords do not match",
+      "errorPasswordTooShort": "Password too short - minimum 10 characters",
+      "success": "Password successfully reset",
+      "password": "Password",
+      "passwordPlaceholder": "Enter your password here",
+      "confirmPassword": "Confirm password",
+      "confirmPasswordPlaceholder": "Confirm your password",
+      "submit": "Reset password",
+      "goBack": "Go back to the main page"
     },
     "newPassword": "New password",
     "email": "Email",
