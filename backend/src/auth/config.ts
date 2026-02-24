@@ -17,7 +17,7 @@ export const auth = betterAuth({
     user: {
         modelName: "users",
         fields: {
-            image: "avatar_url"
+            image: "avatarUrl"
         }
     },
     session: {
