@@ -1,0 +1,143 @@
+import type { Config } from "tailwindcss";
+
+const config: Config = {
+  darkMode: "class",
+
+  content: [
+    "./src/app/**/*.{js,ts,jsx,tsx}",
+    "./src/components/**/*.{js,ts,jsx,tsx}",
+  ],
+
+  theme: {
+    extend: {
+      fontFamily: {
+        title: ["Outfit", "sans-serif"],
+        body: ["Livvic", "sans-serif"],
+        accessible: ["Atkinson Hyperlegible", "sans-serif"],
+      },
+
+      fontSize: {
+        xs: ["16px", { lineHeight: "18px" }],
+        sm: ["20px", { lineHeight: "24px" }],
+        md: ["24px", { lineHeight: "32px" }],
+        lg: ["28px", { lineHeight: "40px" }],
+        xl: ["34px", { lineHeight: "48px" }],
+        xxl: ["40px", { lineHeight: "48px" }],
+      },
+      fontWeight: {
+        thin: "100",
+        regular: "400",
+        medium: "500",
+        bold: "700",
+      },
+
+      /**
+       * COLORS - SEMANTIC TOKENS
+       * Alias to CSS variables!
+       */
+      colors: {
+        test: "#ff0000",
+        primary: {
+          DEFAULT: "var(--primary-default)",
+          hover: "var(--primary-hover)",
+          active: "var(--primary-active)",
+          subtle: "var(--primary-subtle)",
+          contrast: "var(--primary-contrast)",
+        },
+
+        accent: {
+          DEFAULT: "var(--accent-default)",
+          hover: "var(--accent-hover)",
+          active: "var(--accent-active)",
+          subtle: "var(--accent-subtle)",
+          contrast: "var(--accent-contrast)",
+        },
+
+        surface: {
+          DEFAULT: "var(--surface-default)",
+          subtle: "var(--surface-subtle)",
+          elevated: "var(--surface-elevated)",
+          overlay: "var(--surface-overlay)",
+          hover: "var(--surface-overlay)",
+          active: "var(--surface-elevated)",
+        },
+
+        border: {
+          DEFAULT: "var(--border-default)",
+          subtle: "var(--border-subtle)",
+          strong: "var(--border-strong)",
+          focus: "var(--border-focus)",
+          error: "var(--border-error)",
+        },
+
+        text: {
+          DEFAULT: "var(--text-primary)",
+          primary: "var(--text-primary)",
+          secondary: "var(--text-secondary)",
+          muted: "var(--text-muted)",
+          placeholder: "var(--text-muted)",
+          disabled: "var(--text-disabled)",
+          inverse: "var(--text-inverse)",
+          contrast: "var(--text-inverse)",
+          link: "var(--text-link)",
+          linkHover: "var(--text-link-hover)",
+        },
+
+        success: {
+          DEFAULT: "var(--success-default)",
+          subtle: "var(--success-subtle)",
+          contrast: "var(--success-contrast)",
+        },
+
+        warning: {
+          DEFAULT: "var(--warning-default)",
+          subtle: "var(--warning-subtle)",
+          contrast: "var(--warning-contrast)",
+        },
+
+        error: {
+          DEFAULT: "var(--error-default)",
+          subtle: "var(--error-subtle)",
+          contrast: "var(--error-contrast)",
+        },
+
+        /**
+         * SHADCN/UI COMPATIBILITY
+         */
+        background: "var(--surface-subtle)",
+        foreground: "var(--text-default)",
+        card: {
+          DEFAULT: "var(--surface-default)",
+          foreground: "var(--text-default)",
+        },
+        popover: {
+          DEFAULT: "var(--surface-default)",
+          foreground: "var(--text-default)",
+        },
+        muted: {
+          DEFAULT: "var(--surface-subtle)",
+          foreground: "var(--text-secondary)",
+        },
+        destructive: {
+          DEFAULT: "var(--error-default)",
+          foreground: "var(--error-contrast)",
+        },
+        input: "var(--border-default)",
+        ring: "var(--primary-default)",
+      },
+
+      borderRadius: {
+        lg: "1rem",
+        md: "0.75rem",
+        sm: "0.5rem",
+      },
+      spacing: {
+        sidebar: "4rem",
+      },
+    },
+  },
+
+  plugins: [],
+};
+
+export default config;
