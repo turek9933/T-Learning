@@ -1,6 +1,6 @@
 "use client"
 import { useTranslations } from "next-intl";
-import { Link } from "@/i18n/routing";
+import { Link, useRouter } from "@/i18n/routing";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import { Mail, Lock, MoveLeft, UserPen, EyeOff, Eye } from "lucide-react";
@@ -9,7 +9,6 @@ import { Banner } from "@/components/ui/Banner";
 import { InputGroup, InputGroupInput, InputGroupAddon, InputGroupButton } from "@/components/ui/input-group";
 import { customToast } from "@/lib/customToast";
 import { authClient } from "@/lib/auth-client";
-import { useRouter } from "@/i18n/routing";
 
 export default function RegisterForm() {
   const t = useTranslations("auth.register");

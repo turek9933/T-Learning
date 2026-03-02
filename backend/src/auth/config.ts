@@ -31,22 +31,40 @@ export const auth = betterAuth({
         enabled: true,
         minPasswordLength: Number(process.env.MIN_PASSWORD_LENGTH) ?? 10,
         sendResetPassword: async ({ user, url, token }) => {
-            const frontendUrl = url.replace(process.env.BETTER_AUTH_BASE_URL!, process.env.CORS_ORIGIN!);
-            console.log(user, url, token);
-            console.log(`Sending for: ${user.email} link:\n${frontendUrl}`);
+            console.log('[reset-password]:', url);
             sendMail({
                 to: user.email,
                 subject: "Reset password",
                 html: `
                 <h1>Reset password</h1>
                 <p>Hi ${user.name},</p>
-                <p>Click <a href="${frontendUrl}">here</a> to reset your password or paste link from below. Link expires in 1 hour</p>
-                <p>${frontendUrl}</p>
+                <p>Click <a href="${url}">here</a> to reset your password or paste link from below. Link expires in 1 hour</p>
+                <p><a href="${url}">${url}</a></p>
                 <p>If you didn't request this, you can ignore this email</p>
                 `,
             });
         },
         resetPasswordTokenExpiresIn: 3600,
+    },
+    emailVerification: {
+        sendVerificationEmail: async ({ user, url, token }, request) => {
+            const urlWithCallback = new URL(url);
+            urlWithCallback.searchParams.set('callbackURL', `${process.env.CORS_ORIGIN}/verify-email?token=${token}`);
+            console.log('[verify-email]:', urlWithCallback);
+            sendMail({
+                to: user.email,
+                subject: "Verify email",
+                html: `
+                <h1>Verify email</h1>
+                <p>Hi ${user.name},</p>
+                <p>Click <a href="${urlWithCallback.toString()}">here</a> to verify your email or paste link from below</p>
+                <p><a href="${urlWithCallback.toString()}">${urlWithCallback.toString()}</a></p>
+                <p>If you didn't request this, you can ignore this email</p>
+                `,
+            });
+        },
+        sendOnSignUp: true,
+        autoSignInAfterVerification: true
     },
     socialProviders: {
         google: {

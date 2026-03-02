@@ -107,6 +107,15 @@
       "submit": "Reset password",
       "goBack": "Go back to the main page"
     },
+    "verifyEmail": {
+      "title": "Verify email",
+      "success": "Email successfully verified",
+      "pending": "Email is being verified",
+      "redirectTimer": "Redirecting in {seconds} seconds",
+      "goBack": "Go back to the main page",
+      "error": "Failed to verify email",
+      "errorVerify": "Failed to verify email"
+    },
     "newPassword": "New password",
     "email": "Email",
     "password": "Password",

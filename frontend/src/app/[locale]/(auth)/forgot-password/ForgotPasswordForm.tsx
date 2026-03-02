@@ -42,7 +42,6 @@ export default function ForgotPasswordForm({ titleProp, subtitleProp, emailProp,
     };
 
     return (
-
     <PageContainer>
       <div className="w-full max-w-md">
         <div className="mb-8 text-center">
@@ -100,5 +99,5 @@ export default function ForgotPasswordForm({ titleProp, subtitleProp, emailProp,
         </div>
       </div>
     </PageContainer>
-    )
+    );
 }
