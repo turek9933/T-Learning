@@ -22,10 +22,13 @@
   "navbar": {
     "changeLanguage": "Zmień jezyk",
     "changeTheme": "Zmień motyw",
+    "changeAvatar": "Zmień avatar",
+    "accountSettings": "Ustawienia konta",
     "light": "Jasny",
     "dark": "Ciemny",
     "accessible": "Dostępny",
     "login":"Zaloguj się",
+    "logout":"Wyloguj się",
     "toggleMenu": "Przełącz menu"
   },
   "validation": {

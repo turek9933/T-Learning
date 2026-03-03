@@ -1,6 +1,7 @@
 import { Resend } from 'resend';
+import { env } from '@/config/env';
 
-const resend = new Resend(process.env.RESEND_API_KEY);
+const resend = new Resend(env.resendApiKey);
 
 export const sendMail = async ({to, subject, html }: {
     to: string,
@@ -8,7 +9,7 @@ export const sendMail = async ({to, subject, html }: {
     html: string
 }) => {
     resend.emails.send({
-        from: `T-Learning <${process.env.CORS_ORIGIN}>`,
+        from: `T-Learning <${env.corsOrigin}>`,
         to,
         subject,
         html,

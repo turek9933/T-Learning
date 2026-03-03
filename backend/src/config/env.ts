@@ -1,0 +1,55 @@
+const required = [
+    "PORT",
+    "NODE_ENV",
+    "CORS_ORIGIN",
+    "DATABASE_URL",
+    "RESEND_API_KEY",
+    "JWT_SECRET",
+    "BETTER_AUTH_SECRET",
+    "BETTER_AUTH_URL",
+    "SESSION_EXPIRATION_DAYS",
+    "SESSION_UPDATE_DAYS",
+    "PASSWORD_MIN_LENGHT",
+    "GOOGLE_CLIENT_ID",
+    "GOOGLE_CLIENT_SECRET",
+    "MINIO_ENDPOINT",
+    "MINIO_PORT",
+    "MINIO_ACCESS_KEY",
+    "MINIO_SECRET_KEY",
+    "MINIO_BUCKET",
+    "STRIPE_SECRET_KEY",
+    "STRIPE_WEBHOOK_SECRET",
+    "ONESIGNAL_APP_ID",
+    "ONESIGNAL_REST_API_KEY",
+] as const;
+
+for (const key of required) {
+    if (!process.env[key]) {
+        throw new Error(`Missing environment variable: ${key}`);
+    }
+}
+
+export const env = {
+    port: process.env.PORT!,
+    nodeEnv: process.env.NODE_ENV!,
+    corsOrigin: process.env.CORS_ORIGIN!,
+    databaseUrl: process.env.DATABASE_URL!,
+    resendApiKey: process.env.RESEND_API_KEY!,
+    jwtSecret: process.env.JWT_SECRET!,
+    betterAuthSecret: process.env.BETTER_AUTH_SECRET!,
+    betterAuthUrl: process.env.BETTER_AUTH_URL!,
+    sessionExpirationDays: process.env.SESSION_EXPIRATION_DAYS!,
+    sessionUpdateDays: process.env.SESSION_UPDATE_DAYS!,
+    passwordMinLenght: process.env.PASSWORD_MIN_LENGHT!,
+    googleClientId: process.env.GOOGLE_CLIENT_ID!,
+    googleClientSecret: process.env.GOOGLE_CLIENT_SECRET!,
+    minioEndpoint: process.env.MINIO_ENDPOINT!,
+    minioPort: process.env.MINIO_PORT!,
+    minioAccessKey: process.env.MINIO_ACCESS_KEY!,
+    minioSecretKey: process.env.MINIO_SECRET_KEY!,
+    minioBucket: process.env.MINIO_BUCKET!,
+    stripeSecretKey: process.env.STRIPE_SECRET_KEY!,
+    stripeWebhookSecret: process.env.STRIPE_WEBHOOK_SECRET!,
+    onesignalAppId: process.env.ONESIGNAL_APP_ID!,
+    onesignalRestApiKey: process.env.ONESIGNAL_REST_API_KEY!,
+}

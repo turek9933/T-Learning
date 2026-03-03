@@ -20,14 +20,16 @@ export default function VerifyEmailView() {
   const [timeLeft, setTimeLeft] = useState(-1);
 
   useEffect(() => {
-  const token = searchParams.get("token");
+    const token = searchParams.get("token");
     if (!token) {
+      customToast.error(t("error"));
       setStatus("error");
       return;
     }
     authClient.verifyEmail({ query: { token } })
       .then(({ error }) => {
         if (error) {
+          console.error(error);
           setStatus("error");
           customToast.error(t("errorVerify"));
           setTimeLeft(-1);
@@ -61,8 +63,11 @@ export default function VerifyEmailView() {
       </div>
 
       <div className="bg-bg rounded-xl p-8 text-center">
-        <p className={`text-lg ${status === "success" ? "text-text" : "text-text-muted"}`}>
-          {status === "success" ? t("success") : t("pending")}
+        <p className={`text-lg
+          ${status === "success" ? "text-text" : // success
+          status === "error" ? "text-error font-bold" : // error
+          "text-text-muted"}`}> {/* pending */}
+          {t(status)}
         </p>
       </div>
 
