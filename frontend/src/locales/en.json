@@ -22,10 +22,13 @@
   "navbar": {
     "changeLanguage": "Change language",
     "changeTheme": "Change theme",
+    "changeAvatar": "Change avatar",
+    "accountSettings": "Account settings",
     "light": "Light",
     "dark": "Dark",
     "accessible": "Accessible",
     "login":"Log in",
+    "logout":"Log out",
     "toggleMenu": "Toggle menu"
   },
   "validation": {
@@ -106,6 +109,15 @@
       "confirmPasswordPlaceholder": "Confirm your password",
       "submit": "Reset password",
       "goBack": "Go back to the main page"
+    },
+    "verifyEmail": {
+      "title": "Verify email",
+      "success": "Email successfully verified",
+      "pending": "Email is being verified",
+      "redirectTimer": "Redirecting in {seconds} seconds",
+      "goBack": "Go back to the main page",
+      "error": "Failed to verify email",
+      "errorVerify": "Failed to verify email"
     },
     "newPassword": "New password",
     "email": "Email",

@@ -22,10 +22,13 @@
   "navbar": {
     "changeLanguage": "Cambia lingua",
     "changeTheme": "Cambia tema",
+    "changeAvatar": "Cambia avatar",
+    "accountSettings": "Impostazioni account",
     "light": "Luce",
     "dark": "Scuro",
     "accessible": "Accessibile",
     "login":"Accedi",
+    "logout":"Esci",
     "toggleMenu": "Attiva menu"
   },
   "validation": {
@@ -106,6 +109,15 @@
       "confirmPasswordPlaceholder": "Conferma la tua password",
       "submit": "Reimposta password",
       "goBack": "Torna alla homepage"
+    },
+    "verifyEmail": {
+      "title": "Verifica email",
+      "success": "Email verificata con successo",
+      "pending": "Email in corso di verifica",
+      "redirectTimer": "Reindirizzamento in {seconds} secondi",
+      "goBack": "Torna alla homepage",
+      "error": "Impossibile verificare l'email",
+      "errorVerify": "Impossibile verificare l'email"
     },
     "newPassword": "Nuova password",
     "email": "Email",

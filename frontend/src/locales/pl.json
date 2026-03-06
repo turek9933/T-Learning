@@ -22,10 +22,13 @@
   "navbar": {
     "changeLanguage": "Zmień jezyk",
     "changeTheme": "Zmień motyw",
+    "changeAvatar": "Zmień avatar",
+    "accountSettings": "Ustawienia konta",
     "light": "Jasny",
     "dark": "Ciemny",
     "accessible": "Dostępny",
     "login":"Zaloguj się",
+    "logout":"Wyloguj się",
     "toggleMenu": "Przełącz menu"
   },
   "validation": {
@@ -81,7 +84,6 @@
       "errorPasswordTooShort": "Hasło jest za krótkie - minimum 10 znaków",
       "errorRegister": "Rejestracja nie powiodła sie"
     },
-    
     "logout": "Wyloguj się",
     "forgotPassword": {
       "title": "Resetuj hasło",
@@ -107,6 +109,15 @@
       "confirmPasswordPlaceholder": "Wpisz ponownie swoje hasło",
       "submit": "Zresetuj hasło",
       "goBack": "Powrót do strony głównej"
+    },
+    "verifyEmail": {
+      "title": "Weryfikacja emaila",
+      "success": "Email został zweryfikowany",
+      "pending": "Email jest w trakcie weryfikacji",
+      "redirectTimer": "Przekierowanie za {seconds} sekund",
+      "goBack": "Powrót do strony głównej",
+      "error": "Link do weryfikacji emaila jest nieprawidłowy",
+      "errorVerify": "Nie udało się zweryfikować emaila"
     },
     "newPassword": "Nowe hasło",
     "email": "Email",
