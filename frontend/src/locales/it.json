@@ -139,6 +139,9 @@
     "sendResetLink": "Invia link di reimpostazione",
     "backToLogin": "Torna al login"
   },
+  "dashboard": {
+    "title": "Pulpit"
+  },
   "landing": {
     "heroTitle": "Piattaforma modulare per l'apprendimento online",
     "heroSubtitle": "Un'alternativa intuitiva, leggera ed efficiente alle piattaforme educative complesse",

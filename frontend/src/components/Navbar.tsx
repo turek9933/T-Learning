@@ -13,6 +13,7 @@ import {
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { authClient } from "@/lib/auth-client";
+import Image from "next/image";
 
 export function Navbar() {
     const t = useTranslations("navbar");
@@ -108,10 +109,12 @@ export function Navbar() {
                             size="icon"
                             className="h-7 w-7 p-0 rounded-full">
                                 {session.user.image ? (
-                                    <img
+                                    <Image
                                     src={session.user.image}
                                     alt={session.user.name ?? ""}
-                                    className="h-7 w-7 rounded-full object-cover cursor-pointer"
+                                    width={28}
+                                    height={28}
+                                    className="rounded-full object-cover"
                                     />
                                 ) : (
                                     <div className="h-7 w-7 rounded-full bg-primary hover:bg-primary-hover flex items-center justify-center text-text-contrast text-sm font-bold cursor-pointer">
@@ -171,10 +174,12 @@ export function Navbar() {
                     {session && (
                         <div className="flex items-center gap-3 px-2 py-1 border-border border-b">
                             {session.user.image ? (
-                                <img
+                                <Image
                                 src={session.user.image}
                                 alt={session.user.name ?? ""}
-                                className="h-7 w-7 rounded-full object-cover"
+                                width={28}
+                                height={28}
+                                className="rounded-full object-cover"
                                 />
                             ) : (
                                 <div className="h-7 w-7 rounded-full bg-primary flex items-center justify-center text-text-contrast text-sm font-bold">

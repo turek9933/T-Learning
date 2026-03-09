@@ -1,19 +1,16 @@
 import { betterAuth } from "better-auth";
 import { db } from "@/db/index";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
-import { users, sessions, accounts, verifications } from "@/db/schema";
+import * as schema from "@/db/schema";
 import { sendMail } from "@/lib/email";
 import { env } from "@/config/env";
+import { organization } from "better-auth/plugins";
+import { ac, viewer, member, admin, owner } from "@/lib/permissions";
 
 export const auth = betterAuth({
     database: drizzleAdapter(db, {
         provider: "pg",
-        schema: {
-            users: users,
-            sessions: sessions,
-            accounts: accounts,
-            verifications: verifications,
-        },
+        schema: schema,
     }),
     user: {
         modelName: "users",
@@ -24,7 +21,7 @@ export const auth = betterAuth({
     session: {
         modelName: "sessions",
         expiresIn: (Number(env.sessionExpirationDays) ?? 14 ) * 60 * 60 * 24,// Session expires in (SESSION_EXPIRATION_DAYS or 14) days
-        updateAge: (Number(env.sessionUpdateDays) ?? 2 ) * 60 * 24,// Update session age every (SESSION_UPDATE_DAYS or 2) days
+        updateAge: (Number(env.sessionUpdateDays) ?? 2 ) * 60 * 60 * 24,// Update session age every (SESSION_UPDATE_DAYS or 2) days
     },
     account: { modelName: "accounts" },
     verification: { modelName: "verifications" },
@@ -76,5 +73,81 @@ export const auth = betterAuth({
     baseURL: env.betterAuthUrl,
     trustedOrigins: [
         env.corsOrigin
+    ],
+    plugins : [
+        organization({
+            ac,
+            roles: { owner, admin, member, viewer },
+            
+            allowUserToCreateOrganization: async ({ user }) => {
+                return true;//TODO check if user is allowed to create organization
+            },
+
+            schema: {
+                organization: {
+                    modelName: "workspaces",
+                    additionalFields: {
+                        type: {
+                            type: 'string',
+                            defaultValue: 'single',
+                            input: true,
+                        },
+                        status: {
+                            type: 'string',
+                            defaultValue: 'draft',
+                            input: true,
+                        },
+                        price: {
+                            type: 'number',
+                            required: false,
+                            input: true,
+                        },
+                    },
+                },
+                member: {
+                    modelName: "workspaceMembers",
+                    fields: {
+                        organizationId: "workspaceId",
+                    },
+                    additionalFields: {
+                        hasPaid: {
+                            type: 'boolean',
+                            required: false,
+                        },
+                        expiresAt: {
+                            type: 'date',
+                            required: false,
+                        },
+                    },
+                },
+                invitation: {
+                    modelName: "workspaceInvitations",
+                    fields: {
+                        organizationId: "workspaceId",
+                    },
+                },
+                session: {
+                    fields: {
+                        activeOrganizationId: "activeWorkspaceId",
+                    },
+                },
+            },
+
+            async sendInvitationEmail(data) {
+                const invitationLink = `${env.corsOrigin}/invite/${data.id}`;
+                sendMail({
+                    to: data.email,
+                    subject: `Invitation to ${data.organization.name}`,
+                    html: `
+                    <h1>Invitation to Workspace</h1>
+                    <p>Hi,</p>
+                    <p>User: ${data.inviter.user.name} has invited you to join Workspace: ${data.organization.name}</p>
+                    <p>Click <a href="${invitationLink}">here</a> to join workspace or paste link from below</p>
+                    <p><a href="${invitationLink}">${invitationLink}</a></p>
+                    <p>If you didn't request this, you can ignore this email</p>
+                    `,
+                });
+            }
+        }),
     ],
 });

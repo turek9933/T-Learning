@@ -139,6 +139,9 @@
     "sendResetLink": "Send reset link",
     "backToLogin": "Back to login"
   },
+  "dashboard": {
+    "title": "Dashboard"
+  },
   "landing": {
     "heroTitle": "Modular platform for online learning",
     "heroSubtitle": "An intuitive, lightweight, and efficient alternative to complex educational platforms",
