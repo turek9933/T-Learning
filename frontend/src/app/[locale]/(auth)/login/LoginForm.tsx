@@ -11,6 +11,7 @@ import { InputGroup, InputGroupInput, InputGroupAddon, InputGroupButton } from "
 import { Checkbox } from "@/components/ui/checkbox";
 import { authClient } from "@/lib/auth-client";
 import GoogleIcon from "@/components/ui/GoogleIcon";
+import { env } from "@/lib/env";
 
 export default function LoginForm() {
   const t = useTranslations("auth.login");
@@ -58,7 +59,7 @@ export default function LoginForm() {
     try {
       await authClient.signIn.social({
         provider: "google",
-        callbackURL: `${process.env.NEXT_PUBLIC_APP_URL}/dashboard`,
+        callbackURL: `${env.appUrl}/dashboard`,
       }, {
         onSuccess: () => {
           customToast.success(t("loginSuccess"));

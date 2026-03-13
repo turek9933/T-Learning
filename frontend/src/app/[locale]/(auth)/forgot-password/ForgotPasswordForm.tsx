@@ -9,6 +9,7 @@ import { InputGroup, InputGroupInput, InputGroupAddon } from "@/components/ui/in
 import { Link } from "@/i18n/routing";
 import { Button } from "@/components/ui/button";
 import { Mail, MoveLeft } from "lucide-react";
+import { env } from "@/lib/env";
 
 interface ForgotPasswordData {
     titleProp: string;
@@ -32,7 +33,7 @@ export default function ForgotPasswordForm({ titleProp, subtitleProp, emailProp,
       try {
         const { error } = await authClient.requestPasswordReset({
           email: email,
-          redirectTo: `${process.env.NEXT_PUBLIC_APP_URL}/reset-password`,
+          redirectTo: `${env.appUrl}/reset-password`,
         });
         customToast.success(successProp);
       } catch (error) {

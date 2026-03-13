@@ -34,10 +34,14 @@
   "validation": {
     "required": "To pole jest wymagane",
     "invalidEmail": "Podaj poprawny adres email",
-    "passwordTooShort": "Hasło musi mieć minimum 10 znaków",
+    "passwordTooShort": "Hasło musi mieć minimum {minLength} znaków",
     "passwordsMustMatch": "Hasła muszą być identyczne",
     "nameTooShort": "Dane muszą mieć co najmniej 2 znaki",
-    "selectRole": "Wybierz rolę"
+    "workspaceNameTooShort": "Nazwa musi mieć co najmniej 3 znaki",
+    "workspaceNameTooLong": "Nazwa może mieć co najwyżej {nameMaxLength} znaki",
+    "workspaceDescriptionTooLong": "Opis może mieć co najwyżej {descriptionMaxLength} znaków",
+    "workspacePriceInvalid": "Podaj prawidłową cene",
+    "workspacePriceTooLow": "Cena musi być dodatnia"
   },
   "auth": {
     "login": {
@@ -140,7 +144,20 @@
     "backToLogin": "Powrót do logowania"
   },
   "dashboard": {
-    "title": "Pulpit"
+    "title": "Pulpit",
+    "createWorkspace": "Stwórz przestrzeń roboczą",
+    "workspace": {
+      "new": {
+        "title": "Stwórz nową przestrzeń roboczą",
+        "subtitle": "Przestrzenia robocza to miejsce na materiały, zadania oraz ogłoszenia",
+        "name": "Nazwa",
+        "namePlaceholder": "Wpisz tutaj nazwę przestrzeni roboczej",
+        "description": "Opis",
+        "descriptionPlaceholder": "Wpisz tutaj opis przestrzeni roboczej",
+        "create": "Stwórz",
+        "cancel": "Anuluj"
+      }
+    }
   },
   "landing": {
     "heroTitle": "Modułowa platforma do nauczania online",

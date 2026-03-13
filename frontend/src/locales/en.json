@@ -34,10 +34,14 @@
   "validation": {
     "required": "This field is required",
     "invalidEmail": "Please enter a valid email address",
-    "passwordTooShort": "Password must be at least 10 characters",
+    "passwordTooShort": "Password must be at least {minLength} characters",
     "passwordsMustMatch": "Passwords must match",
     "nameTooShort": "Name must be at least 2 characters",
-    "selectRole": "Please select a role"
+    "workspaceNameTooShort": "Workspace name must be at least 3 characters",
+    "workspaceNameTooLong": "Workspace name must be at most {nameMaxLength} characters",
+    "workspaceDescriptionTooLong": "Workspace description must be at most {descriptionMaxLength} characters",
+    "workspacePriceInvalid": "Please enter a valid price",
+    "workspacePriceTooLow": "Price must be positive"
   },
   "auth": {
     "login": {
@@ -140,7 +144,20 @@
     "backToLogin": "Back to login"
   },
   "dashboard": {
-    "title": "Dashboard"
+    "title": "Dashboard",
+    "createWorkspace": "Create workspace",
+    "workspace": {
+      "new": {
+        "title": "Create new workspace",
+        "subtitle": "Workspace is a place to store materials, tasks and announcements",
+        "name": "Name",
+        "namePlaceholder": "Enter workspace name",
+        "description": "Description",
+        "descriptionPlaceholder": "Enter workspace description",
+        "create": "Create",
+        "cancel": "Cancel"
+      }
+    }
   },
   "landing": {
     "heroTitle": "Modular platform for online learning",

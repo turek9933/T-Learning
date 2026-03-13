@@ -34,10 +34,14 @@
   "validation": {
     "required": "Questo campo è obbligatorio",
     "invalidEmail": "Inserisci un indirizzo email valido",
-    "passwordTooShort": "La password deve contenere almeno 10 caratteri",
+    "passwordTooShort": "La password deve contenere almeno {minLength} caratteri",
     "passwordsMustMatch": "Le password devono corrispondere",
     "nameTooShort": "Il nome deve contenere almeno 2 caratteri",
-    "selectRole": "Seleziona un ruolo"
+    "workspaceNameTooShort": "La workspace deve avere almeno 3 caratteri",
+    "workspaceNameTooLong": "La workspace deve avere al massimo {nameMaxLength} caratteri",
+    "workspaceDescriptionTooLong": "La workspace deve avere al massimo {descriptionMaxLength} caratteri",
+    "workspacePriceInvalid": "Inserisci un prezzo valido",
+    "workspacePriceTooLow": "Il prezzo deve essere positivo"
   },
   "auth": {
     "login": {
@@ -140,7 +144,20 @@
     "backToLogin": "Torna al login"
   },
   "dashboard": {
-    "title": "Pulpit"
+    "title": "Pulpit",
+    "createWorkspace": "Crea workspace",
+    "workspace": {
+      "new": {
+        "title": "Crea nuova workspace",
+        "subtitle": "Workspace is a place to store materials, tasks and announcements",
+        "name": "Nome",
+        "namePlaceholder": "Inserisci qui il nome della workspace",
+        "description": "Descrizione",
+        "descriptionPlaceholder": "Inserisci qui la descrizione della workspace",
+        "create": "Crea",
+        "cancel": "Annulla"
+      }
+    }
   },
   "landing": {
     "heroTitle": "Piattaforma modulare per l'apprendimento online",

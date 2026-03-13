@@ -10,6 +10,11 @@ import { Link, useRouter } from "@/i18n/routing";
 import { Button } from "@/components/ui/button";
 import { Eye, EyeOff, Lock, MoveLeft } from "lucide-react";
 import { useSearchParams } from "next/navigation";
+import { env } from "@/lib/env";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import { useValidationSchemas, NewPasswordFormData } from "@/lib/validation";
 
 interface ResetPasswordData {
     titleProp: string;
@@ -32,9 +37,17 @@ export default function ResetPasswordForm({ titleProp, subtitleProp, passwordPro
     const router = useRouter();
     const token = searchParams.get("token");
 
-    const [password, setPassword] = useState("");
-    const [confirmPassword, setConfirmPassword] = useState("");
-    const [loading, setLoading] = useState(false);
+    const {
+        register,
+        handleSubmit,
+        formState: { errors, isSubmitting },
+    } = useForm<NewPasswordFormData>({
+        resolver: zodResolver(useValidationSchemas().newPasswordSchema),
+    });
+
+    // const [password, setPassword] = useState("");
+    // const [confirmPassword, setConfirmPassword] = useState("");
+    // const [loading, setLoading] = useState(false);
     const [errorField, setErrorField] = useState("");
     const [showPassword, setShowPassword] = useState(false);
     const [showConfirmPassword, setShowConfirmPassword] = useState(false);
@@ -60,33 +73,44 @@ export default function ResetPasswordForm({ titleProp, subtitleProp, passwordPro
         );
     }
 
-    const handleSubmit = async (e: React.FormEvent) => {
-      e.preventDefault();
-      setErrorField("");
-      
-      if (password !== confirmPassword) {
-        customToast.error(errorPasswordMatchProp);
-        setErrorField(errorPasswordMatchProp);
-        return;
-      }
-      if (password.length < Number(process.env.NEXT_PUBLIC_PASSWORD_MIN_LENGTH)) {
-        customToast.error(errorPasswordTooShortProp);
-        setErrorField(errorPasswordTooShortProp);
-        return;
-      }
-      setLoading(true);
-      try {
-        const { error } = await authClient.resetPassword({
-          newPassword: password,
-          token
-        });
+    const onSubmit = async (data: NewPasswordFormData) => {
+      const { error } = await authClient.resetPassword({
+        newPassword: data.password,
+        token
+      })
+      if (error) {
+        customToast.error(errorProp);
+      } else {
         customToast.success(successProp);
         router.push("/login");
-      } catch (error) {
-        customToast.error(errorProp);
-        setErrorField(errorProp);
       }
-      setLoading(false);
+
+      // e.preventDefault();
+      // setErrorField("");
+      
+      // if (password !== confirmPassword) {
+      //   customToast.error(errorPasswordMatchProp);
+      //   setErrorField(errorPasswordMatchProp);
+      //   return;
+      // }
+      // if (password.length < Number(env.passwordMinLength)) {
+      //   customToast.error(errorPasswordTooShortProp);
+      //   setErrorField(errorPasswordTooShortProp);
+      //   return;
+      // }
+      // setLoading(true);
+      // try {
+      //   const { error } = await authClient.resetPassword({
+      //     newPassword: password,
+      //     token
+      //   });
+      //   customToast.success(successProp);
+      //   router.push("/login");
+      // } catch (error) {
+      //   customToast.error(errorProp);
+      //   setErrorField(errorProp);
+      // }
+      // setLoading(false);
     };
 
     return (
@@ -104,7 +128,7 @@ export default function ResetPasswordForm({ titleProp, subtitleProp, passwordPro
         </div>
 
         <div className="bg-bg border border-border rounded-xl p-8">
-          <form onSubmit={handleSubmit} className="space-y-8">
+          <form onSubmit={handleSubmit(onSubmit)} className="space-y-8">
             <div>
               <label htmlFor="password" className="block text-sm font-normal text-text mb-2">
                 {passwordProp}
@@ -113,8 +137,9 @@ export default function ResetPasswordForm({ titleProp, subtitleProp, passwordPro
                 <InputGroupInput
                 id="password"
                 type={showPassword ? "text" : "password"}
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
+                // value={password}
+                // onChange={(e) => setPassword(e.target.value)}
+                {...register("password")}
                 placeholder={passwordPlaceholderProp}
                 className="w-full font-normal"
                 required
@@ -142,8 +167,9 @@ export default function ResetPasswordForm({ titleProp, subtitleProp, passwordPro
                 <InputGroupInput
                 id="confirmPassword"
                 type={showConfirmPassword ? "text" : "password"}
-                value={confirmPassword}
-                onChange={(e) => setConfirmPassword(e.target.value)}
+                // value={confirmPassword}
+                // onChange={(e) => setConfirmPassword(e.target.value)}
+                {...register("confirmPassword")}
                 placeholder={confirmPasswordPlaceholderProp}
                 className="w-full font-normal"
                 required
@@ -166,7 +192,8 @@ export default function ResetPasswordForm({ titleProp, subtitleProp, passwordPro
             <Button
             id="reset-button"
             type="submit"
-            disabled={loading}
+            // disabled={loading}
+            disabled={isSubmitting}
             className="w-full bg-primary hover:bg-primary-hover focus:bg-primary-hover text-text-contrast py-3"
             >
               {submitProp}
@@ -186,6 +213,5 @@ export default function ResetPasswordForm({ titleProp, subtitleProp, passwordPro
         </div>
       </div>
     </PageContainer>
-    )
-
+    );
 }
