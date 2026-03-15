@@ -38,6 +38,7 @@
     "passwordsMustMatch": "Le password devono corrispondere",
     "nameTooShort": "Il nome deve contenere almeno 2 caratteri",
     "workspaceNameTooShort": "La workspace deve avere almeno 3 caratteri",
+    "workSpaceSlugInvalid": "La workspace deve essere composta da lettere, numeri e simboli - e iniziare con una lettera",
     "workspaceNameTooLong": "La workspace deve avere al massimo {nameMaxLength} caratteri",
     "workspaceDescriptionTooLong": "La workspace deve avere al massimo {descriptionMaxLength} caratteri",
     "workspacePriceInvalid": "Inserisci un prezzo valido",
@@ -60,6 +61,7 @@
       "register": "Registrati",
       "goBack": "Torna alla homepage",
       "loginSuccess": "Accesso avvenuto con successo",
+      "googlePopup": "Accedi con Google",
       "errorEmailOrPassword": "Email o password errata",
       "errorLogin": "Accesso fallito",
       "or": "o"
@@ -83,7 +85,9 @@
       "registering": "Registrazione in corso...",
       "goBack": "Torna alla homepage",
       "registerSuccess": "Registrazione avvenuta con successo",
+      "errorEmail": "Inserisci un indirizzo email valido",
       "errorEmailTaken": "Questa email viene gia utilizzata",
+      "errorPassword": "Inserisci una password valida",
       "errorPasswordMatch": "Le password non corrispondono",
       "errorPasswordTooShort": "La password deve contenere almeno 10 caratteri",
       "errorRegister": "Registrazione fallita"

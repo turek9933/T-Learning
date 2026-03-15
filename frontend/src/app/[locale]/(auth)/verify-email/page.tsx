@@ -1,12 +1,12 @@
-import { getAuthMessages } from "@/lib/messages";
-import { NextIntlClientProvider } from "next-intl";
+// import { getAuthMessages } from "@/lib/messages";
+// import { NextIntlClientProvider } from "next-intl";
 import VerifyEmailView from "./VerifyEmailView";
 
 export default async function RegisterPage() {
-  const authMessages = await getAuthMessages();
+  // const authMessages = await getAuthMessages();
   return (
-    <NextIntlClientProvider messages={authMessages}>
+    // <NextIntlClientProvider messages={authMessages}>
       <VerifyEmailView />
-    </NextIntlClientProvider>
+    // </NextIntlClientProvider>
   );
 }

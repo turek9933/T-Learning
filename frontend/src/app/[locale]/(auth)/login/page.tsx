@@ -1,12 +1,12 @@
-import { getAuthMessages } from "@/lib/messages";
-import { NextIntlClientProvider } from "next-intl";
+// import { getAuthMessages } from "@/lib/messages";
+// import { NextIntlClientProvider } from "next-intl";
 import LoginForm from "./LoginForm";
 
 export default async function LoginPage() {
-  const authMessages = await getAuthMessages();
+  // const authMessages = await getAuthMessages();
   return (
-    <NextIntlClientProvider messages={authMessages}>
+    // <NextIntlClientProvider messages={authMessages}>
       <LoginForm />
-    </NextIntlClientProvider>
+    // </NextIntlClientProvider>
   );
 }

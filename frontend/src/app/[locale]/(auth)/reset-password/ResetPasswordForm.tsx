@@ -10,10 +10,8 @@ import { Link, useRouter } from "@/i18n/routing";
 import { Button } from "@/components/ui/button";
 import { Eye, EyeOff, Lock, MoveLeft } from "lucide-react";
 import { useSearchParams } from "next/navigation";
-import { env } from "@/lib/env";
-import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
+import { useForm, type FieldErrors } from "react-hook-form";
 import { useValidationSchemas, NewPasswordFormData } from "@/lib/validation";
 
 interface ResetPasswordData {
@@ -33,6 +31,7 @@ interface ResetPasswordData {
 }
 
 export default function ResetPasswordForm({ titleProp, subtitleProp, passwordProp, passwordPlaceholderProp, confirmPasswordProp, confirmPasswordPlaceholderProp, submitProp, successProp, errorProp, errorTokenProp, errorPasswordMatchProp, errorPasswordTooShortProp, goBackProp }: ResetPasswordData) {
+    const { newPasswordSchema } = useValidationSchemas();
     const searchParams = useSearchParams();
     const router = useRouter();
     const token = searchParams.get("token");
@@ -42,13 +41,8 @@ export default function ResetPasswordForm({ titleProp, subtitleProp, passwordPro
         handleSubmit,
         formState: { errors, isSubmitting },
     } = useForm<NewPasswordFormData>({
-        resolver: zodResolver(useValidationSchemas().newPasswordSchema),
+        resolver: zodResolver(newPasswordSchema),
     });
-
-    // const [password, setPassword] = useState("");
-    // const [confirmPassword, setConfirmPassword] = useState("");
-    // const [loading, setLoading] = useState(false);
-    const [errorField, setErrorField] = useState("");
     const [showPassword, setShowPassword] = useState(false);
     const [showConfirmPassword, setShowConfirmPassword] = useState(false);
     
@@ -73,44 +67,26 @@ export default function ResetPasswordForm({ titleProp, subtitleProp, passwordPro
         );
     }
 
+    const onError = (err: FieldErrors<NewPasswordFormData>) => {
+      if (err.password) {
+        customToast.error(err.password.message ?? errorProp);
+      }
+      else if (err.confirmPassword) {
+        customToast.error(err.confirmPassword.message ?? errorProp);
+      }
+    }
+
     const onSubmit = async (data: NewPasswordFormData) => {
       const { error } = await authClient.resetPassword({
         newPassword: data.password,
         token
-      })
+      });
       if (error) {
         customToast.error(errorProp);
       } else {
         customToast.success(successProp);
         router.push("/login");
       }
-
-      // e.preventDefault();
-      // setErrorField("");
-      
-      // if (password !== confirmPassword) {
-      //   customToast.error(errorPasswordMatchProp);
-      //   setErrorField(errorPasswordMatchProp);
-      //   return;
-      // }
-      // if (password.length < Number(env.passwordMinLength)) {
-      //   customToast.error(errorPasswordTooShortProp);
-      //   setErrorField(errorPasswordTooShortProp);
-      //   return;
-      // }
-      // setLoading(true);
-      // try {
-      //   const { error } = await authClient.resetPassword({
-      //     newPassword: password,
-      //     token
-      //   });
-      //   customToast.success(successProp);
-      //   router.push("/login");
-      // } catch (error) {
-      //   customToast.error(errorProp);
-      //   setErrorField(errorProp);
-      // }
-      // setLoading(false);
     };
 
     return (
@@ -128,17 +104,15 @@ export default function ResetPasswordForm({ titleProp, subtitleProp, passwordPro
         </div>
 
         <div className="bg-bg border border-border rounded-xl p-8">
-          <form onSubmit={handleSubmit(onSubmit)} className="space-y-8">
+          <form onSubmit={handleSubmit(onSubmit, onError)} className="space-y-8">
             <div>
               <label htmlFor="password" className="block text-sm font-normal text-text mb-2">
                 {passwordProp}
               </label>
-              <InputGroup className={`bg-bg-muted py-6 ${errorField !== "" ? "ring-2 ring-error border-error" : ""}`}>
+              <InputGroup className={`bg-bg-muted py-6 ${errors.password ? "ring-2 ring-error border-error" : ""}`}>
                 <InputGroupInput
                 id="password"
                 type={showPassword ? "text" : "password"}
-                // value={password}
-                // onChange={(e) => setPassword(e.target.value)}
                 {...register("password")}
                 placeholder={passwordPlaceholderProp}
                 className="w-full font-normal"
@@ -157,18 +131,18 @@ export default function ResetPasswordForm({ titleProp, subtitleProp, passwordPro
                   </InputGroupButton>
                 </InputGroupAddon>
               </InputGroup>
-              {errorField !== "" ? <p className="text-error text-sm mt-2">{errorField}</p> : ""}
+              {errors.password && (
+                <p className="text-error text-sm mt-2">{errors.password.message}</p>
+              )}
             </div>
             <div>
               <label htmlFor="password" className="block text-sm font-normal text-text mb-2">
                 {confirmPasswordProp}
               </label>
-              <InputGroup className={`bg-bg-muted py-6 ${errorField !== "" ? "ring-2 ring-error border-error" : ""}`}>
+              <InputGroup className={`bg-bg-muted py-6 ${errors.confirmPassword ? "ring-2 ring-error border-error" : ""}`}>
                 <InputGroupInput
                 id="confirmPassword"
                 type={showConfirmPassword ? "text" : "password"}
-                // value={confirmPassword}
-                // onChange={(e) => setConfirmPassword(e.target.value)}
                 {...register("confirmPassword")}
                 placeholder={confirmPasswordPlaceholderProp}
                 className="w-full font-normal"
@@ -192,7 +166,6 @@ export default function ResetPasswordForm({ titleProp, subtitleProp, passwordPro
             <Button
             id="reset-button"
             type="submit"
-            // disabled={loading}
             disabled={isSubmitting}
             className="w-full bg-primary hover:bg-primary-hover focus:bg-primary-hover text-text-contrast py-3"
             >

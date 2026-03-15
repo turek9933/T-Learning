@@ -12,46 +12,65 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { authClient } from "@/lib/auth-client";
 import GoogleIcon from "@/components/ui/GoogleIcon";
 import { env } from "@/lib/env";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm, Controller, type FieldErrors } from "react-hook-form";
+import { useValidationSchemas, LoginFormData } from "@/lib/validation";
+
 
 export default function LoginForm() {
   const t = useTranslations("auth.login");
+  const { loginSchema } = useValidationSchemas();
 
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [rememberMe, setRememberMe] = useState(false);
-  const [loading, setLoading] = useState(false);
-  const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
   const [showPassword, setShowPassword] = useState(false);
+  const [loading, setLoading] = useState(false);
 
-  const handleLogin = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setLoading(true);
+  const {
+    register,
+    handleSubmit,
+    control,
+    setError,
+    formState: { errors, isSubmitting },
+  } = useForm<LoginFormData>({
+    defaultValues: {
+        email: '',
+        password: '',
+        rememberMe: false,
+    },
+    resolver: zodResolver(loginSchema),
+  })
 
-    try {
-      const { error } = await authClient.signIn.email({
-        email,
-        password,
-        rememberMe: rememberMe,
-        callbackURL: "/dashboard"
-      }, {
-        onSuccess: () => {
-          customToast.success(t("loginSuccess"));
-        },
-        onError: (context) => {
-          if (context.error.code === "INVALID_EMAIL_OR_PASSWORD") {
-            setFieldErrors({ emailOrPassword: t("errorEmailOrPassword") });
-            customToast.error(t("errorEmailOrPassword"));
-          } else {
-            customToast.error(context.error.message);
-          }
-        }
-      });
-    } catch (error) {
-      console.error(error);
+  const onError = (err: FieldErrors<LoginFormData>) => {
+    if (err.email) {
+      customToast.error(err.email.message ?? t("errorEmail"));
+    } else if (err.password) {
+      customToast.error(err.password.message ?? t("errorPassword"));
+    } else {
       customToast.error(t("errorLogin"));
     }
+  }
 
-    setLoading(false);
+  const onSubmit = async (data: LoginFormData) => {
+    const { error } = await authClient.signIn.email({
+      email: data.email,
+      password: data.password,
+      rememberMe: data.rememberMe,
+      callbackURL: "/dashboard"
+    });
+    if (error) {
+      switch (error.code) {
+        case "INVALID_EMAIL_OR_PASSWORD":
+          setError("email", { message: t("errorEmailOrPassword") });
+          setError("password", { message: t("errorEmailOrPassword") });
+          customToast.error(t("errorEmailOrPassword"));
+          break;
+        default:
+          customToast.error(t("errorLogin"));
+          break;
+      }
+      return;
+    } else {
+      customToast.success(t("loginSuccess"));
+    }
   }
 
   const handleLoginWithGoogle = async () => {
@@ -62,21 +81,16 @@ export default function LoginForm() {
         callbackURL: `${env.appUrl}/dashboard`,
       }, {
         onSuccess: () => {
-          customToast.success(t("loginSuccess"));
+          customToast.success(t("googlePopup"));
         },
         onError: (context) => {
           customToast.error(context.error.message);
         }
       });
     } catch (error) {
-      console.error(error);
       customToast.error(t("errorLogin"));
     }
     setLoading(false);
-  }
-
-  function toggleRememberMe () {
-    setRememberMe(!rememberMe);
   }
 
   return (
@@ -93,17 +107,16 @@ export default function LoginForm() {
         </div>
 
         <div className="bg-bg border border-border rounded-xl p-8">
-          <form onSubmit={handleLogin} className="space-y-8">
+          <form onSubmit={handleSubmit(onSubmit, onError)} className="space-y-8">
             <div>
               <label htmlFor="email" className="block text-sm font-normal text-text mb-2">
                 {t("email")}
               </label>
-                <InputGroup className={`bg-bg-muted py-6 ${fieldErrors.email ? "ring-2 ring-error border-error" : ""}`}>
+                <InputGroup className={`bg-bg-muted py-6 ${errors.email ? "ring-2 ring-error border-error" : ""}`}>
                   <InputGroupInput
                   id="email"
                   type="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
+                  {...register("email")}
                   placeholder={t("emailPlaceholder")}
                   className="w-full font-normal"
                   required
@@ -118,12 +131,11 @@ export default function LoginForm() {
               <label htmlFor="password" className="block text-sm font-normal text-text mb-2">
                 {t("password")}
               </label>
-              <InputGroup className={`bg-bg-muted py-6 ${fieldErrors.email ? "ring-2 ring-error border-error" : ""}`}>
+              <InputGroup className={`bg-bg-muted py-6 ${errors.password ? "ring-2 ring-error border-error" : ""}`}>
                 <InputGroupInput
                 id="password"
                 type={showPassword ? "text" : "password"}
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
+                {...register("password")}
                 placeholder={t("passwordPlaceholder")}
                 className="w-full font-normal"
                 required
@@ -142,17 +154,22 @@ export default function LoginForm() {
                 </InputGroupAddon>
               </InputGroup>
 
-              {fieldErrors.emailOrPassword && <p className="text-error text-sm mt-2">{fieldErrors.emailOrPassword}</p>}
+              {errors.password && <p className="text-error text-sm mt-2">{errors.password.message}</p>}
             </div>
 
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
-                <Checkbox
-                id="remember"
-                checked={rememberMe}
-                onCheckedChange={toggleRememberMe}
-                className="cursor-pointer w-4 h-4 focus:ring-primary focus:ring-offset-4"
-                />
+                <Controller
+                name="rememberMe"
+                control={control}
+                render={({ field }) => (
+                  <Checkbox
+                  id="remember"
+                  checked={field.value}
+                  onCheckedChange={field.onChange}
+                  className="cursor-pointer w-4 h-4 focus:ring-primary focus:ring-offset-4"
+                  />
+                )}/>
                 <span className="text-sm text-text-secondary">
                   {t("rememberMe")}
                 </span>
@@ -169,10 +186,10 @@ export default function LoginForm() {
             <Button
             id="login-button"
             type="submit"
-            disabled={loading}
+            disabled={isSubmitting}
             className="w-full bg-primary hover:bg-primary-hover focus:bg-primary-hover text-text-contrast py-3"
             >
-              {loading ? t("loggingIn") : t("login")}
+              {isSubmitting ? t("loggingIn") : t("login")}
             </Button>
           </form>
 

@@ -1,5 +1,4 @@
 // All required environment variables are checked and redefined in the build process
-// Prefix NEXT_PUBLIC_ is currently required, but handled in the build process
 
 const required = [
     "NEXT_PUBLIC_APP_URL",
@@ -9,23 +8,17 @@ const required = [
     "NEXT_PUBLIC_WORKSPACE_DESCRIPTION_MAX_LENGTH"
 ] as const;
 
-// console.log('[env]:', process.env);
-
-console.warn('[appUrl]:', process.env.NEXT_PUBLIC_APP_URL);
-
-for (const key of required) {
-        console.warn(`Missing environment variable: ${key}, [is present]: ${!!process.env[key]}`);
-        console.warn(`[Dynamic is present]: ${!process.env[key]}`);
-
-    if (!process.env[key]) {
+const checkEnv = (key: string, value: string | undefined): string => {
+    if (!value) {
         throw new Error(`Missing environment variable: ${key}`);
     }
+    return value;
 }
 
 export const env = {
-    appUrl: process.env.NEXT_PUBLIC_APP_URL!,
-    apiUrl: process.env.NEXT_PUBLIC_API_URL!,
-    passwordMinLength: process.env.NEXT_PUBLIC_PASSWORD_MIN_LENGTH!,
-    workspaceNameMaxLength: process.env.NEXT_PUBLIC_WORKSPACE_NAME_MAX_LENGTH!,
-    workspaceDescriptionMaxLength: process.env.NEXT_PUBLIC_WORKSPACE_DESCRIPTION_MAX_LENGTH!
+    appUrl:                                     checkEnv("NEXT_PUBLIC_APP_URL", process.env.NEXT_PUBLIC_APP_URL!),
+    apiUrl:                                     checkEnv("NEXT_PUBLIC_API_URL", process.env.NEXT_PUBLIC_API_URL!),
+    passwordMinLength:                          checkEnv("NEXT_PUBLIC_PASSWORD_MIN_LENGTH", process.env.NEXT_PUBLIC_PASSWORD_MIN_LENGTH!),
+    workspaceNameMaxLength:                     checkEnv("NEXT_PUBLIC_WORKSPACE_NAME_MAX_LENGTH", process.env.NEXT_PUBLIC_WORKSPACE_NAME_MAX_LENGTH!),
+    workspaceDescriptionMaxLength:              checkEnv("NEXT_PUBLIC_WORKSPACE_DESCRIPTION_MAX_LENGTH", process.env.NEXT_PUBLIC_WORKSPACE_DESCRIPTION_MAX_LENGTH!),
 }

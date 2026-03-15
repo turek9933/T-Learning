@@ -8,6 +8,7 @@ export function generateStaticParams() {
     return routing.locales.map((locale) => ({ locale }));
 }
 
+
 export default async function LocaleLayout({
     children,
     params,
@@ -22,13 +23,14 @@ export default async function LocaleLayout({
     }
 
     const allMessages = await getMessages();
-    const messagesForLayout = {
-        navbar: allMessages.navbar,
-        common: allMessages.common,
-    };
+    // const messagesForLayout = {
+    //     navbar: allMessages.navbar,
+    //     common: allMessages.common,
+    //     validation: allMessages.validation
+    // };
     
     return (
-        <NextIntlClientProvider locale={locale} messages={messagesForLayout}>
+        <NextIntlClientProvider locale={locale} messages={allMessages}>
             <div className="min-h-screen flex flex-col">
                 <Navbar />
                 <main className="flex-1">

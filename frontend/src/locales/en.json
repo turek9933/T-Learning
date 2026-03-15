@@ -39,6 +39,7 @@
     "nameTooShort": "Name must be at least 2 characters",
     "workspaceNameTooShort": "Workspace name must be at least 3 characters",
     "workspaceNameTooLong": "Workspace name must be at most {nameMaxLength} characters",
+    "workSpaceSlugInvalid": "Workspace name must be made of letters, numbers and symbols - and start with a letter",
     "workspaceDescriptionTooLong": "Workspace description must be at most {descriptionMaxLength} characters",
     "workspacePriceInvalid": "Please enter a valid price",
     "workspacePriceTooLow": "Price must be positive"
@@ -60,6 +61,7 @@
       "register": "Sign up",
       "goBack": "Go back to the main page",
       "loginSuccess": "Login successful",
+      "googlePopup": "Login with Google",
       "errorEmailOrPassword": "Invalid email or password",
       "errorLogin": "Login failed",
       "or": "or"
@@ -83,7 +85,9 @@
       "registering": "Registering...",
       "goBack": "Go back to the main page",
       "registerSuccess": "Registration successful",
+      "errorEmail": "Please enter a valid email address",
       "errorEmailTaken": "Email already taken",
+      "errorPassword": "Please enter a valid password",
       "errorPasswordMatch": "Passwords do not match",
       "errorPasswordTooShort": "Password too short - minimum 10 characters",
       "errorRegister": "Registration failed"

@@ -10,6 +10,9 @@ import { Link } from "@/i18n/routing";
 import { Button } from "@/components/ui/button";
 import { Mail, MoveLeft } from "lucide-react";
 import { env } from "@/lib/env";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm, type FieldErrors } from "react-hook-form";
+import { useValidationSchemas, ForgotPasswordFormData } from "@/lib/validation";
 
 interface ForgotPasswordData {
     titleProp: string;
@@ -23,23 +26,31 @@ interface ForgotPasswordData {
 }
 
 export default function ForgotPasswordForm({ titleProp, subtitleProp, emailProp, emailPlaceholderProp, submitProp, successProp, errorProp, goBackProp }: ForgotPasswordData) {
-    const [email, setEmail] = useState("");
-    const [loading, setLoading] = useState(false);
-    
-    const handleSubmit = async (e: React.FormEvent) => {
-      e.preventDefault();
-      setLoading(true);
-
-      try {
-        const { error } = await authClient.requestPasswordReset({
-          email: email,
-          redirectTo: `${env.appUrl}/reset-password`,
-        });
-        customToast.success(successProp);
-      } catch (error) {
-        customToast.error(errorProp);
+    const { forgotPasswordSchema } = useValidationSchemas();
+    const {
+      register,
+      handleSubmit,
+      formState: { errors, isSubmitting },
+    } = useForm<ForgotPasswordFormData>({
+      resolver: zodResolver(forgotPasswordSchema),
+    });
+  
+    const onError = (err: FieldErrors<ForgotPasswordFormData>) => {
+      if (err.email) {
+        customToast.error(err.email.message ?? errorProp);
       }
-      setLoading(false);
+    };
+
+    const onSubmit = async (data: ForgotPasswordFormData) => {
+      const { error } = await authClient.requestPasswordReset({
+        email: data.email,
+        redirectTo: `${env.appUrl}/`,
+      });
+      if (error) {
+        customToast.error(errorProp);
+      } else {
+        customToast.success(successProp);
+      }
     };
 
     return (
@@ -56,7 +67,7 @@ export default function ForgotPasswordForm({ titleProp, subtitleProp, emailProp,
         </div>
 
         <div className="bg-bg border border-border rounded-xl p-8">
-          <form onSubmit={handleSubmit} className="space-y-8">
+          <form onSubmit={handleSubmit(onSubmit, onError)} className="space-y-8">
             <div>
               <label htmlFor="email" className="block text-sm font-normal text-text mb-2">
                 {emailProp}
@@ -65,8 +76,7 @@ export default function ForgotPasswordForm({ titleProp, subtitleProp, emailProp,
                   <InputGroupInput
                   id="email"
                   type="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
+                  {...register("email")}
                   placeholder={emailPlaceholderProp}
                   className="w-full font-normal"
                   required
@@ -80,7 +90,7 @@ export default function ForgotPasswordForm({ titleProp, subtitleProp, emailProp,
             <Button
             id="forgot-button"
             type="submit"
-            disabled={loading}
+            disabled={isSubmitting}
             className="w-full bg-primary hover:bg-primary-hover focus:bg-primary-hover text-text-contrast py-3"
             >
               {submitProp}

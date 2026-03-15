@@ -39,6 +39,7 @@
     "nameTooShort": "Dane muszą mieć co najmniej 2 znaki",
     "workspaceNameTooShort": "Nazwa musi mieć co najmniej 3 znaki",
     "workspaceNameTooLong": "Nazwa może mieć co najwyżej {nameMaxLength} znaki",
+    "workSpaceSlugInvalid": "Nazwa musi składacić sie z liter, cyfr i znaków - oraz zaczynać od litery",
     "workspaceDescriptionTooLong": "Opis może mieć co najwyżej {descriptionMaxLength} znaków",
     "workspacePriceInvalid": "Podaj prawidłową cene",
     "workspacePriceTooLow": "Cena musi być dodatnia"
@@ -60,6 +61,7 @@
       "register": "Zarejestruj się",
       "goBack": "Powrót do strony głównej",
       "loginSuccess": "Zalogowano pomyslnie",
+      "googlePopup": "Logowanie z Google",
       "errorEmailOrPassword": "Niepoprawny email lub hasło",
       "errorLogin": "Logowanie nie powiodło sie",
       "or": "lub"
@@ -83,7 +85,9 @@
       "registering": "Rejestracja...",
       "goBack": "Powrót do strony głównej",
       "registerSuccess": "Rejestracja zakonczona pomyslnie",
+      "errorEmail": "Podaj poprawny adres email",
       "errorEmailTaken": "Ten email jest już zarejestrowany",
+      "errorPassword": "Podaj prawidłowe hasło",
       "errorPasswordMatch": "Hasła nie zgadzają sie",
       "errorPasswordTooShort": "Hasło jest za krótkie - minimum 10 znaków",
       "errorRegister": "Rejestracja nie powiodła sie"

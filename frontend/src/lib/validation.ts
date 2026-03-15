@@ -2,9 +2,9 @@ import { useTranslations } from "next-intl";
 import { z } from "zod";
 import { env } from "@/lib/env";
 
-const t = useTranslations("validation");
 
 export function useValidationSchemas() {
+  const t = useTranslations("validation");
   const loginSchema = z.object({
     email: z
       .email({ message: t("invalidEmail") })
@@ -13,14 +13,16 @@ export function useValidationSchemas() {
     password: z
       .string({ message: t("required") })
       .min(Number(env.passwordMinLength) ?? 10, { message: t("passwordTooShort", {minLength: env.passwordMinLength}) }),
+
+    rememberMe: z.boolean(),
   });
 
   const registerSchema = z.object({
-    first_name: z
+    firstName: z
       .string({ message: t("required") })
       .min(2, { message: t("nameTooShort") }),
     
-      last_name: z
+    lastName: z
       .string({ message: t("required") })
       .min(2, { message: t("nameTooShort") }),
 
@@ -72,7 +74,7 @@ export function useValidationSchemas() {
       .string({ message: t("required") })
       .min(3, { message: t("nameTooShort") })
       .max(Number(env.workspaceNameMaxLength) ?? 100, { message: t("workspaceNameTooLong", {nameMaxLength: env.workspaceNameMaxLength}) })
-      .regex(/^[a-z0-9-]+$/, { message: t("slugInvalid") }),
+      .regex(/^[a-z0-9-]+$/, { message: t("workSpaceSlugInvalid") }),
 
     type: z.enum(['single', 'group']),
 
