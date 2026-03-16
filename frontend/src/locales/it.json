@@ -149,19 +149,38 @@
   },
   "dashboard": {
     "title": "Pulpit",
-    "createWorkspace": "Crea workspace",
+    "createWorkspace": "Crea zone di lavoro",
     "workspace": {
       "new": {
-        "title": "Crea nuova workspace",
-        "subtitle": "Workspace is a place to store materials, tasks and announcements",
+        "title": "Crea nuova zone di lavoro",
+        "subtitle": "Zone di lavoro sono luoghi dove puoi archiviare materiali, compiti e annunci",
+        "type": "Tipo",
+        "typeSingle": "Individuale",
+        "typeSingleDescription": "Adatto per l'apprendimento per uno studente",
+        "typeGroup": "Gruppo",
+        "typeGroupDescription": "Adatto per l'apprendimento per piu studenti",
         "name": "Nome",
-        "namePlaceholder": "Inserisci qui il nome della workspace",
+        "placeholderName": "Mia zone di lavoro",
+        "slug": "Slug",
+        "slugHint": "Fine dell'indirizzo url della zone di lavoro, e.g. my-workspace",
+        "slugPlaceholder": "mia-zone-di-lavoro",
         "description": "Descrizione",
-        "descriptionPlaceholder": "Inserisci qui la descrizione della workspace",
-        "create": "Crea",
-        "cancel": "Annulla"
+        "placeholderDescription": "Inserisci qui la descrizione della zone di lavoro",
+        "optional": "Opzionale",
+        "price": "Prezzo",
+        "creating": "Creazione in corso...",
+        "submit": "Crea",
+        "cancel": "Annulla",
+        "errorCreate": "Impossibile creare la zone di lavoro",
+        "errorSlugTaken": "Slug gia utilizzato",
+        "successCreate": "Zone di lavoro creata con successo"
       }
     }
+  },
+  "breadcrumb": {
+    "dashboard": "Pulpit",
+    "workspaces": "Workspace",
+    "new": "Nuovo"
   },
   "landing": {
     "heroTitle": "Piattaforma modulare per l'apprendimento online",

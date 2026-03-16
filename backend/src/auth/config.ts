@@ -92,6 +92,11 @@ export const auth = betterAuth({
                             defaultValue: 'single',
                             input: true,
                         },
+                        description: {
+                            type: 'string',
+                            required: false,
+                            input: true,
+                        },
                         status: {
                             type: 'string',
                             defaultValue: 'draft',

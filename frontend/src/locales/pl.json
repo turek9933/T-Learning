@@ -154,14 +154,33 @@
       "new": {
         "title": "Stwórz nową przestrzeń roboczą",
         "subtitle": "Przestrzenia robocza to miejsce na materiały, zadania oraz ogłoszenia",
+        "type": "Typ przestrzeni roboczej",
+        "typeSingle": "Indywidualna",
+        "typeSingleDescription": "Służy do nauki dla jednego ucznia",
+        "typeGroup": "Grupowa",
+        "typeGroupDescription": "Służy do nauki grupowej",
         "name": "Nazwa",
-        "namePlaceholder": "Wpisz tutaj nazwę przestrzeni roboczej",
+        "placeholderName": "Moja przestrzeń robocza",
+        "slug": "Slug",
+        "slugHint": "Końcowka adresu url przestrzeni roboczej, np. moja-przestrzen-robocza",
+        "placeholderSlug": "moja-przestrzen-robocza",
         "description": "Opis",
-        "descriptionPlaceholder": "Wpisz tutaj opis przestrzeni roboczej",
-        "create": "Stwórz",
-        "cancel": "Anuluj"
+        "placeholderDescription": "Wpisz tutaj opis przestrzeni roboczej",
+        "optional": "Opcjonalne",
+        "price": "Cena",
+        "creating": "Tworzenie...",
+        "submit": "Stwórz",
+        "cancel": "Anuluj",
+        "errorCreate": "Nie udało się utworzyć przestrzeni roboczej",
+        "errorSlugTaken": "Slug jest już zajęty",
+        "successCreate": "Przestrzeń robocza została utworzona"
       }
     }
+  },
+  "breadcrumb": {
+    "dashboard": "Pulpit",
+    "workspaces": "Przestrzenie robocze",
+    "new": "Stwórz"
   },
   "landing": {
     "heroTitle": "Modułowa platforma do nauczania online",

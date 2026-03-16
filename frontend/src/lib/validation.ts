@@ -12,7 +12,7 @@ export function useValidationSchemas() {
 
     password: z
       .string({ message: t("required") })
-      .min(Number(env.passwordMinLength) ?? 10, { message: t("passwordTooShort", {minLength: env.passwordMinLength}) }),
+      .min(Number(env.passwordMinLength ?? 10), { message: t("passwordTooShort", {minLength: env.passwordMinLength}) }),
 
     rememberMe: z.boolean(),
   });
@@ -32,11 +32,11 @@ export function useValidationSchemas() {
 
     password: z
       .string({ message: t("required") })
-      .min(Number(env.passwordMinLength) ?? 10, { message: t("passwordTooShort", {minLength: env.passwordMinLength}) }),
+      .min(Number(env.passwordMinLength ?? 10), { message: t("passwordTooShort", {minLength: env.passwordMinLength}) }),
 
     confirmPassword: z
       .string({ message: t("required") })
-      .min(Number(env.passwordMinLength) ?? 10, { message: t("passwordTooShort", {minLength: env.passwordMinLength}) }),
+      .min(Number(env.passwordMinLength ?? 10), { message: t("passwordTooShort", {minLength: env.passwordMinLength}) }),
     })
     .refine((data) => data.password === data.confirmPassword, {
       message: t("passwordsMustMatch"),
@@ -53,11 +53,11 @@ export function useValidationSchemas() {
     .object({
       password: z
         .string({ message: t("required") })
-        .min(Number(env.passwordMinLength) ?? 10, { message: t("passwordTooShort", {minLength: env.passwordMinLength}) }),
+        .min(Number(env.passwordMinLength ?? 10), { message: t("passwordTooShort", {minLength: env.passwordMinLength}) }),
         
         confirmPassword: z
         .string({ message: t("required") })
-        .min(Number(env.passwordMinLength) ?? 10, { message: t("passwordTooShort", {minLength: env.passwordMinLength}) }),
+        .min(Number(env.passwordMinLength ?? 10), { message: t("passwordTooShort", {minLength: env.passwordMinLength}) }),
   })
     .refine((data) => data.password === data.confirmPassword, {
       message: t("passwordsMustMatch"),
@@ -68,19 +68,19 @@ export function useValidationSchemas() {
     name: z
       .string({ message: t("required") })
       .min(3, { message: t("workspaceNameTooShort") })
-      .max(Number(env.workspaceNameMaxLength) ?? 100, { message: t("workspaceNameTooLong", {nameMaxLength: env.workspaceNameMaxLength}) }),
+      .max(Number(env.workspaceNameMaxLength ?? 100), { message: t("workspaceNameTooLong", {nameMaxLength: env.workspaceNameMaxLength}) }),
 
     slug: z
       .string({ message: t("required") })
       .min(3, { message: t("nameTooShort") })
-      .max(Number(env.workspaceNameMaxLength) ?? 100, { message: t("workspaceNameTooLong", {nameMaxLength: env.workspaceNameMaxLength}) })
+      .max(Number(env.workspaceNameMaxLength ?? 100), { message: t("workspaceNameTooLong", {nameMaxLength: env.workspaceNameMaxLength}) })
       .regex(/^[a-z0-9-]+$/, { message: t("workSpaceSlugInvalid") }),
 
     type: z.enum(['single', 'group']),
 
     description: z
       .string()
-      .max(Number(env.workspaceDescriptionMaxLength) ?? 500, { message: t("workspaceDescriptionTooLong", {descriptionMaxLength: env.workspaceDescriptionMaxLength}) })
+      .max(Number(env.workspaceDescriptionMaxLength ?? 500), { message: t("workspaceDescriptionTooLong", {descriptionMaxLength: env.workspaceDescriptionMaxLength}) })
       .optional(),
 
     price: z
@@ -102,3 +102,5 @@ export type LoginFormData = z.infer<ReturnType<typeof useValidationSchemas>["log
 export type RegisterFormData = z.infer<ReturnType<typeof useValidationSchemas>["registerSchema"]>;
 export type ForgotPasswordFormData = z.infer<ReturnType<typeof useValidationSchemas>["forgotPasswordSchema"]>;
 export type NewPasswordFormData = z.infer<ReturnType<typeof useValidationSchemas>["newPasswordSchema"]>;
+
+export type WorkspaceFormData = z.infer<ReturnType<typeof useValidationSchemas>["workspaceSchema"]>;

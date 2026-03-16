@@ -148,8 +148,8 @@ export const workspaces = pgTable('workspaces', {
     price: numeric('price', { precision: 10, scale: 2 }),
     settings: jsonb('settings').$type<WorkspaceSettings>(),
     metadata: text('metadata'),
-    created_at: timestamp('created_at').defaultNow().notNull(),
-    updated_at: timestamp('updated_at').defaultNow().notNull(),
+    createdAt: timestamp('created_at').defaultNow().notNull(),
+    updatedAt: timestamp('updated_at').defaultNow().notNull(),
     },
     (table) => [uniqueIndex('workspaces_slug_uidx').on(table.slug)]
 );
@@ -218,8 +218,8 @@ export const posts = pgTable('posts', {
     workspaceId: text('workspace_id').references(() => workspaces.id, { onDelete: 'cascade' }).notNull(),
     content: text('content').notNull(),
     pinned: boolean('pinned'),
-    created_at: timestamp('created_at').defaultNow().notNull(),
-    updated_at: timestamp('updated_at').defaultNow().notNull(),
+    createdAt: timestamp('created_at').defaultNow().notNull(),
+    updatedAt: timestamp('updated_at').defaultNow().notNull(),
 });
 
 export const postAttachments = pgTable('post_attachments', {
@@ -229,5 +229,5 @@ export const postAttachments = pgTable('post_attachments', {
     type: text('type').notNull(),
     url: text('url').notNull(),
     size: integer('size').notNull(),
-    created_at: timestamp('created_at').defaultNow().notNull(),
+    createdAt: timestamp('created_at').defaultNow().notNull(),
 });

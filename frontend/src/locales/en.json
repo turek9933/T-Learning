@@ -155,13 +155,32 @@
         "title": "Create new workspace",
         "subtitle": "Workspace is a place to store materials, tasks and announcements",
         "name": "Name",
-        "namePlaceholder": "Enter workspace name",
+        "type": "Type",
+        "typeSingle": "Single",
+        "typeSingleDescription": "Suitable for learning for one student",
+        "typeGroup": "Group",
+        "typeGroupDescription": "Suitable for learning for multiple students",
+        "placeholderName": "My workspace",
+        "slug": "Slug",
+        "slugHint": "End of url workspace, e.g. my-workspace",
+        "placeholderSlug": "my-workspace",
         "description": "Description",
-        "descriptionPlaceholder": "Enter workspace description",
-        "create": "Create",
-        "cancel": "Cancel"
+        "placeholderDescription": "Enter workspace description",
+        "optional": "Optional",
+        "price": "Price",
+        "creating": "Creating...",
+        "submit": "Create",
+        "cancel": "Cancel",
+        "errorCreate": "Failed to create workspace",
+        "errorSlugTaken": "Slug already taken",
+        "successCreate": "Workspace successfully created"
       }
     }
+  },
+  "breadcrumb": {
+    "dashboard": "Dashboard",
+    "workspaces": "Workspaces",
+    "new": "New"
   },
   "landing": {
     "heroTitle": "Modular platform for online learning",
