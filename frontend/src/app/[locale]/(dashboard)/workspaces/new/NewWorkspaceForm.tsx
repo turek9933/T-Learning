@@ -248,7 +248,7 @@ export default function NewWorkspaceForm() {
                         min="0"
                         step="0.01"
                         {...register('price', {
-                            setValueAs: (value) => value === '' ? undefined : value,
+                            setValueAs: (value) => value === '' ? undefined : Number(value),
                         })}
                         className="flex-1 px-3 py-2 text-sm bg-bg text-text"
                         placeholder="0.00"
