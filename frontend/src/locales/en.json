@@ -31,6 +31,12 @@
     "logout":"Log out",
     "toggleMenu": "Toggle menu"
   },
+  "sidebar": {
+    "workspaces": "Workspaces",
+    "calendar": "Calendar",
+    "messages": "Messages",
+    "settings": "Settings"
+  },
   "validation": {
     "required": "This field is required",
     "invalidEmail": "Please enter a valid email address",
@@ -149,7 +155,19 @@
   },
   "dashboard": {
     "title": "Dashboard",
+    "subtitle": "Here you will find a list of all workspaces",
+    "createNew": "Create new",
+    "emptyTitle": "No workspaces",
+    "emptySubtitle": "You don't have any workspaces yet, create new one now!",
+    "active": "Active",
+    "draft": "Draft",
+    "archived": "Archived",
+    "owner": "Owner",
+    "admin": "Admin",
+    "member": "Member",
+    "viewer": "Viewer",
     "createWorkspace": "Create workspace",
+    "errorLoad": "Failed to load workspaces data",
     "workspace": {
       "new": {
         "title": "Create new workspace",

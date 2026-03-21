@@ -9,7 +9,7 @@ export default async function LandingPage() {
     const t = await getTranslations("landing");
     
     return (
-    <PageContainer>
+    <PageContainer sidebar={false}>
         <section className="py-4 lg:py-12 container">
             <div className="flex flex-col items-center text-center max-w-4xl mx-auto">
                 <Banner />

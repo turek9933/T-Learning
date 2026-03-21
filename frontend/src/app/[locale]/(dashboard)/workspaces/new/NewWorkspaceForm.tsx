@@ -10,7 +10,7 @@ import { useValidationSchemas, WorkspaceFormData } from '@/lib/validation';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
-import { Users, User, TriangleAlert } from 'lucide-react';
+import { Users, User, TriangleAlert, Group } from 'lucide-react';
 import { PageContainer } from '@/components/ui/PageContainer';
 import { CustomBreadcrumb } from '@/components/CustomBreadcrumb';
 
@@ -99,10 +99,10 @@ export default function NewWorkspaceForm() {
 
             <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-8">
                 {/* Type */}
-                <div>
+                <div className="flex flex-col gap-2">
                     <label className="text-md font-semibold text-text-secondary">
                         {t('type')}
-                    </label>
+                    </label>          
                     <Controller
                     name="type"
                     control={control}

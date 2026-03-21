@@ -3,11 +3,11 @@ import { getMessages } from "next-intl/server";
 import { notFound } from "next/navigation";
 import { routing } from "@/i18n/routing";
 import { Navbar } from "@/components/Navbar";
+import { QueryProvider } from "@/components/QueryProvider";
 
 export function generateStaticParams() {
     return routing.locales.map((locale) => ({ locale }));
 }
-
 
 export default async function LocaleLayout({
     children,
@@ -23,20 +23,17 @@ export default async function LocaleLayout({
     }
 
     const allMessages = await getMessages();
-    // const messagesForLayout = {
-    //     navbar: allMessages.navbar,
-    //     common: allMessages.common,
-    //     validation: allMessages.validation
-    // };
-    
+
     return (
         <NextIntlClientProvider locale={locale} messages={allMessages}>
-            <div className="min-h-screen flex flex-col">
-                <Navbar />
-                <main className="flex-1">
-                    {children}
-                </main>
-            </div>
+            <QueryProvider>
+                <div className="flex flex-col min-h-screen">
+                    <Navbar />
+                    <main className="flex-1 flex">
+                        {children}
+                    </main>
+                </div>
+            </QueryProvider>
         </NextIntlClientProvider>
     );
 }

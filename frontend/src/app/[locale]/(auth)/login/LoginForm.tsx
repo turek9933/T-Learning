@@ -94,7 +94,7 @@ export default function LoginForm() {
   }
 
   return (
-    <PageContainer>
+    <PageContainer sidebar={false}>
       <div className="w-full max-w-md">
         <div className="mb-8 text-center">
           <Banner />

@@ -4,7 +4,7 @@ import { PageContainer } from "@/components/ui/PageContainer";
 
 export default function NotFound() {
     return (
-    <PageContainer>
+    <PageContainer sidebar={false}>
         <div className="text-center max-w-md">
             <h1 className="font-title font-bold text-text-secondary mb-4">
                 404

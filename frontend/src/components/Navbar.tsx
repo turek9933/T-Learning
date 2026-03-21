@@ -37,7 +37,7 @@ export function Navbar() {
     <nav className="sticky top-0 w-full border-b border-border bg-bg backdrop-blur">
         <div className="container flex h-16 items-center justify-between">
             <Link 
-            href="/" 
+            href={session ? "/dashboard" : "/"} 
             className="flex items-center gap-2 hover:opacity-80 transition-opacity rounded"
             >
                 <span className="font-title font-bold text-xl text-text">

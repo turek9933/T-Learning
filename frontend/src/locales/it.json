@@ -31,6 +31,12 @@
     "logout":"Esci",
     "toggleMenu": "Attiva menu"
   },
+  "sidebar": {
+    "workspaces": "Zone di lavoro",
+    "calendar": "Calendario",
+    "messages": "Messaggi",
+    "settings": "Impostazioni"
+  },
   "validation": {
     "required": "Questo campo è obbligatorio",
     "invalidEmail": "Inserisci un indirizzo email valido",
@@ -149,7 +155,19 @@
   },
   "dashboard": {
     "title": "Pulpit",
+    "subtitle": "Qui troverai una lista di tutte le zone di lavoro",
+    "createNew": "Crea nuova",
+    "emptyTitle": "Nessuna zone di lavoro",
+    "emptyDescription": "Non hai ancora zone di lavoro, crea una ora!",
+    "active": "Attiva",
+    "draft": "Bozza",
+    "archived": "Archiviata",
+    "owner": "Proprietario",
+    "admin": "Amministratore",
+    "member": "Membro",
+    "viewer": "Visualizzatore",
     "createWorkspace": "Crea zone di lavoro",
+    "errorLoad": "Impossibile caricare i dati delle zone di lavoro",
     "workspace": {
       "new": {
         "title": "Crea nuova zone di lavoro",

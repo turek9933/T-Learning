@@ -31,6 +31,12 @@
     "logout":"Wyloguj się",
     "toggleMenu": "Przełącz menu"
   },
+  "sidebar": {
+    "workspaces": "Przestrzenie robocze",
+    "calendar": "Kalendarz",
+    "messages": "Wiadomości",
+    "settings": "Ustawienia"
+  },
   "validation": {
     "required": "To pole jest wymagane",
     "invalidEmail": "Podaj poprawny adres email",
@@ -149,7 +155,19 @@
   },
   "dashboard": {
     "title": "Pulpit",
+    "subtitle": "Tutaj znajduje się lista wszystkich przestrzeń roboczych",
+    "createNew": "Stwórz nową",
+    "emptyTitle": "Brak przestrzeni roboczych",
+    "emptySubtitle": "Nie masz jeszcze przestrzeni roboczych, stwórz nową teraz!",
+    "active": "Aktywna",
+    "draft": "Szkic",
+    "archived": "Archiwum",
+    "owner": "Właściciel",
+    "admin": "Administrator",
+    "member": "Uczestnik",
+    "viewer": "Obserwator",
     "createWorkspace": "Stwórz przestrzeń roboczą",
+    "errorLoad": "Nie udało się wczytać danych o przestrzeniach roboczych",
     "workspace": {
       "new": {
         "title": "Stwórz nową przestrzeń roboczą",

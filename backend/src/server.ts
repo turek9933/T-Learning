@@ -1,6 +1,7 @@
 import { Elysia } from 'elysia';
 import { cors } from '@elysiajs/cors';
 import { authRoute } from '@/routes/auth.route';
+import { workspaceRoute } from '@/routes/workspace.route';
 import { env } from './config/env';
 
 export const app = new Elysia()
@@ -11,4 +12,5 @@ export const app = new Elysia()
             allowedHeaders: ['Content-Type', 'Authorization'],
     }))
     .use(authRoute)
+    .use(workspaceRoute)
     .listen(env.port);

@@ -48,7 +48,7 @@ export default function ResetPasswordForm({ titleProp, subtitleProp, passwordPro
     
     if (!token) {
         return (
-        <PageContainer>
+        <PageContainer sidebar={false}>
             <div className="w-full max-w-md">
                 <div className="mb-8 text-center">
                     <Banner />
@@ -91,7 +91,7 @@ export default function ResetPasswordForm({ titleProp, subtitleProp, passwordPro
 
     return (
 
-    <PageContainer>
+    <PageContainer sidebar={false}>
       <div className="w-full max-w-md">
         <div className="mb-8 text-center">
           <Banner />

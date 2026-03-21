@@ -63,7 +63,7 @@ export default function RegisterForm() {
   };
 
   return (
-    <PageContainer>
+    <PageContainer sidebar={false}>
       <div className="w-full max-w-lg">
         <div className="mb-8 text-center">
           <Banner />
