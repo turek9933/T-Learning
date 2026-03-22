@@ -3,6 +3,7 @@ import { cors } from '@elysiajs/cors';
 import { authRoute } from '@/routes/auth.route';
 import { workspaceRoute } from '@/routes/workspace.route';
 import { env } from './config/env';
+import { userRoute } from './routes/user.route';
 
 export const app = new Elysia()
     .use(cors({
@@ -13,4 +14,5 @@ export const app = new Elysia()
     }))
     .use(authRoute)
     .use(workspaceRoute)
+    .use(userRoute)
     .listen(env.port);
