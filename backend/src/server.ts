@@ -1,9 +1,9 @@
 import { Elysia } from 'elysia';
 import { cors } from '@elysiajs/cors';
 import { authRoute } from '@/routes/auth.route';
-import { workspaceRoute } from '@/routes/workspace.route';
+import { workspaceRoute } from '@/routes/workspaces.route';
 import { env } from './config/env';
-import { userRoute } from './routes/user.route';
+import { userRoute } from './routes/users.route';
 
 export const app = new Elysia()
     .use(cors({

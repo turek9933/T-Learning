@@ -89,12 +89,31 @@ export function useValidationSchemas() {
       .optional(),
   });
 
+  const editWorkspaceSchema = z.object({
+    name: z
+      .string({ message: t("required") })
+      .min(3, { message: t("workspaceNameTooShort") })
+      .max(Number(env.workspaceNameMaxLength ?? 100), { message: t("workspaceNameTooLong", {nameMaxLength: env.workspaceNameMaxLength}) })
+      .optional(),
+
+    description: z
+      .string()
+      .max(Number(env.workspaceDescriptionMaxLength ?? 500), { message: t("workspaceDescriptionTooLong", {descriptionMaxLength: env.workspaceDescriptionMaxLength}) })
+      .optional(),
+
+    price: z
+      .number({ message: t("workspacePriceInvalid") })
+      .min(0, { message: t("workspacePriceTooLow") })
+      .optional(),
+  })
+
   return {
     loginSchema,
     registerSchema,
     forgotPasswordSchema,
     newPasswordSchema,
-    workspaceSchema
+    workspaceSchema,
+    editWorkspaceSchema
   };
 }
 
@@ -104,3 +123,4 @@ export type ForgotPasswordFormData = z.infer<ReturnType<typeof useValidationSche
 export type NewPasswordFormData = z.infer<ReturnType<typeof useValidationSchemas>["newPasswordSchema"]>;
 
 export type WorkspaceFormData = z.infer<ReturnType<typeof useValidationSchemas>["workspaceSchema"]>;
+export type EditWorkspaceFormData = z.infer<ReturnType<typeof useValidationSchemas>["editWorkspaceSchema"]>;

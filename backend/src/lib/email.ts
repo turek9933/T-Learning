@@ -8,10 +8,16 @@ export const sendMail = async ({to, subject, html }: {
     subject: string,
     html: string
 }) => {
-    resend.emails.send({
-        from: `T-Learning <${env.corsOrigin}>`,
+    const { data, error } = await resend.emails.send({
+        from: `T-Learning <${env.resendEmailAddress}>`,
         to,
         subject,
         html,
     })
+
+    if (error) {
+        console.error('RESEND ERROR:', error);
+        throw error;
+    }
+    console.info('RESEND EMAIL SENT:', data);
 };

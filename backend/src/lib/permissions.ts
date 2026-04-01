@@ -25,6 +25,7 @@ export const member = ac.newRole({
 
 export const admin = ac.newRole({
     ...adminAc.statements,
+    invitation: ["create", "cancel"],
     lesson: ["create", "read", "update", "delete"],
     homework: ["create", "read", "update", "delete"],
     material: ["create", "read", "update", "delete"],
@@ -33,5 +34,6 @@ export const admin = ac.newRole({
 
 export const owner = ac.newRole({
     ...admin.statements,
+    invitation: ["create", "cancel"],
     payment: ["create", "read", "update", "delete", "refund"],
 });

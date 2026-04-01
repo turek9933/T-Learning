@@ -30,7 +30,7 @@ export const auth = betterAuth({
         minPasswordLength: Number(env.passwordMinLenght) ?? 10,
         sendResetPassword: async ({ user, url, token }) => {
             console.log('[reset-password]:', url);
-            sendMail({
+            await sendMail({
                 to: user.email,
                 subject: "Reset password",
                 html: `
@@ -49,7 +49,7 @@ export const auth = betterAuth({
             const urlWithCallback = new URL(url);
             urlWithCallback.searchParams.set('callbackURL', `${env.corsOrigin}/verify-email?token=${token}`);
             console.log('[verify-email]:', urlWithCallback);
-            sendMail({
+            await sendMail({
                 to: user.email,
                 subject: "Verify email",
                 html: `
@@ -140,7 +140,7 @@ export const auth = betterAuth({
 
             async sendInvitationEmail(data) {
                 const invitationLink = `${env.corsOrigin}/invite/${data.id}`;
-                sendMail({
+                await sendMail({
                     to: data.email,
                     subject: `Invitation to ${data.organization.name}`,
                     html: `

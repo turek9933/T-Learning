@@ -34,7 +34,7 @@ export function Navbar() {
     };
     
     return (
-    <nav className="sticky top-0 w-full border-b border-border bg-bg backdrop-blur">
+    <nav className="sticky top-0 w-full border-b border-border bg-bg backdrop-blur z-50">
         <div className="container flex h-16 items-center justify-between">
             <Link 
             href={session ? "/dashboard" : "/"} 
@@ -303,8 +303,6 @@ export function Navbar() {
                             </Link>
                         </Button>
                     )}
-
-
                 </div>
             </div>
         )}

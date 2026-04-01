@@ -4,7 +4,7 @@ import { db } from '@/db/index';
 import { users } from '@/db/schema';
 import { authRoute } from '@/routes/auth.route';
 
-export const userRoute = new Elysia({ prefix: '/api/user' })
+export const userRoute = new Elysia({ prefix: '/api/users' })
     .use(authRoute)
 
     // GET /api/user/search?q=
@@ -34,7 +34,6 @@ export const userRoute = new Elysia({ prefix: '/api/user' })
                 )
             )
             .limit(10);
-
         return results;
     }, {
         // Only authenticated users can search, query must be at least 2 characters
@@ -46,5 +45,3 @@ export const userRoute = new Elysia({ prefix: '/api/user' })
             }),
         }),
     });
-
-    

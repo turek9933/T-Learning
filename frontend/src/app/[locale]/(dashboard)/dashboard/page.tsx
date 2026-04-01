@@ -5,22 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Plus, Users, User, BookOpen, Activity, PencilLine, LibraryBig, ChessKing, ChessQueen, GraduationCap, HatGlasses } from 'lucide-react';
 import { useMyWorkspaces, WorkspaceItem } from '@/lib/queries/workspaces';
 import { PageContainer } from '@/components/ui/PageContainer';
-
-function StatusBadge({ status = 'draft' }: { status: WorkspaceItem['status'] }) {
-    const styles: Record<string, string> = {
-        active:   'text-success',
-        draft:    'text-warning',
-        archived: 'text-text-muted',
-    };
-    const icons: Record<string, React.ElementType> = {
-        active:   Activity,
-        draft:    PencilLine,
-        archived: LibraryBig,
-    };
-    const x = status || 'draft';
-    const IconComponent = icons[x] ?? icons.draft;
-    return <IconComponent className={`w-4 h-4 ${styles[x] ?? styles.draft}`} />
-}
+import StatusBadge from '@/components/StatusBadge';
 
 function WorkspaceRow({ workspace }: { workspace: WorkspaceItem }) {
     const avatarColor: Record<string, string> = {
