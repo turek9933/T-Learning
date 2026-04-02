@@ -11,6 +11,8 @@ import { Button } from '@/components/ui/button';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import WorkspacePending from '@/components/WorkspacePending';
 import WorkspaceError from '@/components/WorkspaceError';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { authClient } from '@/lib/auth-client';
 
 function WorkspaceTabs({ slug }: { slug: string }) {
     const t = useTranslations('dashboard.workspace.tabs');
@@ -124,6 +126,32 @@ export default function WorkspacePage() {
         viewer: 'text-text-muted',
     };
 
+    // Workspace activation
+    const queryClient = useQueryClient();
+    const activateMutation = useMutation({
+        mutationFn: async () => {
+            const res = await authClient.organization.update({
+                organizationId: workspace?.id,
+                data: {
+                    status: 'active'
+                }
+            });
+            if (res?.error) {
+                throw new Error(res.error.message);
+            }
+            return res.data;
+        },
+        onSuccess: (_, data) => {
+            queryClient.invalidateQueries({ queryKey: ['workspaces', slug] });
+            queryClient.invalidateQueries({ queryKey: ['workspaces', 'me'] });
+            customToast.success(t(`successStatusActive`));
+        },
+        onError: () => customToast.error(t('errorStatus')),
+    });
+    function activateWorkspace() {
+        activateMutation.mutate();
+    }
+
     return (
         <PageContainer>
             <WorkspaceTabs slug={slug} />
@@ -197,8 +225,13 @@ export default function WorkspacePage() {
                     <div className="text-center max-w-md border border-warning rounded-lg p-4 space-y-2">
                         <h3 className="text-text-secondary">{t("workspaceDraft")}</h3>
                         <p className="text-text-secondary">{t("workspaceDraftInfo")}</p>
-                        {/* //TODO Add real buttons, currently just placeholders */}
-                        <Button className="text-text-contrast" onClick={() => console.log("Activate workspace placeholder")}>{t("activate")}</Button>
+                        <Button
+                        className="text-text-contrast"
+                        onClick={() => activateWorkspace()}
+                        disabled={activateMutation.isPending}
+                        >
+                            {activateMutation.isPending ? t("activating") : t("activate")}
+                        </Button>
                     </div>
                 )}
                 </>

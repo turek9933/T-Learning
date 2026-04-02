@@ -16,6 +16,7 @@ import { Button } from '@/components/ui/button';
 import { useRouter } from '@/i18n/routing';
 import { useState } from 'react';
 import { Input } from '@/components/ui/input';
+import { authClient } from '@/lib/auth-client';
 
 function EditSection({ slug }: { slug: string }) {
     const t = useTranslations('dashboard.workspace.settings');
@@ -29,16 +30,28 @@ function EditSection({ slug }: { slug: string }) {
       formState: { errors, isSubmitting },
     } = useForm<EditWorkspaceFormData>({
       resolver: zodResolver(editWorkspaceSchema),
+      defaultValues: {
+        name: workspace?.name,
+        description: workspace?.description ? workspace.description : undefined,
+        price: workspace?.price ? workspace.price : undefined
+      }
     });
 
-    // TODO: add mutation
-    const placeholderFetch = async (data: EditWorkspaceFormData) => {
-      console.log(data);
-    };
-
     const mutation = useMutation({
-        // TODO: add mutation
-        mutationFn: (data: EditWorkspaceFormData) => placeholderFetch(data),
+        mutationFn: async (formData: EditWorkspaceFormData) => {
+            const res = await authClient.organization.update({
+                organizationId: workspace?.id,
+                data: {
+                    name: formData.name,
+                    description: formData.description,
+                    price: formData.price
+                }
+            });
+            if (res?.error) {
+                throw new Error(res.error.message);
+            }
+            return res.data;
+        },
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ['workspaces', slug] });
             queryClient.invalidateQueries({ queryKey: ['workspaces', 'me'] });
@@ -57,14 +70,13 @@ function EditSection({ slug }: { slug: string }) {
                 <div className="flex flex-col space-y-2">
                     <label htmlFor="name" className='mb-2 font-semibold'>{t('name')}</label>
                     <InputGroup
-                    className={`bg-bg-muted py-6 ${errors.name ? "ring-2 ring-error border-error" : ""}`}>
+                    className={`bg-bg py-6 ${errors.name ? "ring-2 ring-error border-error" : ""}`}>
                         <InputGroupInput
                         id="name"
                         type="text"
                         {...register("name")}
                         placeholder={workspace?.name || t("namePlaceholder")}
                         className="w-full font-normal"
-                        required
                         />
                         <InputGroupAddon>
                         <Pencil className="w-5 h-5 text-text-muted"/>
@@ -75,14 +87,13 @@ function EditSection({ slug }: { slug: string }) {
                 <div className="flex flex-col space-y-2">
                     <label htmlFor="description" className='mb-2 font-semibold'>{t('description')}</label>
                     <InputGroup
-                    className={`bg-bg-muted py-6 ${errors.description ? "ring-2 ring-error border-error" : ""}`}>
+                    className={`bg-bg py-6 ${errors.description ? "ring-2 ring-error border-error" : ""}`}>
                         <InputGroupInput
                         id="description"
                         type="text"
                         {...register("description")}
                         placeholder={workspace?.description || t("descriptionPlaceholder")}
                         className="w-full font-normal"
-                        required
                         />
                         <InputGroupAddon>
                         <Pencil className="w-5 h-5 text-text-muted"/>
@@ -93,7 +104,7 @@ function EditSection({ slug }: { slug: string }) {
                 <div className="flex flex-col space-y-2">
                     <label htmlFor="price" className='mb-2 font-semibold'>{t('price')}</label>
                     <InputGroup
-                    className={`bg-bg-muted py-6 ${errors.description ? "ring-2 ring-error border-error" : ""}`}>
+                    className={`bg-bg py-6 ${errors.description ? "ring-2 ring-error border-error" : ""}`}>
                         <InputGroupInput
                         id="price"
                         type="number"
@@ -102,7 +113,6 @@ function EditSection({ slug }: { slug: string }) {
                         })}
                         placeholder={workspace?.price?.toString() || t("pricePlaceholder")}
                         className="w-full font-normal"
-                        required
                         />
                         <InputGroupAddon>
                         <Pencil className="w-5 h-5 text-text-muted"/>
@@ -129,13 +139,19 @@ function StatusSection({ slug }: { slug: string }) {
     const { data: workspace } = useWorkspace(slug);
     const status = workspace?.status || 'draft' as 'draft' || 'active' || 'archived';
 
-    // TODO: add mutation
-    const placeholderFetch = async (data: 'draft' | 'active' | 'archived') => {
-        console.log(data);
-    };
     const mutation = useMutation({
-        // TODO: add mutation
-        mutationFn: (data: 'draft' | 'active' | 'archived') => placeholderFetch(data),
+        mutationFn: async (newStatus: 'draft' | 'active' | 'archived') => {
+            const res = await authClient.organization.update({
+                organizationId: workspace?.id,
+                data: {
+                    status: newStatus
+                }
+            });
+            if (res?.error) {
+                throw new Error(res.error.message);
+            }
+            return res.data;
+        },
         onSuccess: (_, data) => {
             queryClient.invalidateQueries({ queryKey: ['workspaces', slug] });
             queryClient.invalidateQueries({ queryKey: ['workspaces', 'me'] });
@@ -180,13 +196,18 @@ function DeleteSection({ slug }: { slug: string }) {
     const [confirmName, setConfirmName] = useState('');
     const nameMatches = workspace?.name === confirmName;
 
-    // TODO: add mutation
-    const placeholderFetch = async (slug: string) => {
-        console.log(slug);
-    };
     const mutation = useMutation({
-        // TODO: add mutation
-        mutationFn: () => placeholderFetch(slug),
+        mutationFn: async () => {
+            console.log(workspace?.id);
+            const res = await authClient.organization.delete({
+                organizationId: workspace?.id || '',
+            });
+            console.log(res);
+            if (res?.error) {
+                throw new Error(res.error.message);
+            }
+            return res.data;
+        },
         onSuccess: () => {
             queryClient.removeQueries({ queryKey: ['workspaces', slug] });
             queryClient.invalidateQueries({ queryKey: ['workspaces', 'me'] });
@@ -246,7 +267,6 @@ function DeleteSection({ slug }: { slug: string }) {
         </section>
     );
 }
-
     
 export default function WorkspaceEditPage() {
     const t = useTranslations('dashboard.workspace.settings');
@@ -264,8 +284,6 @@ export default function WorkspaceEditPage() {
 
     if (!isOwnerOrAdmin)
         return <WorkspaceError errorMessage={t('errorPermission')} />
-
-
 
     return (
         <PageContainer>
