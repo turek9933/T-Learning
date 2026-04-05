@@ -3,7 +3,7 @@ import { useTranslations } from "next-intl";
 import { Link, usePathname, useRouter } from "@/i18n/routing";
 import { Button } from "@/components/ui/button";
 import { Globe, Moon, Sun, Contrast, Menu, X, LogOut } from "lucide-react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useTheme } from "@/components/ThemeProvider";
 import {
     DropdownMenu,
@@ -22,6 +22,12 @@ export function Navbar() {
     const {theme, setTheme} = useTheme();
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
     const {data: session, isPending} = authClient.useSession();
+    const [isMounted, setMounted] = useState(false);
+    const mountedSession = isMounted ? session : null;
+
+    useEffect(() => {
+        setMounted(true);
+    }, []);
 
     const handleSignOut = async () => {
         await authClient.signOut({
@@ -37,7 +43,7 @@ export function Navbar() {
     <nav className="sticky top-0 w-full border-b border-border bg-bg backdrop-blur z-50">
         <div className="container flex h-16 items-center justify-between">
             <Link 
-            href={session ? "/dashboard" : "/"} 
+            href={!isMounted ? "/" : session ? "/dashboard" : "/"} 
             className="flex items-center gap-2 hover:opacity-80 transition-opacity rounded"
             >
                 <span className="font-title font-bold text-xl text-text">
@@ -46,38 +52,42 @@ export function Navbar() {
             </Link>
 
             <div className="hidden md:flex items-center gap-3">
-                <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                        <Button variant="ghost" size="icon" className="cursor-pointer">
-                            <Globe className="h-5 w-5" />
-                            <span className="sr-only">{t("changeLanguage")}</span>
-                        </Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent align="end">
-                        <DropdownMenuItem asChild>
-                            <Link href={pathname} locale="pl" className="w-full cursor-pointer text-text">
-                                Polski 🇵🇱
-                            </Link>
-                        </DropdownMenuItem>
-                        <DropdownMenuItem asChild>
-                            <Link href={pathname} locale="en" className="w-full cursor-pointer text-text">
-                                English 🇬🇧
-                            </Link>
-                        </DropdownMenuItem>
-                        <DropdownMenuItem asChild>
-                            <Link href={pathname} locale="it" className="w-full cursor-pointer text-text">
-                                Italiano 🇮🇹
-                            </Link>
-                        </DropdownMenuItem>
-                    </DropdownMenuContent>
-                </DropdownMenu>
+                {mountedSession && (
+                    <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                            <Button variant="ghost" size="icon" className="cursor-pointer">
+                                <Globe className="h-5 w-5" />
+                                <span className="sr-only">{t("changeLanguage")}</span>
+                            </Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent align="end">
+                            <DropdownMenuItem asChild>
+                                <Link href={pathname} locale="pl" className="w-full cursor-pointer text-text">
+                                    Polski 🇵🇱
+                                </Link>
+                            </DropdownMenuItem>
+                            <DropdownMenuItem asChild>
+                                <Link href={pathname} locale="en" className="w-full cursor-pointer text-text">
+                                    English 🇬🇧
+                                </Link>
+                            </DropdownMenuItem>
+                            <DropdownMenuItem asChild>
+                                <Link href={pathname} locale="it" className="w-full cursor-pointer text-text">
+                                    Italiano 🇮🇹
+                                </Link>
+                            </DropdownMenuItem>
+                        </DropdownMenuContent>
+                    </DropdownMenu>
+                )}
 
+                {isMounted && (
                 <DropdownMenu>
                     <DropdownMenuTrigger asChild>
                         <Button variant="ghost" size="icon" className="cursor-pointer">
-                            {theme === "light" && <Sun className="h-5 w-5" />}
-                            {theme === "dark" && <Moon className="h-5 w-5" />}
-                            {theme === "accessible" && <Contrast className="h-5 w-5" />}
+                            {/* Hydration - if not mounted, show sun icon - default light theme */}
+                            {theme === "accessible" ? <Contrast className="h-5 w-5" />
+                            : theme === "dark" ? <Moon className="h-5 w-5" />
+                            : <Sun className="h-5 w-5" />}
                             <span className="sr-only">{t("changeTheme")}</span>
                       </Button>
                     </DropdownMenuTrigger>
@@ -96,11 +106,12 @@ export function Navbar() {
                         </DropdownMenuItem>
                     </DropdownMenuContent>
                 </DropdownMenu>
+                )}
                 
-                {isPending ? (
+                {!isMounted ? (
                     // Loading placeholder
                     <div className="h-7 w-7 rounded-full bg-bg-card hover:bg-bg-hover animate-pulse" />
-                ) : session ? (
+                ) : mountedSession ? (
                     // User is signed in
                     <DropdownMenu>
                         <DropdownMenuTrigger asChild>
@@ -108,25 +119,25 @@ export function Navbar() {
                             variant="ghost"
                             size="icon"
                             className="h-7 w-7 p-0 rounded-full">
-                                {session.user.image ? (
+                                {mountedSession.user.image ? (
                                     <Image
-                                    src={session.user.image}
-                                    alt={session.user.name ?? ""}
+                                    src={mountedSession.user.image}
+                                    alt={mountedSession.user.name ?? ""}
                                     width={28}
                                     height={28}
                                     className="rounded-full object-cover"
                                     />
                                 ) : (
                                     <div className="h-7 w-7 rounded-full bg-primary hover:bg-primary-hover flex items-center justify-center text-text-contrast text-sm font-bold cursor-pointer">
-                                        {session.user.name?.charAt(0).toUpperCase()}
+                                        {mountedSession.user.name?.charAt(0).toUpperCase()}
                                     </div>
                                 )}
                             </Button>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end">
                             <div className="p-2">
-                                <p className="text-sm font-medium text-text">{session.user.name}</p>
-                                <p className="text-xs text-text-secondary">{session.user.email}</p>
+                                <p className="text-sm font-medium text-text">{mountedSession.user.name}</p>
+                                <p className="text-xs text-text-secondary">{mountedSession.user.email}</p>
                             </div>
                             <DropdownMenuSeparator className="bg-text"/>
                             <DropdownMenuItem asChild className="cursor-pointer">
@@ -171,24 +182,24 @@ export function Navbar() {
         {mobileMenuOpen && (
             <div className="md:hidden border-t border-border bg-bg">
                 <div className="container py-4 space-y-4">
-                    {session && (
+                    {mountedSession && (
                         <div className="flex items-center gap-3 px-2 py-1 border-border border-b">
-                            {session.user.image ? (
+                            {mountedSession.user.image ? (
                                 <Image
-                                src={session.user.image}
-                                alt={session.user.name ?? ""}
+                                src={mountedSession.user.image}
+                                alt={mountedSession.user.name ?? ""}
                                 width={28}
                                 height={28}
                                 className="rounded-full object-cover"
                                 />
                             ) : (
                                 <div className="h-7 w-7 rounded-full bg-primary flex items-center justify-center text-text-contrast text-sm font-bold">
-                                    {session.user.name?.charAt(0).toUpperCase()}
+                                    {mountedSession.user.name?.charAt(0).toUpperCase()}
                                 </div>
                             )}
                             <div className="p-2">
-                                <p className="text-sm font-medium text-text">{session.user.name}</p>
-                                <p className="text-xs text-text-secondary">{session.user.email}</p>
+                                <p className="text-sm font-medium text-text">{mountedSession.user.name}</p>
+                                <p className="text-xs text-text-secondary">{mountedSession.user.email}</p>
                             </div>
                         </div>
                     )}
@@ -271,7 +282,7 @@ export function Navbar() {
                         </div>
                     </div>
 
-                    {session ? (
+                    {mountedSession ? (
                         <div className="space-y-2">
                             <p className="text-sm font-medium text-text-muted px-2">
                                 {t("accountSettings")}

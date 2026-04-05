@@ -247,12 +247,10 @@ import Avatar from '@/components/Avatar';
 
 function MemberRow({
     member,
-    currentUserRole,
     workspaceId,
     workspaceSlug
 }: {
     member: MemberItem;
-    currentUserRole: WorkspaceRole;
     workspaceId: string;
     workspaceSlug: string;
 }) {
@@ -453,10 +451,16 @@ export default function WorkspaceMembersPage() {
                 <UserSearchSection workspaceId={workspace.id} workspaceSlug={slug} />
    
                 {/* Members list section */}
-                {members.length === 0 && (
+                {members.length === 0 ? (
                     <p className="text-text-secondary text-center mt-4">
                         {t('noMembers')}
                     </p>
+                ) : (
+                    <>
+                    {members.map((member) => (
+                        <MemberRow key={member.memberId} member={member} workspaceId={workspace.id} workspaceSlug={slug} />
+                    ))}
+                    </>
                 )}
             </section>
         </PageContainer>

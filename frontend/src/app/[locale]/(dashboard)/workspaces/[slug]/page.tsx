@@ -38,8 +38,8 @@ function WorkspaceTabs({ slug }: { slug: string }) {
                 <Link
                 key={key}
                 href={href}
-                className={`hover:text-text
-                    ${isActive(href) ? 'text-text' : 'text-text-muted'}`}
+                className={`hover:text-text px-2 hover:border-b-2 hover:border-border-hover
+                    ${isActive(href) ? 'text-text border-b-2 border-border-focus' : 'text-text-muted'}`}
                 >
                     {label}
                 </Link>
@@ -114,11 +114,6 @@ export default function WorkspacePage() {
     const canModerate = workspace?.role === 'owner' || workspace?.role === 'admin';
     const items = [];
 
-    if (isPending)
-        return <WorkspacePending />;
-    if (isError || !workspace)
-        return <WorkspaceError errorMessage={t('errorLoad')} />
-
     const avatarColor: Record<string, string> = {
         owner:  'text-accent',
         admin:  'text-accent',
@@ -151,6 +146,11 @@ export default function WorkspacePage() {
     function activateWorkspace() {
         activateMutation.mutate();
     }
+
+    if (isPending)
+        return <WorkspacePending />;
+    if (isError || !workspace)
+        return <WorkspaceError errorMessage={t('errorLoad')} />
 
     return (
         <PageContainer>
