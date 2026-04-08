@@ -1,6 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 import { env } from '@/lib/env';
 
+export const WorkspaceRole = ['owner', 'admin', 'member', 'viewer'] as const
 export type WorkspaceRole = 'owner' | 'admin' | 'member' | 'viewer';
 export type WorkspaceStatus = 'draft' | 'active' | 'archived';
 export type WorkspaceType = 'single' | 'group';

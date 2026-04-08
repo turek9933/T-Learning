@@ -1,3 +1,4 @@
+import { env } from "@/lib/env";
 import type { NextConfig } from "next";
 import createNextIntlPlugin from "next-intl/plugin";
 
@@ -16,7 +17,8 @@ const nextConfig: NextConfig = {
         pathname: '/*/**',
       }
     ],
-  }
+  },
+  allowedDevOrigins: [env.appUrl],
 };
 
 export default withNextIntl(nextConfig);

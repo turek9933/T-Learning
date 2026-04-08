@@ -7,7 +7,7 @@ import { userRoute } from './routes/users.route';
 
 export const app = new Elysia()
     .use(cors({
-            origin: env.corsOrigin,
+            origin: env.corsOrigin.split(',').map(origin => origin.trim()),
             methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
             credentials: true,
             allowedHeaders: ['Content-Type', 'Authorization'],
@@ -15,4 +15,7 @@ export const app = new Elysia()
     .use(authRoute)
     .use(workspaceRoute)
     .use(userRoute)
-    .listen(env.port);
+    .listen({
+        hostname: '0.0.0.0',
+        port: env.port
+    });

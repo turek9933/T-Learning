@@ -5,6 +5,9 @@ import { env } from "@/lib/env"
 
 export const authClient = createAuthClient({
     baseURL: env.apiUrl,
+    fetchOptions: {
+        credentials: 'include'
+    },
     plugins: [
         organizationClient({
             ac,

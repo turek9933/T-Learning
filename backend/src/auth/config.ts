@@ -47,7 +47,7 @@ export const auth = betterAuth({
     emailVerification: {
         sendVerificationEmail: async ({ user, url, token }, request) => {
             const urlWithCallback = new URL(url);
-            urlWithCallback.searchParams.set('callbackURL', `${env.corsOrigin}/verify-email?token=${token}`);
+            urlWithCallback.searchParams.set('callbackURL', `${env.appUrl}/verify-email?token=${token}`);
             console.log('[verify-email]:', urlWithCallback);
             await sendMail({
                 to: user.email,
@@ -72,7 +72,8 @@ export const auth = betterAuth({
     },
     baseURL: env.betterAuthUrl,
     trustedOrigins: [
-        env.corsOrigin
+        env.appUrl,
+        ...env.corsOrigin.split(',').map(origin => origin.trim()),
     ],
     plugins : [
         organization({
@@ -139,7 +140,7 @@ export const auth = betterAuth({
             },
 
             async sendInvitationEmail(data) {
-                const invitationLink = `${env.corsOrigin}/invite/${data.id}`;
+                const invitationLink = `${env.appUrl}/invite/${data.id}`;
                 await sendMail({
                     to: data.email,
                     subject: `Invitation to ${data.organization.name}`,

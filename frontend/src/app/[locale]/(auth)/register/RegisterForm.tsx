@@ -39,26 +39,34 @@ export default function RegisterForm() {
   };
 
   const onSubmit = async (data: RegisterFormData) => {
-    const { error } = await authClient.signUp.email({
-      email: data.email,
-      password: data.password,
-      name: `${data.firstName} ${data.lastName}`.trim(),
-    });
-    if (error) {
-      switch (error.code) {
-        case "USER_ALREADY_EXISTS_USE_ANOTHER_EMAIL":
-          customToast.error(t("errorEmailTaken"));
-          break;
-        case "PASSWORD_TOO_SHORT":
-          customToast.error(t("errorPasswordTooShort"));
-          break;
-        default:
-          customToast.error(t("errorRegister"));
-          break;
-      }
-    } else {
-      customToast.success(t("registerSuccess"));
-      router.push("/login");
+    try {
+      const { error } = await authClient.signUp.email({
+        email: data.email,
+        password: data.password,
+        name: `${data.firstName} ${data.lastName}`.trim(),
+        fetchOptions: {
+          onSuccess: () => {
+            customToast.success(t("registerSuccess"));
+            router.push("/login");
+          },
+          onError: (context) => {
+            switch (context.error.code) {
+              case "USER_ALREADY_EXISTS_USE_ANOTHER_EMAIL":
+                customToast.error(t("errorEmailTaken"));
+                break;
+              case "PASSWORD_TOO_SHORT":
+                customToast.error(t("errorPasswordTooShort"));
+                break;
+              default:
+                customToast.error(t("errorRegister"));
+                break;
+            }
+          }
+        }
+      });
+    } catch (error) {
+      console.error(error);
+      customToast.error(t("errorRegister"));
     }
   };
 

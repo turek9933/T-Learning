@@ -1,6 +1,7 @@
 const required = [
     "PORT",
     "NODE_ENV",
+    "APP_URL",
     "CORS_ORIGIN",
     "DB_USER",
     "DB_PASSWORD",
@@ -37,6 +38,7 @@ for (const key of required) {
 export const env = {
     port: process.env.PORT!,
     nodeEnv: process.env.NODE_ENV!,
+    appUrl: process.env.APP_URL!,
     corsOrigin: process.env.CORS_ORIGIN!,
     dbUser: process.env.DB_USER!,
     dbPassword: process.env.DB_PASSWORD!,

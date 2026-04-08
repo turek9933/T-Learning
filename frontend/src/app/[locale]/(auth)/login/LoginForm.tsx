@@ -15,11 +15,12 @@ import { env } from "@/lib/env";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm, Controller, type FieldErrors } from "react-hook-form";
 import { useValidationSchemas, LoginFormData } from "@/lib/validation";
-
+import { useRouter } from "@/i18n/routing";
 
 export default function LoginForm() {
   const t = useTranslations("auth.login");
   const { loginSchema } = useValidationSchemas();
+  const router = useRouter();
 
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -50,26 +51,34 @@ export default function LoginForm() {
   }
 
   const onSubmit = async (data: LoginFormData) => {
-    const { error } = await authClient.signIn.email({
-      email: data.email,
-      password: data.password,
-      rememberMe: data.rememberMe,
-      callbackURL: "/dashboard"
-    });
-    if (error) {
-      switch (error.code) {
-        case "INVALID_EMAIL_OR_PASSWORD":
-          setError("email", { message: t("errorEmailOrPassword") });
-          setError("password", { message: t("errorEmailOrPassword") });
-          customToast.error(t("errorEmailOrPassword"));
-          break;
-        default:
-          customToast.error(t("errorLogin"));
-          break;
-      }
-      return;
-    } else {
-      customToast.success(t("loginSuccess"));
+    try {
+      const { error } = await authClient.signIn.email({
+        email: data.email,
+        password: data.password,
+        rememberMe: data.rememberMe,
+        fetchOptions: {
+          onSuccess: () => {
+            console.log("Login successful fired");
+            customToast.success(t("loginSuccess"));
+            router.push("/dashboard");
+          },
+          onError: (context) => {
+            switch (context.error.code) {
+              case "INVALID_EMAIL_OR_PASSWORD":
+                setError("email", { message: t("errorEmailOrPassword") });
+                setError("password", { message: t("errorEmailOrPassword") });
+                customToast.error(t("errorEmailOrPassword"));
+                break;
+              default:
+                customToast.error(t("errorLogin"));
+                break;
+            }
+          }
+        }
+      });
+    } catch (error) {
+      console.error(error);
+      customToast.error(t("errorLogin"));
     }
   }
 
