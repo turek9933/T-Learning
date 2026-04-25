@@ -1,6 +1,5 @@
 CREATE TYPE "public"."event_type" AS ENUM('meeting', 'deadline', 'exam');--> statement-breakpoint
 CREATE TYPE "public"."workspace_member_role" AS ENUM('owner', 'admin', 'member', 'viewer');--> statement-breakpoint
-CREATE TYPE "public"."workspace_member_status" AS ENUM('invited', 'active', 'suspended');--> statement-breakpoint
 CREATE TYPE "public"."workspace_status" AS ENUM('draft', 'active', 'archived');--> statement-breakpoint
 CREATE TYPE "public"."workspace_type" AS ENUM('single', 'group');--> statement-breakpoint
 CREATE TABLE "accounts" (
@@ -32,7 +31,7 @@ CREATE TABLE "post_attachments" (
 CREATE TABLE "posts" (
 	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
 	"user_id" text,
-	"workspace_id" uuid NOT NULL,
+	"workspace_id" text NOT NULL,
 	"content" text NOT NULL,
 	"pinned" boolean,
 	"created_at" timestamp DEFAULT now() NOT NULL,
@@ -48,6 +47,7 @@ CREATE TABLE "sessions" (
 	"ip_address" text,
 	"user_agent" text,
 	"user_id" text NOT NULL,
+	"active_workspace_id" text,
 	CONSTRAINT "sessions_token_unique" UNIQUE("token")
 );
 --> statement-breakpoint
@@ -59,6 +59,8 @@ CREATE TABLE "users" (
 	"avatar_url" text,
 	"created_at" timestamp DEFAULT now() NOT NULL,
 	"updated_at" timestamp DEFAULT now() NOT NULL,
+	"can_create_workspaces" boolean DEFAULT false NOT NULL,
+	"is_admin" boolean DEFAULT false NOT NULL,
 	CONSTRAINT "users_email_unique" UNIQUE("email")
 );
 --> statement-breakpoint
@@ -71,28 +73,41 @@ CREATE TABLE "verifications" (
 	"updated_at" timestamp DEFAULT now() NOT NULL
 );
 --> statement-breakpoint
+CREATE TABLE "workspace_invitations" (
+	"id" text PRIMARY KEY NOT NULL,
+	"workspace_id" text NOT NULL,
+	"inviter_id" text NOT NULL,
+	"email" text NOT NULL,
+	"role" text DEFAULT 'member' NOT NULL,
+	"status" text DEFAULT 'pending' NOT NULL,
+	"created_at" timestamp DEFAULT now() NOT NULL,
+	"expires_at" timestamp NOT NULL
+);
+--> statement-breakpoint
 CREATE TABLE "workspace_members" (
-	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
+	"id" text PRIMARY KEY NOT NULL,
 	"user_id" text NOT NULL,
-	"workspace_id" uuid NOT NULL,
+	"workspace_id" text NOT NULL,
 	"role" "workspace_member_role" DEFAULT 'member' NOT NULL,
-	"status" "workspace_member_status" DEFAULT 'active' NOT NULL,
 	"has_paid" boolean,
-	"joined_at" timestamp DEFAULT now() NOT NULL,
+	"created_at" timestamp DEFAULT now() NOT NULL,
 	"expires_at" timestamp
 );
 --> statement-breakpoint
 CREATE TABLE "workspaces" (
-	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
-	"active" boolean DEFAULT true,
+	"id" text PRIMARY KEY NOT NULL,
+	"name" text NOT NULL,
+	"slug" text NOT NULL,
+	"logo" text,
 	"type" "workspace_type" DEFAULT 'single' NOT NULL,
-	"name" text,
 	"description" text,
 	"status" "workspace_status" DEFAULT 'draft' NOT NULL,
-	"prize" numeric(10, 2),
+	"price" numeric(10, 2),
 	"settings" jsonb,
+	"metadata" text,
 	"created_at" timestamp DEFAULT now() NOT NULL,
-	"updated_at" timestamp DEFAULT now() NOT NULL
+	"updated_at" timestamp DEFAULT now() NOT NULL,
+	CONSTRAINT "workspaces_slug_unique" UNIQUE("slug")
 );
 --> statement-breakpoint
 ALTER TABLE "accounts" ADD CONSTRAINT "accounts_user_id_users_id_fk" FOREIGN KEY ("user_id") REFERENCES "public"."users"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
@@ -100,7 +115,14 @@ ALTER TABLE "post_attachments" ADD CONSTRAINT "post_attachments_post_id_posts_id
 ALTER TABLE "posts" ADD CONSTRAINT "posts_user_id_users_id_fk" FOREIGN KEY ("user_id") REFERENCES "public"."users"("id") ON DELETE set null ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "posts" ADD CONSTRAINT "posts_workspace_id_workspaces_id_fk" FOREIGN KEY ("workspace_id") REFERENCES "public"."workspaces"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "sessions" ADD CONSTRAINT "sessions_user_id_users_id_fk" FOREIGN KEY ("user_id") REFERENCES "public"."users"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE "workspace_invitations" ADD CONSTRAINT "workspace_invitations_workspace_id_workspaces_id_fk" FOREIGN KEY ("workspace_id") REFERENCES "public"."workspaces"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE "workspace_invitations" ADD CONSTRAINT "workspace_invitations_inviter_id_users_id_fk" FOREIGN KEY ("inviter_id") REFERENCES "public"."users"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "workspace_members" ADD CONSTRAINT "workspace_members_user_id_users_id_fk" FOREIGN KEY ("user_id") REFERENCES "public"."users"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "workspace_members" ADD CONSTRAINT "workspace_members_workspace_id_workspaces_id_fk" FOREIGN KEY ("workspace_id") REFERENCES "public"."workspaces"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 CREATE INDEX "accounts_userId_idx" ON "accounts" USING btree ("user_id");--> statement-breakpoint
-CREATE INDEX "sessions_userId_idx" ON "sessions" USING btree ("user_id");
+CREATE INDEX "sessions_userId_idx" ON "sessions" USING btree ("user_id");--> statement-breakpoint
+CREATE INDEX "workspace_invitations_workspaceId_idx" ON "workspace_invitations" USING btree ("workspace_id");--> statement-breakpoint
+CREATE INDEX "workspace_invitations_inviterId_idx" ON "workspace_invitations" USING btree ("inviter_id");--> statement-breakpoint
+CREATE INDEX "workspace_members_workspaceId_idx" ON "workspace_members" USING btree ("workspace_id");--> statement-breakpoint
+CREATE INDEX "workspace_members_userId_idx" ON "workspace_members" USING btree ("user_id");--> statement-breakpoint
+CREATE UNIQUE INDEX "workspaces_slug_uidx" ON "workspaces" USING btree ("slug");

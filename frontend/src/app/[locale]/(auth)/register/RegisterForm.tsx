@@ -9,65 +9,80 @@ import { Banner } from "@/components/ui/Banner";
 import { InputGroup, InputGroupInput, InputGroupAddon, InputGroupButton } from "@/components/ui/input-group";
 import { customToast } from "@/lib/customToast";
 import { authClient } from "@/lib/auth-client";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm, type FieldErrors } from "react-hook-form";
+import { useValidationSchemas, RegisterFormData } from "@/lib/validation";
+import { useSearchParams } from "next/navigation";
+
+const localePrefix = /^\/[a-z]{2}/;
+
+function getSafeCallbackURL(raw: string | null, fallback: string): string {
+  if (!raw) return fallback;
+  if (raw.startsWith('/') && !raw.startsWith('//')) return raw.replace(localePrefix, '');
+  return fallback;
+}
 
 export default function RegisterForm() {
+  const { registerSchema } = useValidationSchemas();
   const t = useTranslations("auth.register");
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const callbackUrl = getSafeCallbackURL(searchParams.get('callbackUrl'), '');
 
-  const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
-  const [loading, setLoading] = useState(false);
-  const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isSubmitting },
+  } = useForm<RegisterFormData>({
+    resolver: zodResolver(registerSchema),
+  });
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-  const handleRegisterUser = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setFieldErrors({});
 
-    if (password !== confirmPassword) {
-      setFieldErrors({ password: t("errorPasswordMatch") });
-      customToast.error(t("errorPasswordMatch"));
-      return;
+  const onError = (err: FieldErrors<RegisterFormData>) => {
+    if (err.email) {
+      customToast.error(err.email?.message ?? t("errorEmail"));
+    } else if (err.password) {
+      customToast.error(err.password?.message ?? t("errorPassword"));
+    } else {
+      customToast.error(t("errorRegister"));
     }
+  };
 
-    setLoading(true);
-
+  const onSubmit = async (data: RegisterFormData) => {
     try {
-      await authClient.signUp.email({
-        email,
-        password,
-        name: `${firstName} ${lastName}`.trim(),
-      }, {
-        onSuccess: () => {
-          customToast.success(t("registerSuccess"));
-          router.push("/login");
-        },
-        onError: (context) => {
-          switch (context.error.code) { 
-            case "USER_ALREADY_EXISTS_USE_ANOTHER_EMAIL":
-              setFieldErrors({ email: t("errorEmailTaken") });
-              break;
-            case "PASSWORD_TOO_SHORT":
-              setFieldErrors({ password: t("errorPasswordTooShort") });
-              break;
-            default:
+    const { error } = await authClient.signUp.email({
+      email: data.email,
+      password: data.password,
+      name: `${data.firstName} ${data.lastName}`.trim(),
+      fetchOptions: {
+          onSuccess: () => {
+            customToast.success(t("registerSuccess"));
+            router.push(callbackUrl.startsWith('/') ? `/login?callbackUrl=${callbackUrl}` : '/login');
+          },
+          onError: (context) => {
+            switch (context.error.code) {
+              case "USER_ALREADY_EXISTS_USE_ANOTHER_EMAIL":
+                customToast.error(t("errorEmailTaken"));
                 break;
+              case "PASSWORD_TOO_SHORT":
+                customToast.error(t("errorPasswordTooShort"));
+                break;
+              default:
+                customToast.error(t("errorRegister"));
+                break;
+            }
           }
-          customToast.error(context.error.message ?? context.error.statusText);
         }
-      }); 
+      });
     } catch (error) {
       console.error(error);
       customToast.error(t("errorRegister"));
     }
-    setLoading(false);
   };
 
   return (
-    <PageContainer>
+    <PageContainer sidebar={false}>
       <div className="w-full max-w-lg">
         <div className="mb-8 text-center">
           <Banner />
@@ -80,7 +95,7 @@ export default function RegisterForm() {
         </div>
 
         <div className="bg-bg border border-border rounded-xl p-8">
-          <form onSubmit={handleRegisterUser} className="space-y-8">
+          <form onSubmit={handleSubmit(onSubmit, onError)} className="space-y-8">
             <div className="flex flex-col md:flex-row gap-4">
               <div className="flex-1">
                 <label htmlFor="firstName" className="block text-sm font-normal text-text mb-2">
@@ -90,8 +105,7 @@ export default function RegisterForm() {
                   <InputGroupInput
                   id="firstName"
                   type="text"
-                  value={firstName}
-                  onChange={(e) => setFirstName(e.target.value)}
+                  {...register("firstName")}
                   placeholder={t("firstNamePlaceholder")}
                   className="w-full font-normal"
                   required
@@ -109,8 +123,7 @@ export default function RegisterForm() {
                   <InputGroupInput
                   id="lastName"
                   type="text"
-                  value={lastName}
-                  onChange={(e) => setLastName(e.target.value)}
+                  {...register("lastName")}
                   placeholder={t("lastNamePlaceholder")}
                   className="w-full font-normal"
                   required
@@ -123,12 +136,11 @@ export default function RegisterForm() {
               <label htmlFor="email" className="block text-sm font-normal text-text mb-2">
                 {t("email")}
               </label>
-                <InputGroup className={`bg-bg-muted py-6 ${fieldErrors.email ? "ring-2 ring-error border-error" : ""}`}>
+                <InputGroup className={`bg-bg-muted py-6 ${errors.email ? "ring-2 ring-error border-error" : ""}`}>
                   <InputGroupInput
                   id="email"
                   type="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
+                  {...register("email")}
                   placeholder={t("emailPlaceholder")}
                   className="w-full font-normal"
                   required
@@ -137,19 +149,18 @@ export default function RegisterForm() {
                     <Mail className="w-5 h-5 text-text-muted"/>
                   </InputGroupAddon>
                 </InputGroup>
-                {fieldErrors.email && <p className="text-error text-sm mt-2">{fieldErrors.email}</p>}
+                {errors.email && <p className="text-error text-sm mt-2">{errors.email?.message}</p>}
             </div>
 
             <div>
               <label htmlFor="password" className="block text-sm font-normal text-text mb-2">
                 {t("password")}
               </label>
-              <InputGroup className={`bg-bg-muted py-6 ${fieldErrors.password ? "ring-2 ring-error border-error" : ""}`}>
+              <InputGroup className={`bg-bg-muted py-6 ${errors.password ? "ring-2 ring-error border-error" : ""}`}>
                 <InputGroupInput
                 id="password"
                 type={showPassword ? "text" : "password"}
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
+                {...register("password")}
                 placeholder={t("passwordPlaceholder")}
                 className="w-full font-normal"
                 required
@@ -167,19 +178,18 @@ export default function RegisterForm() {
                   </InputGroupButton>
                 </InputGroupAddon>
               </InputGroup>
-              {fieldErrors.password && <p className="text-error text-sm mt-2">{fieldErrors.password}</p>}
+              {errors.password && <p className="text-error text-sm mt-2">{errors.password.message}</p>}
             </div>
             
             <div>
               <label htmlFor="confirm-password" className="block text-sm font-normal text-text mb-2">
                 {t("confirmPassword")}
               </label>
-              <InputGroup className={`bg-bg-muted py-6 ${fieldErrors.password ? "ring-2 ring-error border-error" : ""}`}>
+              <InputGroup className={`bg-bg-muted py-6 ${errors.confirmPassword ? "ring-2 ring-error border-error" : ""}`}>
                 <InputGroupInput
                 id="confirm-password"
                 type={showConfirmPassword ? "text" : "password"}
-                value={confirmPassword}
-                onChange={(e) => setConfirmPassword(e.target.value)}
+                {...register("confirmPassword")}
                 placeholder={t("confirmPasswordPlaceholder")}
                 className="w-full font-normal"
                 required
@@ -202,10 +212,10 @@ export default function RegisterForm() {
             <Button
             id="login-button"
             type="submit"
-            disabled={loading}
+            disabled={isSubmitting}
             className="w-full bg-primary hover:bg-primary-hover focus:bg-primary-hover text-text-contrast py-3 my-4"
             >
-              {loading ? t("registering") : t("register")}
+              {isSubmitting ? t("registering") : t("register")}
             </Button>
           </form>
 

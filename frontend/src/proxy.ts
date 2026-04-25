@@ -2,6 +2,7 @@ import createMiddleware from 'next-intl/middleware';
 import { routing } from '@/i18n/routing';
 import { NextRequest, NextResponse } from 'next/server';
 import { getSessionCookie } from 'better-auth/cookies';
+import { env } from './lib/env';
 
 const i18nMiddleware = createMiddleware(routing);
 
@@ -29,9 +30,7 @@ function trimLocalePrefix(pathname: string) {
 
 function isPublicRoute(pathname: string) {
   const path = trimLocalePrefix(pathname);
-  console.error('[isPublicRoute]:', path);
   return PUBLIC_ROUTES.some((route) => {
-    console.error('\t[route]:', route, '\t[path]:', path);
     return route === path || path.startsWith(route + '/')
 });
 }
@@ -40,30 +39,46 @@ function isAuthRoute(pathname: string) {
   return AUTH_ROUTES.some((route) => route === path || path.startsWith(route + '/'));
 }
 
+async function validateSession(request: NextRequest) {
+  const sessionCookie = getSessionCookie(request);
+  
+  if (!sessionCookie) return false;
+  
+  try {
+    const res = await fetch(
+      `${env.apiUrl}/api/auth/get-session`,
+      {
+        headers: {
+          cookie: request.headers.get('cookie') ?? '',
+        },
+      }
+    );
+    
+    const session = await res.json();
+
+    return !!session?.user;
+  } catch {
+    return false;
+  }
+}
+
 export default async function middleware(request: NextRequest) {
   const response = i18nMiddleware(request);
-  console.info('[middleware]:', response);
-  console.error('[response.ok]:', response?.ok);
+
   // Return if next-intl middleware handled the request
-  if (response && !response.ok)
+  if (response && response.status !== 200)
     return response;
 
   const pathname = request.nextUrl.pathname;
   const local = pathname.split("/")[1] ?? "en";
-  const session = getSessionCookie(request);
 
-  console.info('[pathname]:', pathname);
-  console.info('[local]:', local);
-  console.info('[session]:', session);
-
-  console.warn('[isPublicRoute]:', isPublicRoute(pathname));
-  if (isPublicRoute(pathname)) {
+  if (isPublicRoute(pathname))
     return response ?? NextResponse.next();
-  }
 
-  console.warn('[isAuthRoute]:', isAuthRoute(pathname));
+  const validSession = await validateSession(request);
+
   if (isAuthRoute(pathname)) {
-    if (session) {
+    if (validSession) {
       return NextResponse.redirect(
         new URL(`/${local}/dashboard`, request.url),
         { headers: response?.headers },
@@ -72,9 +87,11 @@ export default async function middleware(request: NextRequest) {
     return response ?? NextResponse.next()
   }
   
-  if (!session) {
+  if (!validSession) {
+    const loginUrl = new URL(`/${local}/login`, request.url);
+    loginUrl.searchParams.set('callbackUrl', pathname);
     return NextResponse.redirect(
-      new URL(`/${local}/login`, request.url),
+      loginUrl,
       { headers: response?.headers },
     );
   }

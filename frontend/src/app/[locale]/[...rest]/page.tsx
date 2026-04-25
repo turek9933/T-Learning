@@ -6,12 +6,12 @@ import { getTranslations } from "next-intl/server";
 export default async function NotFound() {
     const t = await getTranslations("notFound");
     return (
-    <PageContainer>
+    <PageContainer sidebar={false}>
         <div className="text-center max-w-md">
-            <h1 className="text-6xl md:text-8xl font-title font-bold text-text-secondary mb-4">
+            <h1 className="font-title font-bold text-text-secondary mb-4">
                 404
             </h1>
-            <h2 className="text-2xl md:text-3xl font-title font-bold text-text mb-8">
+            <h2 className="font-title font-bold text-text mb-8">
                 {t("title")}
             </h2>
 

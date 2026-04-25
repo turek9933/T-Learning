@@ -1,0 +1,18 @@
+services:
+  db:
+    image: postgres:17-bookworm
+    container_name: t-learning-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_NAME: ${DB_NAME}
+      POSTGRES_PORT: ${DB_PORT}
+      POSTGRES_DB: t-learning
+    ports:
+    - "5432:5432"
+    volumes:
+    - t-learning-data:/var/lib/postgresql/data
+ 
+volumes:
+  t-learning-data:

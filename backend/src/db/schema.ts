@@ -2,7 +2,7 @@ import { relations } from "drizzle-orm";
 import { 
     boolean, integer, jsonb, numeric, text, timestamp, uuid,
     pgEnum, pgTable,
-    index 
+    index, uniqueIndex
 } from "drizzle-orm/pg-core";
 
 
@@ -11,11 +11,6 @@ export const workspaceMemberRoleEnum = pgEnum('workspace_member_role', [
     'admin',
     'member',
     'viewer'
-])
-export const workspaceMemberStatusEnum = pgEnum('workspace_member_status', [
-    'invited',
-    'active', 
-    'suspended'
 ])
 export const workspaceTypeEnum = pgEnum('workspace_type', [
     'single',
@@ -61,6 +56,8 @@ export const users = pgTable('users', {
         .defaultNow()
         .$onUpdate(() => new Date())
         .notNull(),
+    canCreateWorkspaces: boolean('can_create_workspaces').default(false).notNull(),
+    isAdmin: boolean('is_admin').default(false).notNull(),
 });
 
 export const sessions = pgTable('sessions', {
@@ -74,6 +71,7 @@ export const sessions = pgTable('sessions', {
     ipAddress: text('ip_address'),
     userAgent: text('user_agent'),
     userId: text('user_id').references(() => users.id, { onDelete: 'cascade' }).notNull(),
+    activeWorkspaceId: text('active_workspace_id'),
     },
     (table) => [index('sessions_userId_idx').on(table.userId)]
 );
@@ -117,6 +115,8 @@ export const verifications = pgTable('verifications', {
 export const userRelations = relations(users, ({ many }) => ({
     sessions: many(sessions),
     accounts: many(accounts),
+    workspaceMembers: many(workspaceMembers),
+    workspaceInvitations: many(workspaceInvitations),
 }));
 
 export const sessionRelations = relations(sessions, ({ one }) => ({
@@ -133,39 +133,93 @@ export const accountRelations = relations(accounts, ({ one }) => ({
     }),
 }));
 
+//
+// Workspace tables
+//
 
 export const workspaces = pgTable('workspaces', {
-    id: uuid('id').defaultRandom().primaryKey(),
-    active: boolean('active').default(true),
-    type: workspaceTypeEnum('type').notNull().default('single'),
-    name: text('name'),
+    id: text('id').primaryKey(),
+    name: text('name').notNull(),
+    slug: text('slug').notNull().unique(),
+    logo: text('logo'),
+    type: workspaceTypeEnum('type').default('single').notNull(),
     description: text('description'),
-    status: workspaceStatusEnum('status').notNull().default('draft'),
-    prize: numeric('prize', { precision: 10, scale: 2 }),
+    status: workspaceStatusEnum('status').default('draft').notNull(),
+    price: numeric('price', { precision: 10, scale: 2 }),
     settings: jsonb('settings').$type<WorkspaceSettings>(),
-    created_at: timestamp('created_at').defaultNow().notNull(),
-    updated_at: timestamp('updated_at').defaultNow().notNull(),
-});
+    metadata: text('metadata'),
+    createdAt: timestamp('created_at').defaultNow().notNull(),
+    updatedAt: timestamp('updated_at').defaultNow().notNull(),
+    },
+    (table) => [uniqueIndex('workspaces_slug_uidx').on(table.slug)]
+);
 
 export const workspaceMembers = pgTable('workspace_members', {
-    id: uuid('id').defaultRandom().primaryKey(),
+    id: text('id').primaryKey(),
     userId: text('user_id').references(() => users.id, { onDelete: 'cascade' }).notNull(),
-    workspaceId: uuid('workspace_id').references(() => workspaces.id, { onDelete: 'cascade'}).notNull(),
-    role: workspaceMemberRoleEnum('role').notNull().default('member'),
-    status: workspaceMemberStatusEnum('status').notNull().default('active'),
+    workspaceId: text('workspace_id').references(() => workspaces.id, { onDelete: 'cascade'}).notNull(),
+    role: workspaceMemberRoleEnum('role').default('member').notNull(),
     hasPaid: boolean('has_paid'),
-    joinedAt: timestamp('joined_at').defaultNow().notNull(),
+    createdAt: timestamp('created_at').defaultNow().notNull(),
     expiresAt: timestamp('expires_at'),
-});
+    },
+    (table) => [
+        index('workspace_members_workspaceId_idx').on(table.workspaceId),
+        index('workspace_members_userId_idx').on(table.userId),
+    ]
+);
+
+export const workspaceInvitations = pgTable('workspace_invitations', {
+    id: text('id').primaryKey(),
+    workspaceId: text('workspace_id').references(() => workspaces.id, { onDelete: 'cascade' }).notNull(),
+    inviterId: text('inviter_id').references(() => users.id, { onDelete: 'cascade' }).notNull(),
+    email: text('email').notNull(),
+    role: text('role').default('member').notNull(),
+    status: text('status').default('pending').notNull(),
+    createdAt: timestamp('created_at').defaultNow().notNull(),
+    expiresAt: timestamp('expires_at').notNull(),
+    },
+    (table) => [
+        index('workspace_invitations_workspaceId_idx').on(table.workspaceId),
+        index('workspace_invitations_inviterId_idx').on(table.inviterId),
+    ]
+);
+
+export const workspaceRelations = relations(workspaces, ({ many }) => ({
+    workspaceMembers: many(workspaceMembers),
+    workspaceInvitations: many(workspaceInvitations),
+}))
+
+export const workspaceMemberRelations = relations(workspaceMembers, ({ one }) => ({
+    workspaces: one(workspaces, {
+        fields: [workspaceMembers.workspaceId],
+        references: [workspaces.id],
+    }),
+    users: one(users, {
+        fields: [workspaceMembers.userId],
+        references: [users.id],
+    }),
+}));
+
+export const workspaceInvitationRelations = relations(workspaceInvitations, ({ one }) => ({
+    workspaces: one(workspaces, {
+        fields: [workspaceInvitations.workspaceId],
+        references: [workspaces.id],
+    }),
+    users: one(users, {
+        fields: [workspaceInvitations.inviterId],
+        references: [users.id],
+    }),
+}));
 
 export const posts = pgTable('posts', {
     id: uuid('id').defaultRandom().primaryKey(),
     userId: text('user_id').references(() => users.id, { onDelete: 'set null' }),
-    workspaceId: uuid('workspace_id').references(() => workspaces.id, { onDelete: 'cascade' }).notNull(),
+    workspaceId: text('workspace_id').references(() => workspaces.id, { onDelete: 'cascade' }).notNull(),
     content: text('content').notNull(),
     pinned: boolean('pinned'),
-    created_at: timestamp('created_at').defaultNow().notNull(),
-    updated_at: timestamp('updated_at').defaultNow().notNull(),
+    createdAt: timestamp('created_at').defaultNow().notNull(),
+    updatedAt: timestamp('updated_at').defaultNow().notNull(),
 });
 
 export const postAttachments = pgTable('post_attachments', {
@@ -175,5 +229,5 @@ export const postAttachments = pgTable('post_attachments', {
     type: text('type').notNull(),
     url: text('url').notNull(),
     size: integer('size').notNull(),
-    created_at: timestamp('created_at').defaultNow().notNull(),
+    createdAt: timestamp('created_at').defaultNow().notNull(),
 });

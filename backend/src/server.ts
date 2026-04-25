@@ -1,14 +1,21 @@
 import { Elysia } from 'elysia';
 import { cors } from '@elysiajs/cors';
 import { authRoute } from '@/routes/auth.route';
+import { workspaceRoute } from '@/routes/workspaces.route';
 import { env } from './config/env';
+import { userRoute } from './routes/users.route';
 
 export const app = new Elysia()
     .use(cors({
-            origin: env.corsOrigin,
+            origin: env.corsOrigin.split(',').map(origin => origin.trim()),
             methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
             credentials: true,
             allowedHeaders: ['Content-Type', 'Authorization'],
     }))
     .use(authRoute)
-    .listen(env.port);
+    .use(workspaceRoute)
+    .use(userRoute)
+    .listen({
+        hostname: env.host,
+        port: env.port
+    });

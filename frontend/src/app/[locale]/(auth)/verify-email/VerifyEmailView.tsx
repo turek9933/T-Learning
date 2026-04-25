@@ -53,7 +53,7 @@ export default function VerifyEmailView() {
   }, [timeLeft]);
 
   return (
-  <PageContainer>
+  <PageContainer sidebar={false}>
     <div className="w-full max-w-md">
       <div className="mb-8 text-center">
         <Banner />

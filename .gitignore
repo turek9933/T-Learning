@@ -67,8 +67,10 @@ web_modules/
 
 # dotenv environment variable files
 .env
-.env.*
-!.env.example
+.env.development.local
+.env.test.local
+.env.production.local
+.env.local
 
 # parcel-bundler cache (https://parceljs.org/)
 .cache
@@ -126,6 +128,7 @@ dist
 .vscode-test
 .vscode/
 
+.directory
 
 # yarn v3
 .pnp.*

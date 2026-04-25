@@ -6,3 +6,10 @@ export async function getAuthMessages() {
         auth: allMessages.auth,
     };
 }
+
+export async function getDashboardMessages() {
+    const allMessages = await getMessages();
+    return {
+        dashboard: allMessages.dashboard,
+    };
+}
