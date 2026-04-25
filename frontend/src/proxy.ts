@@ -68,15 +68,15 @@ export default async function middleware(request: NextRequest) {
   // Return if next-intl middleware handled the request
   if (response && response.status !== 200)
     return response;
-  
+
   const pathname = request.nextUrl.pathname;
   const local = pathname.split("/")[1] ?? "en";
-  
+
   if (isPublicRoute(pathname))
     return response ?? NextResponse.next();
 
   const validSession = await validateSession(request);
-  
+
   if (isAuthRoute(pathname)) {
     if (validSession) {
       return NextResponse.redirect(
@@ -88,8 +88,10 @@ export default async function middleware(request: NextRequest) {
   }
   
   if (!validSession) {
+    const loginUrl = new URL(`/${local}/login`, request.url);
+    loginUrl.searchParams.set('callbackUrl', pathname);
     return NextResponse.redirect(
-      new URL(`/${local}/login`, request.url),
+      loginUrl,
       { headers: response?.headers },
     );
   }

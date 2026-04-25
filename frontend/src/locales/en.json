@@ -193,7 +193,7 @@
         "errorStatus": "Failed to change workspace status",
         "upcoming": "Upcoming",
         "noContent": "No content",
-        "noContentInfo": "Add announcement, event or task",
+        "noContentInfo": "Here will appear announcements, events or tasks",
         "errorLoad": "Failed to load workspace data"
       },
       "settings": {
@@ -202,6 +202,7 @@
         "members": "Members",
         "files": "Files",
         "edit": "Edit",
+        "view": "View",
         "update": "Update",
         "updating": "Updating...",
         "delete": "Delete",
@@ -217,6 +218,9 @@
         "price": "Price",
         "pricePlaceholder": "Enter new workspace price here",
         "status": "Status",
+        "statusDraft": "Draft",
+        "statusActive": "Active",
+        "statusArchived": "Archived",
         "statusDescription": "You can change status and visibility of workspace",
         "activate": "Activate",
         "archive": "Archive",
@@ -288,6 +292,16 @@
         "errorCreate": "Failed to create workspace",
         "errorSlugTaken": "Slug already taken",
         "successCreate": "Workspace successfully created"
+      },
+      "invite": {
+        "title": "Adding user to workspace",
+        "success": "You were successfully added to workspace",
+        "successWithName": "You were successfully added to {name}",
+        "pending": "You are being added to workspace",
+        "redirectTimer": "Redirecting in {seconds} seconds",
+        "goBack": "Go back to the main page",
+        "error": "Link to add user to workspace is invalid",
+        "errorInvite": "Failed to add user to workspace"
       }
     }
   },

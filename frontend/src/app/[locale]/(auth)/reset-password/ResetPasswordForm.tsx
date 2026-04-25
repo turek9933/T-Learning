@@ -56,9 +56,6 @@ export default function ResetPasswordForm({ titleProp, subtitleProp, passwordPro
                         {titleProp}
                     </h2>
                     <p className="text-text-secondary mt-2">
-                        {subtitleProp}
-                    </p>
-                    <p className="text-text-secondary mt-2">
                         {errorTokenProp}
                     </p>
                 </div>

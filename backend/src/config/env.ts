@@ -1,4 +1,5 @@
 const required = [
+    "HOST",
     "PORT",
     "NODE_ENV",
     "APP_URL",
@@ -36,6 +37,7 @@ for (const key of required) {
 }
 
 export const env = {
+    host: process.env.HOST!,
     port: process.env.PORT!,
     nodeEnv: process.env.NODE_ENV!,
     appUrl: process.env.APP_URL!,

@@ -193,7 +193,7 @@
         "errorStatus": "Impossibile cambiare lo stato della zone di lavoro",
         "upcoming": "Prossimi",
         "noContent": "Nessun contenuto",
-        "noContentInfo": "Aggiungi annunci, evento o compito",
+        "noContentInfo": "Qui appariranno annunci, eventi o compiti",
         "errorLoad": "Impossibile caricare i dati della zone di lavoro"
       },
       "settings": {
@@ -202,6 +202,7 @@
         "members": "Membri",
         "files": "File",
         "edit": "Modifica",
+        "view": "Visualizza",
         "update": "Aggiorna",
         "updating": "Aggiornamento...",
         "delete": "Elimina",
@@ -217,6 +218,9 @@
         "price": "Prezzo",
         "pricePlaceholder": "Inserisci un prezzo per la zone di lavoro",
         "status": "Stato",
+        "statusDraft": "Bozza",
+        "statusActive": "Attiva",
+        "statusArchived": "Archiviata",
         "statusDescription": "Puoi cambiare lo stato e la visibilita della zone di lavoro",
         "active": "Attiva",
         "archive": "Archivia",
@@ -288,6 +292,16 @@
         "errorCreate": "Impossibile creare la zone di lavoro",
         "errorSlugTaken": "Slug gia utilizzato",
         "successCreate": "Zone di lavoro creata con successo"
+      },
+      "invite": {
+        "title": "Invita utente",
+        "success": "Invito inviato con successo",
+        "successWithName": "Invito inviato con successo a {name}",
+        "pending": "Invito in corso...",
+        "redirectTimer": "Reindirizzamento in {seconds} secondi",
+        "goBack": "Torna alla homepage",
+        "error": "Impossibile inviare l'invito",
+        "errorInvite": "Impossibile inviare l'invito"
       }
     }
   },

@@ -16,6 +16,6 @@ export const app = new Elysia()
     .use(workspaceRoute)
     .use(userRoute)
     .listen({
-        hostname: '0.0.0.0',
+        hostname: env.host,
         port: env.port
     });

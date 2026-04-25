@@ -288,9 +288,6 @@ export default function WorkspaceMembersPage() {
     // TODO: add invited members
     const invitedMembers = members.filter((member) => member.expiresAt !== null);
 
-    if (!isOwnerOrAdmin)
-        return <WorkspaceError errorMessage={t('errorPermission')} />
-
     return (
         <PageContainer>
             <section className="flex flex-col w-full max-w-lg items-center space-y-4">
@@ -303,7 +300,9 @@ export default function WorkspaceMembersPage() {
                 </p>
    
                 {/* Search section */}
-                <UserSearchSection workspaceId={workspace.id} workspaceSlug={slug} />
+                {isOwnerOrAdmin && (
+                    <UserSearchSection workspaceId={workspace.id} workspaceSlug={slug} />
+                )}
    
                 {/* Members list section */}
                 {members.length === 0 ? (

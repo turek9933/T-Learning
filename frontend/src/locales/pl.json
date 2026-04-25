@@ -193,7 +193,7 @@
         "errorStatus": "Nie udało się zmienić statusu przestrzeni roboczej",
         "upcoming": "Nadchodzące",
         "noContent": "Brak treści",
-        "noContentInfo": "Dodaj ogłoszenie, wydarzenie lub zadanie",
+        "noContentInfo": "Tutaj pojawią się treści, ogłoszenia, wydarzenia lub zadania",
         "errorLoad": "Nie udało się wczytać danych o przestrzeni roboczej"
       },
       "settings": {
@@ -202,6 +202,7 @@
         "members": "Uczestnicy",
         "files": "Pliki",
         "edit": "Edytuj",
+        "view": "Podgląd",
         "update": "Zaktualizuj",
         "updating": "Aktualizowanie...",
         "delete": "Usuń",
@@ -217,6 +218,9 @@
         "price": "Cena",
         "pricePlaceholder": "Wpisz tutaj nową cene przestrzeni roboczej",
         "status": "Status",
+        "statusDraft": "Szkic",
+        "statusActive": "Aktywny",
+        "statusArchived": "Archiwum",
         "statusDescription": "Możesz zmienić status i widoczność przestrzeni roboczej",
         "activate": "Aktywuj",
         "archive": "Archiwizuj",
@@ -288,6 +292,16 @@
         "errorCreate": "Nie udało się utworzyć przestrzeni roboczej",
         "errorSlugTaken": "Slug jest już zajęty",
         "successCreate": "Przestrzeń robocza została utworzona"
+      },
+      "invite": {
+        "title": "Dodanie uczestnika do przestrzeni roboczej",
+        "success": "Zostałeś dodany do przestrzeni roboczej",
+        "successWithName": "Zostałeś dodany do {name}",
+        "pending": "Jeseś w trakcie dołączenia do przestrzeni roboczej",
+        "redirectTimer": "Przekierowanie za {seconds} sekund",
+        "goBack": "Powrót do strony głównej",
+        "error": "Link do dołączenia do przestrzeni roboczej jest nieprawidłowy",
+        "errorInvite": "Nie udało się dołączyć do przestrzeni roboczej"
       }
     }
   },

@@ -12,11 +12,22 @@ import { authClient } from "@/lib/auth-client";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm, type FieldErrors } from "react-hook-form";
 import { useValidationSchemas, RegisterFormData } from "@/lib/validation";
+import { useSearchParams } from "next/navigation";
+
+const localePrefix = /^\/[a-z]{2}/;
+
+function getSafeCallbackURL(raw: string | null, fallback: string): string {
+  if (!raw) return fallback;
+  if (raw.startsWith('/') && !raw.startsWith('//')) return raw.replace(localePrefix, '');
+  return fallback;
+}
 
 export default function RegisterForm() {
   const { registerSchema } = useValidationSchemas();
   const t = useTranslations("auth.register");
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const callbackUrl = getSafeCallbackURL(searchParams.get('callbackUrl'), '');
 
   const {
     register,
@@ -40,14 +51,14 @@ export default function RegisterForm() {
 
   const onSubmit = async (data: RegisterFormData) => {
     try {
-      const { error } = await authClient.signUp.email({
-        email: data.email,
-        password: data.password,
-        name: `${data.firstName} ${data.lastName}`.trim(),
-        fetchOptions: {
+    const { error } = await authClient.signUp.email({
+      email: data.email,
+      password: data.password,
+      name: `${data.firstName} ${data.lastName}`.trim(),
+      fetchOptions: {
           onSuccess: () => {
             customToast.success(t("registerSuccess"));
-            router.push("/login");
+            router.push(callbackUrl.startsWith('/') ? `/login?callbackUrl=${callbackUrl}` : '/login');
           },
           onError: (context) => {
             switch (context.error.code) {

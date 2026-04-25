@@ -11,14 +11,15 @@ import { customToast } from '@/lib/customToast';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { InputGroup, InputGroupAddon, InputGroupInput } from '@/components/ui/input-group';
-import { Pencil, Play, FileArchive, History, Shredder } from 'lucide-react';
+import { Pencil, Play, FileArchive, History, Shredder, Eye } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useRouter } from '@/i18n/routing';
 import { useState } from 'react';
 import { Input } from '@/components/ui/input';
 import { authClient } from '@/lib/auth-client';
+import StatusBadge from '@/components/StatusBadge';
 
-function EditSection({ slug }: { slug: string }) {
+function EditSection({ slug, isOwnerOrAdmin }: { slug: string, isOwnerOrAdmin: boolean }) {
     const t = useTranslations('dashboard.workspace.settings');
     const queryClient = useQueryClient();
     const { data: workspace } = useWorkspace(slug);
@@ -62,7 +63,9 @@ function EditSection({ slug }: { slug: string }) {
 
     return (
         <section className="flex flex-col w-full max-w-lg items-center space-y-4">
-            <h4>{t('edit')}</h4>
+            <h4>
+                {isOwnerOrAdmin ? t('edit') : t('view')}
+            </h4>
             <form
             className="flex flex-col w-full gap-4"
             onSubmit={handleSubmit((data) => mutation.mutate(data))}
@@ -74,12 +77,16 @@ function EditSection({ slug }: { slug: string }) {
                         <InputGroupInput
                         id="name"
                         type="text"
+                        readOnly={!isOwnerOrAdmin}
                         {...register("name")}
                         placeholder={workspace?.name || t("namePlaceholder")}
                         className="w-full font-normal"
                         />
                         <InputGroupAddon>
-                        <Pencil className="w-5 h-5 text-text-muted"/>
+                        {isOwnerOrAdmin
+                            ? <Pencil className="w-5 h-5 text-text-muted"/>
+                            : <Eye className="w-5 h-5 text-text-muted"/>
+                        }
                         </InputGroupAddon>
                     </InputGroup>
                     {errors.name && <p className="text-error">{errors.name.message}</p>}
@@ -91,13 +98,16 @@ function EditSection({ slug }: { slug: string }) {
                         <InputGroupInput
                         id="description"
                         type="text"
+                        readOnly={!isOwnerOrAdmin}
                         {...register("description")}
                         placeholder={workspace?.description || t("descriptionPlaceholder")}
                         className="w-full font-normal"
                         />
                         <InputGroupAddon>
-                        <Pencil className="w-5 h-5 text-text-muted"/>
-                        </InputGroupAddon>
+                        {isOwnerOrAdmin
+                            ? <Pencil className="w-5 h-5 text-text-muted"/>
+                            : <Eye className="w-5 h-5 text-text-muted"/>
+                        }                        </InputGroupAddon>
                     </InputGroup>
                     {errors.description && <p className="text-error">{errors.description.message}</p>}
                 </div>
@@ -108,6 +118,7 @@ function EditSection({ slug }: { slug: string }) {
                         <InputGroupInput
                         id="price"
                         type="number"
+                        readOnly={!isOwnerOrAdmin}
                         {...register("price", {
                             setValueAs: (value) => value === '' ? undefined : Number(value),
                         })}
@@ -115,25 +126,29 @@ function EditSection({ slug }: { slug: string }) {
                         className="w-full font-normal"
                         />
                         <InputGroupAddon>
-                        <Pencil className="w-5 h-5 text-text-muted"/>
-                        </InputGroupAddon>
+                        {isOwnerOrAdmin
+                            ? <Pencil className="w-5 h-5 text-text-muted"/>
+                            : <Eye className="w-5 h-5 text-text-muted"/>
+                        }                        </InputGroupAddon>
                     </InputGroup>
                     {errors.description && <p className="text-error">{errors.description.message}</p>}
                 </div>
-                <Button
-                id="edit-workspace"
-                type="submit"
-                disabled={isSubmitting}
-                className="w-full bg-primary hover:bg-primary-hover focus:bg-primary-hover text-text-contrast py-3 my-4 cursor-pointer"
-                >
-                {isSubmitting ? t("updating") : t("update")}
-                </Button>
+                { isOwnerOrAdmin && 
+                    <Button
+                    id="edit-workspace"
+                    type="submit"
+                    disabled={!isOwnerOrAdmin || isSubmitting}
+                    className="w-full bg-primary hover:bg-primary-hover focus:bg-primary-hover text-text-contrast py-3 my-4 cursor-pointer"
+                    >
+                    {isSubmitting ? t("updating") : t("update")}
+                    </Button>
+                }
             </form>
         </section>
     );
 }
 
-function StatusSection({ slug }: { slug: string }) {
+function StatusSection({ slug, isOwnerOrAdmin }: { slug: string, isOwnerOrAdmin: boolean }) {
     const t = useTranslations('dashboard.workspace.settings');
     const queryClient = useQueryClient();
     const { data: workspace } = useWorkspace(slug);
@@ -171,17 +186,27 @@ function StatusSection({ slug }: { slug: string }) {
     return (
         <section className="flex flex-col w-full max-w-lg items-center space-y-4">
             <h4>{t('status')}</h4>
-            <p className="font-normal text-text-secondary">{t('statusDescription')}</p>
-            {possibleTransitions && (
-                <Button
-                id="edit-status"
-                type="button"
-                onClick={() => mutation.mutate(possibleTransitions.next)}
-                className="bg-primary hover:bg-primary-hover focus:bg-primary-hover text-text-contrast py-3 cursor-pointer"
-                >
-                    <possibleTransitions.icon className="w-5 h-5 mr-2" />
-                    {t(possibleTransitions.label)}
-                </Button>
+            <div className="flex flex-row gap-2 items-center justify-center">
+                <h5 className={`font-semibold ${status === 'draft' ? 'text-warning' : status === 'active' ? 'text-success' : 'text-text-muted'}`}>
+                    {t(`status${status.charAt(0).toUpperCase() + status.slice(1)}`)}
+                </h5>
+                <StatusBadge status={status} />
+            </div>
+            {isOwnerOrAdmin && (
+                <>
+                    <p className="font-normal text-text-secondary">{t('statusDescription')}</p>
+                    {possibleTransitions && (
+                        <Button
+                        id="edit-status"
+                        type="button"
+                        onClick={() => mutation.mutate(possibleTransitions.next)}
+                        className="bg-primary hover:bg-primary-hover focus:bg-primary-hover text-text-contrast py-3 cursor-pointer"
+                        >
+                            <possibleTransitions.icon className="w-5 h-5 mr-2" />
+                            {t(possibleTransitions.label)}
+                        </Button>
+                    )}
+                </>
             )}
         </section>
     );
@@ -282,8 +307,8 @@ export default function WorkspaceEditPage() {
     const isOwner = workspace.role === 'owner';
     const isOwnerOrAdmin = isOwner || workspace.role === 'admin';
 
-    if (!isOwnerOrAdmin)
-        return <WorkspaceError errorMessage={t('errorPermission')} />
+    // if (!isOwnerOrAdmin)
+    //     return <WorkspaceError errorMessage={t('errorPermission')} />
 
     return (
         <PageContainer>
@@ -297,8 +322,8 @@ export default function WorkspaceEditPage() {
                 <h3 className="text-text">
                     {workspace.name}
                 </h3>
-                <EditSection slug={slug} />
-                <StatusSection slug={slug} />
+                <EditSection slug={slug} isOwnerOrAdmin={isOwnerOrAdmin} />
+                <StatusSection slug={slug} isOwnerOrAdmin={isOwnerOrAdmin} />
                 {isOwner && <DeleteSection slug={slug} />}
             </div>
         </PageContainer>

@@ -16,11 +16,24 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm, Controller, type FieldErrors } from "react-hook-form";
 import { useValidationSchemas, LoginFormData } from "@/lib/validation";
 import { useRouter } from "@/i18n/routing";
+import { useSearchParams } from "next/navigation";
+
+const localePrefix = /^\/[a-z]{2}/;
+
+function getSafeCallbackURL(raw: string | null, fallback: string): string {
+  if (!raw) return fallback;
+  if (raw.startsWith('/') && !raw.startsWith('//')) return raw.replace(localePrefix, '');
+  return fallback;
+}
 
 export default function LoginForm() {
   const t = useTranslations("auth.login");
   const { loginSchema } = useValidationSchemas();
   const router = useRouter();
+  const searchParams = useSearchParams();
+  console.log('\t', searchParams.get('callbackUrl'));
+  const callbackUrl = getSafeCallbackURL(searchParams.get('callbackUrl'), '');
+  console.log(callbackUrl);
 
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -52,27 +65,27 @@ export default function LoginForm() {
 
   const onSubmit = async (data: LoginFormData) => {
     try {
-      const { error } = await authClient.signIn.email({
-        email: data.email,
-        password: data.password,
-        rememberMe: data.rememberMe,
+    const { error } = await authClient.signIn.email({
+      email: data.email,
+      password: data.password,
+      rememberMe: data.rememberMe,
         fetchOptions: {
           onSuccess: () => {
             console.log("Login successful fired");
             customToast.success(t("loginSuccess"));
-            router.push("/dashboard");
+            router.push(callbackUrl.startsWith('/') ? callbackUrl : '/dashboard');
           },
           onError: (context) => {
             switch (context.error.code) {
-              case "INVALID_EMAIL_OR_PASSWORD":
-                setError("email", { message: t("errorEmailOrPassword") });
-                setError("password", { message: t("errorEmailOrPassword") });
-                customToast.error(t("errorEmailOrPassword"));
-                break;
-              default:
-                customToast.error(t("errorLogin"));
-                break;
-            }
+        case "INVALID_EMAIL_OR_PASSWORD":
+          setError("email", { message: t("errorEmailOrPassword") });
+          setError("password", { message: t("errorEmailOrPassword") });
+          customToast.error(t("errorEmailOrPassword"));
+          break;
+        default:
+          customToast.error(t("errorLogin"));
+          break;
+      }
           }
         }
       });
@@ -87,7 +100,7 @@ export default function LoginForm() {
     try {
       await authClient.signIn.social({
         provider: "google",
-        callbackURL: `${env.appUrl}/dashboard`,
+        callbackURL: callbackUrl.startsWith('/') ? callbackUrl : `${env.appUrl}/dashboard`,
       }, {
         onSuccess: () => {
           customToast.success(t("googlePopup"));
