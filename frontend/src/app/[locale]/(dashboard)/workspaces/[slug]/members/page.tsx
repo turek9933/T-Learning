@@ -1,10 +1,10 @@
 'use client';
 import { useTranslations } from 'next-intl';
-import { PageContainer } from '@/components/ui/PageContainer';
+import { PageContainer } from '@/components/layout/PageContainer';
 import { useParams } from 'next/navigation';
 import { MemberItem, useWorkspace, useWorkspaceMembers, WorkspaceRole } from '@/lib/queries/workspaces';
-import WorkspacePending from '@/components/WorkspacePending';
-import WorkspaceError from '@/components/WorkspaceError';
+import WorkspacePending from '@/components/workspace/WorkspacePending';
+import WorkspaceError from '@/components/workspace/WorkspaceError';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { customToast } from '@/lib/customToast';
 import { InputGroup, InputGroupAddon, InputGroupButton, InputGroupInput } from '@/components/ui/input-group';

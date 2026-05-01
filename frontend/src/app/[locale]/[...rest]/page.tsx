@@ -1,6 +1,6 @@
 import { Link } from "@/i18n/routing";
 import { Button } from "@/components/ui/button";
-import { PageContainer } from "@/components/ui/PageContainer";
+import { PageContainer } from "@/components/layout/PageContainer";
 import { getTranslations } from "next-intl/server";
 
 export default async function NotFound() {

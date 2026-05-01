@@ -1,4 +1,4 @@
-import { PageContainer } from "./ui/PageContainer"
+import { PageContainer } from "../layout/PageContainer"
 
 export default function WorkspaceError({ errorMessage }: { errorMessage: string }) {
     return (

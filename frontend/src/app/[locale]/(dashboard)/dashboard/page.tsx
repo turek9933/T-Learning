@@ -4,7 +4,7 @@ import { Link } from '@/i18n/routing';
 import { Button } from '@/components/ui/button';
 import { Plus, Users, User, BookOpen, Activity, PencilLine, LibraryBig, ChessKing, ChessQueen, GraduationCap, HatGlasses } from 'lucide-react';
 import { useMyWorkspaces, WorkspaceItem } from '@/lib/queries/workspaces';
-import { PageContainer } from '@/components/ui/PageContainer';
+import { PageContainer } from '@/components/layout/PageContainer';
 import StatusBadge from '@/components/StatusBadge';
 
 function WorkspaceRow({ workspace }: { workspace: WorkspaceItem }) {

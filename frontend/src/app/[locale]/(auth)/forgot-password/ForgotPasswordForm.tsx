@@ -3,8 +3,8 @@
 import { useState } from "react";
 import { authClient } from "@/lib/auth-client";
 import { customToast } from "@/lib/customToast";
-import { PageContainer } from "@/components/ui/PageContainer";
-import { Banner } from "@/components/ui/Banner";
+import { PageContainer } from "@/components/layout/PageContainer";
+import { Banner } from "@/components/Banner";
 import { InputGroup, InputGroupInput, InputGroupAddon } from "@/components/ui/input-group";
 import { Link } from "@/i18n/routing";
 import { Button } from "@/components/ui/button";
