@@ -3,7 +3,7 @@ import { Link } from "@/i18n/routing";
 import { Button } from "@/components/ui/button";
 import { Layers, CreditCard, MonitorSmartphone, Zap, Shield, Wifi } from "lucide-react";
 import { PageContainer } from "@/components/layout/PageContainer";
-import { Banner } from "@/components/Banner";
+import { Banner } from "@/components/shared/Banner";
 
 export default async function LandingPage() {
     const t = await getTranslations("landing");

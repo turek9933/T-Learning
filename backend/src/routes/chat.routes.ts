@@ -1,0 +1,136 @@
+import { Elysia, t } from 'elysia';
+import { and, or, eq, desc, lt } from 'drizzle-orm';
+import { db } from '@/db/index';
+import { conversations, messages } from '@/db/schema';
+import { auth } from '@/auth/config';
+
+export const chatRoute = new Elysia({ prefix: '/api/conversations' })
+    .derive(async ({ status, request: { headers } }) => {
+        const session = await auth.api.getSession({ headers });
+        if (!session) {
+            return status(401, { message: 'Unauthorized' });
+        }
+        return { user: session.user }
+    })
+
+    // GET /api/conversations
+    // Search for user conversations
+    .get('/', async ({ user }) => {
+        const result = await db
+            .select({
+                id:               conversations.id,
+                participantAId:   conversations.participantAId,
+                participantBId:   conversations.participantBId,
+                createdAt:        conversations.createdAt,
+                updatedAt:        conversations.updatedAt,
+            })
+            .from(conversations)
+            .where(
+                or(
+                    eq(conversations.participantAId, user.id),
+                    eq(conversations.participantBId, user.id),
+                )
+            )
+            .orderBy(conversations.updatedAt)
+        return result
+    })
+
+    // POST /api/conversations
+    // Create a new conversation between two users if not exists already
+    .post('/', async ({ user, body, status }) => {
+        if (!body.participantId) {
+            return status(400, { message: 'Missing participantId' });
+        }
+
+        try {
+            const [created] = await db
+                .insert(conversations)
+                .values({
+                    participantAId: user.id,
+                    participantBId: body.participantId,
+                })
+                .returning({
+                    id:               conversations.id,
+                    participantAId:   conversations.participantAId,
+                    participantBId:   conversations.participantBId,
+                    createdAt:        conversations.createdAt,
+                    updatedAt:        conversations.updatedAt,
+                })
+
+            return created
+        } catch (err: any) {
+            if (err.code === '23505') {
+                const existing = await db
+                    .select()
+                    .from(conversations)
+                    .where(
+                        or(
+                            and(
+                                eq(conversations.participantAId, user.id),
+                                eq(conversations.participantBId, body.participantId),
+                            ),
+                            and(
+                                eq(conversations.participantAId, body.participantId),
+                                eq(conversations.participantBId, user.id),
+                            ),
+                        )
+                    )
+                    .limit(1)
+
+                if (existing.length > 0) {
+                    return existing[0]
+                }
+            }
+
+            return status(500, { message: 'Internal server error, cannot create conversation' });
+        }
+    }, {
+        body: t.Object({
+            participantId: t.String(),
+        }),
+    })
+
+    // GET /api/:id/messages
+    // Get a conversation by id, cursor is createdAt of last message, limit how much to load
+    .get('/:id/messages', async ({ user, params, query, status }) => {
+        const conversation = await db
+            .select()
+            .from(conversations)
+            .where(
+                and(
+                    eq(conversations.id, params.id),
+                    or(
+                        eq(conversations.participantAId, user.id),
+                        eq(conversations.participantBId, user.id),
+                    ),
+                )
+            )
+            .limit(1)
+
+        if (conversation.length === 0) {
+            return status(404, { message: 'Conversation not found' });
+        }
+
+        const limit = query.limit ? parseInt(query.limit) : 30;
+        
+        const result = await db
+            .select()
+            .from(messages)
+            .where(
+                and(
+                    eq(messages.conversationId, params.id),
+                    query.cursor
+                    ? lt(messages.createdAt, new Date(query.cursor))
+                    : undefined,
+                )
+            )
+            .orderBy(desc(messages.createdAt))
+            .limit(limit)
+            
+        return result;
+    }, {
+        query: t.Object({
+            limit: t.Optional(t.String()),
+            cursor: t.Optional(t.String()),
+        }),
+    })

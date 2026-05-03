@@ -53,6 +53,21 @@
     "workspacePriceInvalid": "Please enter a valid price",
     "workspacePriceTooLow": "Price must be positive"
   },
+  "components": {
+    "search": {
+      "search": "Search",
+      "searchPlaceholder": "Type to search",
+      "searchLoading": "Searching...",
+      "searchNotFound": "No results found",
+      "error": "Action failed"
+    },
+    "chat": {
+      "newConversation": "New conversation",
+      "noConversations": "No conversations",
+      "newMessage": "New message",
+      "loading": "Loading..."
+    }
+  },
   "auth": {
     "login": {
       "title": "Welcome back",

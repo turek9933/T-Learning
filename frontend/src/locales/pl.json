@@ -53,6 +53,21 @@
     "workspacePriceInvalid": "Podaj prawidłową cene",
     "workspacePriceTooLow": "Cena musi być dodatnia"
   },
+  "components": {
+    "search": {
+      "search": "Szukaj",
+      "searchPlaceholder": "Wpisz tutaj szukane słowo",
+      "searchLoading": "Szukanie...",
+      "searchNotFound": "Nie znaleziono wyników",
+      "error": "Błąd nie udało się wykonać akcji"
+    },
+    "chat": {
+      "newConversation": "Nowa konwersacja",
+      "noConversations": "Brak konwersacji",
+      "newMessage": "Nowa wiadomość",
+      "loading": "Ładowanie..."
+    }
+  },
   "auth": {
     "login": {
       "title": "Witaj ponownie",

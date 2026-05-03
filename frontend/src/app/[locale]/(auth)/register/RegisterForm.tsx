@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import { Mail, Lock, MoveLeft, UserPen, EyeOff, Eye } from "lucide-react";
 import { PageContainer } from "@/components/layout/PageContainer";
-import { Banner } from "@/components/Banner";
+import { Banner } from "@/components/shared/Banner";
 import { InputGroup, InputGroupInput, InputGroupAddon, InputGroupButton } from "@/components/ui/input-group";
 import { customToast } from "@/lib/customToast";
 import { authClient } from "@/lib/auth-client";
