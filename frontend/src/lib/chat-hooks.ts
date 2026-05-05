@@ -6,9 +6,8 @@ import { env } from "@/lib/env";
 
 export function useWsEvent(handler: (event: WsIncomingEvent) => void) {
     useEffect(() => {
-        wsClient.connect()
         const unsubscribe = wsClient.subscribe(handler)
-        return unsubscribe;
+        return () => { unsubscribe() }
     }, [handler])
 }
 
@@ -29,6 +28,14 @@ export function useCreateConversation() {
     })
 }
 
+export function useConversation(conversationId: string) {
+    const queryClient = useQueryClient();
+
+    const conversations = queryClient.getQueryData<Conversation[]>(['conversations']) || [];
+
+    return conversations.find(c => c.id === conversationId);
+}
+
 export function useConversations() {
     return useQuery({
         queryKey: ['conversations'],
@@ -41,9 +48,9 @@ export function useMessages(conversationId: string) {
     return useInfiniteQuery({
         queryKey: ['messages', conversationId],
         queryFn: ({ pageParam }) => {
-            const url = `/api/conversations/${conversationId}/messages
-            ?limit=30` + (pageParam ? `&cursor=${pageParam}` : '');
-            return fetch(url).then(r => r.json()) as Promise<Message[]>;
+            const url = `${env.apiUrl}/api/conversations/${conversationId}/messages?limit=30`
+            + (pageParam ? `&cursor=${pageParam}` : '');
+            return fetch(url, { credentials: 'include' }).then(r => r.json()) as Promise<Message[]>;
         },
         initialPageParam: null as string | null,
         getNextPageParam: (lastPage) => {

@@ -2,8 +2,8 @@
 
 import { useRouter } from "@/i18n/routing";
 import { useConversations, useCreateConversation } from "@/lib/chat-hooks";
-import { UserSearch } from "@/components/shared/UserSearch";
-import { Plus } from "lucide-react";
+import { UserSearch } from "../shared/UserSearch";
+import { Send } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { ConversationItem } from "./ConversationItem";
 
@@ -18,16 +18,13 @@ export function ConversationList() {
         router.push(`/chat/${conversation.id}`);
     };
 
-    console.info(conversations);
-    console.info(typeof conversations);
     return (
         <div className="flex flex-col h-full">
             <div className="p-4 border-b border-border">
                 <UserSearch
                 onSelect={handleSelectUser}
-                actionLabel={t('newConversation')}
-                actionIcon={<Plus className="w-4 h-4" />}
-                />
+                actionIcon={<Send className="w-4 h-4" />}
+                showMail={false} />
             </div>
 
             <div className="flex-1">

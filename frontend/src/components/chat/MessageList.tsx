@@ -1,8 +1,8 @@
 'use client';
-
 import { useMessages, useWsEvent } from "@/lib/chat-hooks";
 import React, { useCallback, useEffect, useRef } from "react";
 import { MessageItem } from "@/components/chat/MessageItem";
+import { useTranslations } from "next-intl";
 
 export function MessageList({ conversationId, typingUserId, onTypingChange }: {
     conversationId: string,
@@ -11,12 +11,26 @@ export function MessageList({ conversationId, typingUserId, onTypingChange }: {
 }) {
     const { data, fetchNextPage, hasNextPage, isFetchingNextPage } = useMessages(conversationId);
     const bottomRef = useRef<HTMLDivElement>(null);
+    const prevLengthRef = useRef(0);
+    const isLoadingMoreRef = useRef(false);
+    const t = useTranslations('components.chat');
 
-    const allMessages = data?.pages.flatMap(page => [...page].reverse()) ?? [];
+    const allMessages = data?.pages.slice().reverse().flatMap(page => [...page].reverse()) ?? []
 
     useEffect(() => {
-        bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
-    }, [allMessages]);
+        isLoadingMoreRef.current = isFetchingNextPage;
+    }, [isFetchingNextPage]);
+
+    useEffect(() => {
+        const currentLength = allMessages.length;
+        const prevLength = prevLengthRef.current;
+
+        if (currentLength > prevLength && !isLoadingMoreRef.current) {
+            bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
+        }
+
+        prevLengthRef.current = currentLength;
+    }, [allMessages.length]);
 
     const handleScroll = useCallback((e: React.UIEvent<HTMLDivElement>) => {
         if (e.currentTarget.scrollTop < 50 && hasNextPage && !isFetchingNextPage) {
@@ -35,9 +49,15 @@ export function MessageList({ conversationId, typingUserId, onTypingChange }: {
 
     return (
         <div className="flex-1 flex flex-col overflow-y-scroll" onScroll={handleScroll}>
-            {isFetchingNextPage && <p className="text-center text-xs text-text-muted py-2">Ładowanie wiadomości...//TODO</p>}
+            {isFetchingNextPage && (
+                <div className="sticky top-0 z-10 flex justify-center py-2 bg-bg-muted">
+                    <p className="text-center text-xs text-text-muted py-2">
+                        {t('loading')}
+                    </p>
+                </div>
+            )}
             {allMessages.map((message) => (
-                <MessageItem message={message} />
+                <MessageItem key={message.id} message={message} />
             ))}
             {typingUserId && <p className="text-xs text-text-muted px-2 py-1">Pisze... //TODO</p>}
             <div ref={bottomRef} />

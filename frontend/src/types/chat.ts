@@ -16,6 +16,16 @@ export type Conversation = {
     participantBId: string;
     createdAt: string;
     updatedAt: string;
+
+    otherParticipantId: string;
+    otherParticipantName: string;
+    otherParticipantAvatarUrl: string;
+
+    lastMessageId: string;
+    lastMessageType: 'text' | 'image' | 'file';
+    lastMessageContent: string;
+    lastMessageSenderId: string;
+    lastMessageCreatedAt: string;
 }
 
 export type WsIncomingEvent = 

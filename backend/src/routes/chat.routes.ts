@@ -1,8 +1,9 @@
 import { Elysia, t } from 'elysia';
-import { and, or, eq, desc, lt } from 'drizzle-orm';
+import { and, or, eq, desc, lt, sql, isNull } from 'drizzle-orm';
 import { db } from '@/db/index';
-import { conversations, messages } from '@/db/schema';
+import { conversations, messages, users } from '@/db/schema';
 import { auth } from '@/auth/config';
+import { alias } from 'drizzle-orm/pg-core';
 
 export const chatRoute = new Elysia({ prefix: '/api/conversations' })
     .derive(async ({ status, request: { headers } }) => {
@@ -16,22 +17,62 @@ export const chatRoute = new Elysia({ prefix: '/api/conversations' })
     // GET /api/conversations
     // Search for user conversations
     .get('/', async ({ user }) => {
+        const otherParticipantIdExpression = sql<string>`
+            CASE
+                WHEN ${conversations.participantAId} = ${user.id}
+                THEN ${conversations.participantBId}
+                ELSE ${conversations.participantAId}
+            END`
+
+        const otherUser = alias(users, 'other_user');
+
+        const lastMessageSubquery = db
+            .select({
+                id:               messages.id,
+                type:             messages.type,
+                content:          messages.content,
+                senderId:         messages.senderId,
+                createdAt:        messages.createdAt,
+            })
+            .from(messages)
+            .where(
+                and(
+                    eq(messages.conversationId, conversations.id),
+                    isNull(messages.deletedAt),
+                )
+            )
+            .orderBy(desc(messages.createdAt))
+            .limit(1)
+            .as('lastMessage');
+
         const result = await db
             .select({
-                id:               conversations.id,
-                participantAId:   conversations.participantAId,
-                participantBId:   conversations.participantBId,
-                createdAt:        conversations.createdAt,
-                updatedAt:        conversations.updatedAt,
+                id:                         conversations.id,
+                participantAId:             conversations.participantAId,
+                participantBId:             conversations.participantBId,
+                createdAt:                  conversations.createdAt,
+                updatedAt:                  conversations.updatedAt,
+                
+                otherParticipantId:         otherParticipantIdExpression.as('other_participant_id'),
+                otherParticipantName:       otherUser.name,
+                otherParticipantAvatarUrl:  otherUser.avatarUrl,
+
+                lastMessageId:              lastMessageSubquery.id,
+                lastMessageType:            lastMessageSubquery.type,
+                lastMessageContent:         lastMessageSubquery.content,
+                lastMessageSenderId:        lastMessageSubquery.senderId,
+                lastMessageCreatedAt:       lastMessageSubquery.createdAt,
             })
             .from(conversations)
+            .leftJoinLateral(lastMessageSubquery, sql`true`)
+            .leftJoin(otherUser, eq(otherUser.id, otherParticipantIdExpression))
             .where(
                 or(
                     eq(conversations.participantAId, user.id),
                     eq(conversations.participantBId, user.id),
                 )
             )
-            .orderBy(conversations.updatedAt)
+            .orderBy(desc(conversations.updatedAt))
         return result
     })
 

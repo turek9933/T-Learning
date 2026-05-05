@@ -10,9 +10,13 @@ class WsClient {
     private reconnectDelay = 1000;
 
     connect() {
-        if (this.ws?.readyState === WebSocket.OPEN) return;
+        if (this.ws?.readyState === WebSocket.OPEN || this.ws?.readyState === WebSocket.CONNECTING) return;
 
         this.ws = new WebSocket(env.wsUrl);
+
+        this.ws.onopen = () => {
+            this.reconnectDelay = 1000;
+        };
 
         this.ws.onmessage = (event) => {
             const data = JSON.parse(event.data) as WsIncomingEvent;

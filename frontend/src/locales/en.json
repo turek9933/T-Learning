@@ -34,7 +34,7 @@
   "sidebar": {
     "workspaces": "Workspaces",
     "calendar": "Calendar",
-    "messages": "Messages",
+    "messages": "Chat",
     "settings": "Settings",
     "workspaceMain": "Pulpit",
     "workspaceMembers": "Members",
@@ -65,7 +65,8 @@
       "newConversation": "New conversation",
       "noConversations": "No conversations",
       "newMessage": "New message",
-      "loading": "Loading..."
+      "loading": "Loading...",
+      "deletedMessage": "Message deleted"
     }
   },
   "auth": {

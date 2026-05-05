@@ -1,21 +1,20 @@
 import { useState } from 'react';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useQueryClient } from '@tanstack/react-query';
 import { useUserSearch } from '@/lib/queries/users';
-import { authClient } from '@/lib/auth-client';
 import { useTranslations } from 'next-intl';
-import { customToast } from '@/lib/customToast';
 import { Button } from '@/components/ui/button';
 import { InputGroup, InputGroupAddon, InputGroupButton, InputGroupInput } from '@/components/ui/input-group';
-import { Search, X, UserPlus } from 'lucide-react';
+import { Search, X } from 'lucide-react';
 import Avatar from '@/components/shared/Avatar';
 
 type UserSearchProps = {
     onSelect: (user: { id: string; name: string; email: string }) => void
-    actionLabel: string
+    actionLabel?: string
     actionIcon?: React.ReactNode
+    showMail?: boolean
 }
 
-export function UserSearch({onSelect, actionLabel, actionIcon}: UserSearchProps) {
+export function UserSearch({onSelect, actionLabel, actionIcon, showMail = true}: UserSearchProps) {
     const t = useTranslations('components.search');
     const queryClient = useQueryClient();
     const [search, setSearch] = useState('');
@@ -72,7 +71,7 @@ export function UserSearch({onSelect, actionLabel, actionIcon}: UserSearchProps)
                                         <div className="flex items-center gap-2">
                                             <Avatar {...result} />
                                             <p className="font-semibold">{result.name}</p>
-                                            <p className="font-normal text-text-secondary text-sm">{result.email}</p>
+                                            {showMail && <p className="font-normal text-text-secondary text-sm">{result.email}</p>}
                                         </div>
                                         <Button
                                         type="button"

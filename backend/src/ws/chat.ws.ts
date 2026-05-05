@@ -10,6 +10,8 @@ type WsMessage =
  | { eventType: 'typing.start'; conversationId: string; }
  | { eventType: 'typing.stop'; conversationId: string; }
 
+const connectedUsers = new Map<string, string>() // wsId → userId
+
 export const chatWs = new Elysia()
   .state('userId', '' as string)
   .ws('/ws', {
@@ -26,28 +28,28 @@ export const chatWs = new Elysia()
         const session = await auth.api.getSession({
             headers: ws.data.headers,
         });
-
+    
         if (!session) {
             ws.close(1008, 'Unauthorized');
             return;
         }
 
-        ws.data.store.userId = session.user.id
+        // ws.data.store.userId = session.user.id
+        connectedUsers.set(ws.id, session.user.id)
+
         
         ws.subscribe(`user:${session.user.id}`);
     },
 
     async message(ws, body) {
-        const userId = ws.data.store.userId;
+        const userId = connectedUsers.get(ws.id);
 
         if (!userId) return;
         
         const data = body as WsMessage;
         
-        console.log('[message] message.send; userId:', userId);
         if (data.eventType === 'message.send') {
             try {
-                console.log('[message.send] data:', data);
                 const conversation = await db
                     .select()
                     .from(conversations)
@@ -62,15 +64,11 @@ export const chatWs = new Elysia()
                     )
                     .limit(1)
 
-                console.log('[message.send] conversation:', conversation);
                 if (conversation.length === 0) 
                     return;
 
                 if (!data.content) 
                     return;
-
-                console.log('[message.send] data:', data);
-                console.log('[message.send] conversation:', conversation);
 
                 const conv = conversation[0]!;
 
@@ -113,7 +111,7 @@ export const chatWs = new Elysia()
                     message: newMessage,
                 })
             } catch (error) {
-                console.log('[message.send] error:', error);
+                console.error('[message.send] error:', error);
             }
         }
 
@@ -168,8 +166,10 @@ export const chatWs = new Elysia()
     },
 
     async close(ws) {
-        const userId = ws.data.store.userId;
+        const userId = connectedUsers.get(ws.id);
 
         if (userId) ws.unsubscribe(`user:${userId}`);
+
+        connectedUsers.delete(ws.id);
     },
 })

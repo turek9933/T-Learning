@@ -65,7 +65,8 @@
       "newConversation": "Nowa konwersacja",
       "noConversations": "Brak konwersacji",
       "newMessage": "Nowa wiadomość",
-      "loading": "Ładowanie..."
+      "loading": "Ładowanie...",
+      "deletedMessage": "Wiadomość została usunięta"
     }
   },
   "auth": {

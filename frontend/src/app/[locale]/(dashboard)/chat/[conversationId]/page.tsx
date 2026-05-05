@@ -1,7 +1,9 @@
 import { MessageWindow } from "@/components/chat/MessageWindow";
 
-export default function ConversationPage({ params }: { params: { conversationId: string } }) {
+export default async function ConversationPage({ params }: { params: Promise<{ conversationId: string }> }) {
+    const { conversationId } = await params;
+
     return (
-        <MessageWindow conversationId={params.conversationId} />
+        <MessageWindow conversationId={conversationId} />
     )
 }

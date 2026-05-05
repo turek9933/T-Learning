@@ -65,7 +65,8 @@
       "newConversation": "Nuova conversazione",
       "noConversations": "Nessuna conversazione",
       "newMessage": "Nuovo messaggio",
-      "loading": "Caricamento..."
+      "loading": "Caricamento...",
+      "deletedMessage": "Messaggio eliminato"
     }
   },
   "auth": {
