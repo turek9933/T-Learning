@@ -4,9 +4,11 @@ import { useRef, useState } from "react";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { Send } from "lucide-react";
+import { useTranslations } from "next-intl";
 
 export function MessageInput({ conversationId }: { conversationId: string }) {
     const [value, setValue] = useState("");
+    const t = useTranslations('components.chat');
     const isWriting = useRef(false);
     const typingTimeout = useRef<ReturnType<typeof setTimeout>>(undefined);
 
@@ -40,14 +42,14 @@ export function MessageInput({ conversationId }: { conversationId: string }) {
     }
 
     return (
-        <div className="border-t border-border p-4 flex gap">
+        <div className="border-t border-border p-4 flex items-end gap-2">
             <Textarea
-                value={value}
-                onChange={handleChange}
-                onKeyDown={handleKeyDown}
-                placeholder="Napisz wiadomość..."//TODO internalize
-                rows={1}
-                className="flex-1 resize-none bg-bg min-h-0"
+            value={value}
+            onChange={handleChange}
+            onKeyDown={handleKeyDown}
+            placeholder={t('inputPlaceholder')}
+            rows={1}
+            className="flex-1 resize-none bg-bg min-h-0 max-h-24 overflow-y-auto"
             />
             <Button onClick={handleSend} className="ml-2 bg-primary hover:bg-primary-hover text-text-contrast"><Send className="w-4 h-4" /></Button>
         </div>

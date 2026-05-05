@@ -66,7 +66,10 @@
       "noConversations": "Nessuna conversazione",
       "newMessage": "Nuovo messaggio",
       "loading": "Caricamento...",
-      "deletedMessage": "Messaggio eliminato"
+      "deletedMessage": "Messaggio eliminato",
+      "user": "Utente",
+      "isTyping": "{userName} sta scrivendo...",
+      "inputPlaceholder": "Scrivi un messaggio..."
     }
   },
   "auth": {

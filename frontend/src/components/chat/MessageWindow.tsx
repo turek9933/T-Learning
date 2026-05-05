@@ -14,7 +14,7 @@ export function MessageWindow({ conversationId }: { conversationId: string }) {
     if (!conversation) return null;
 
     return (
-        <div className="flex flex-col flex-1">
+        <div className="flex flex-col flex-1 min-h-0">
             <div className="flex h-10 items-center border-b border-border px-4 gap-2">
                 <Link href="/chat" className="hover:text-primary">
                     <ChevronLeft className="w-6 h-6" />
@@ -26,6 +26,7 @@ export function MessageWindow({ conversationId }: { conversationId: string }) {
             <MessageList
             conversationId={conversationId}
             typingUserId={typingUserId}
+            typingUserName={conversation.otherParticipantName}
             onTypingChange={setTypingUserId}
             />
 

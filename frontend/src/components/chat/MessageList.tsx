@@ -4,36 +4,45 @@ import React, { useCallback, useEffect, useRef } from "react";
 import { MessageItem } from "@/components/chat/MessageItem";
 import { useTranslations } from "next-intl";
 
-export function MessageList({ conversationId, typingUserId, onTypingChange }: {
+export function MessageList({ conversationId, typingUserId, typingUserName, onTypingChange }: {
     conversationId: string,
     typingUserId: string | null,
+    typingUserName?: string
     onTypingChange: (typingUserId: string | null) => void
 }) {
     const { data, fetchNextPage, hasNextPage, isFetchingNextPage } = useMessages(conversationId);
     const bottomRef = useRef<HTMLDivElement>(null);
     const prevLengthRef = useRef(0);
-    const isLoadingMoreRef = useRef(false);
+    const loadingOlderRef = useRef(false);
     const t = useTranslations('components.chat');
 
     const allMessages = data?.pages.slice().reverse().flatMap(page => [...page].reverse()) ?? []
 
     useEffect(() => {
-        isLoadingMoreRef.current = isFetchingNextPage;
-    }, [isFetchingNextPage]);
-
-    useEffect(() => {
         const currentLength = allMessages.length;
         const prevLength = prevLengthRef.current;
 
-        if (currentLength > prevLength && !isLoadingMoreRef.current) {
-            bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
+        if (currentLength > prevLength) {
+            if (loadingOlderRef.current) {
+                loadingOlderRef.current = false;
+            } else {
+                bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
+            }
         }
 
         prevLengthRef.current = currentLength;
     }, [allMessages.length]);
 
+    useEffect(() => {
+        if (typingUserId) {
+            bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
+        }
+    }, [typingUserId]);
+
+
     const handleScroll = useCallback((e: React.UIEvent<HTMLDivElement>) => {
         if (e.currentTarget.scrollTop < 50 && hasNextPage && !isFetchingNextPage) {
+            loadingOlderRef.current = true;
             fetchNextPage();
         }
     }, [fetchNextPage, hasNextPage, isFetchingNextPage]);
@@ -59,7 +68,12 @@ export function MessageList({ conversationId, typingUserId, onTypingChange }: {
             {allMessages.map((message) => (
                 <MessageItem key={message.id} message={message} />
             ))}
-            {typingUserId && <p className="text-xs text-text-muted px-2 py-1">Pisze... //TODO</p>}
+
+            {typingUserId &&
+                <p className="text-sm text-text-muted px-2 py-1">
+                    {t('isTyping', { userName: typingUserName ? typingUserName : t('user')})}
+                </p>
+            }
             <div ref={bottomRef} />
         </div>
     );
