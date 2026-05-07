@@ -53,6 +53,27 @@
     "workspacePriceInvalid": "Inserisci un prezzo valido",
     "workspacePriceTooLow": "Il prezzo deve essere positivo"
   },
+  "components": {
+    "search": {
+      "search": "Cerca",
+      "searchPlaceholder": "Cerca qui",
+      "searchLoading": "Cerca...",
+      "searchNotFound": "Nessun risultato trovato",
+      "error": "Operazione fallita"
+    },
+    "chat": {
+      "newConversation": "Nuova conversazione",
+      "selectConversation": "Seleziona una conversazione",
+      "selectConversationDescription": "Seleziona una conversazione per iniziare una chat",
+      "noConversations": "Nessuna conversazione",
+      "newMessage": "Nuovo messaggio",
+      "loading": "Caricamento...",
+      "deletedMessage": "Messaggio eliminato",
+      "user": "Utente",
+      "isTyping": "{userName} sta scrivendo...",
+      "inputPlaceholder": "Scrivi un messaggio..."
+    }
+  },
   "auth": {
     "login": {
       "title": "Benvenuto di nuovo",

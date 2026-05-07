@@ -4,9 +4,9 @@ import { useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { Link, useRouter } from "@/i18n/routing";
 import { authClient } from "@/lib/auth-client";
-import { PageContainer } from "@/components/ui/PageContainer";
+import { PageContainer } from "@/components/layout/PageContainer";
 import { useTranslations } from "next-intl";
-import { Banner } from "@/components/ui/Banner";
+import { Banner } from "@/components/shared/Banner";
 import { MoveLeft } from "lucide-react";
 import { customToast } from "@/lib/customToast";
 

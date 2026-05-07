@@ -11,7 +11,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Users, User, TriangleAlert, Group } from 'lucide-react';
-import { PageContainer } from '@/components/ui/PageContainer';
+import { PageContainer } from '@/components/layout/PageContainer';
 import { CustomBreadcrumb } from '@/components/CustomBreadcrumb';
 
 function generateSlug(name: string): string {

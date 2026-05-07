@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { PageContainer } from "@/components/ui/PageContainer";
+import { PageContainer } from "@/components/layout/PageContainer";
 
 export default function NotFound() {
     return (

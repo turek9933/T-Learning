@@ -6,7 +6,7 @@ import { Calendar, MessageSquare, Settings, LayoutDashboard, Cog, Users, BookOpe
 const NAV_ITEMS = [
     { key: 'workspaces', href: '/dashboard', icon: LayoutDashboard },
     { key: 'calendar',   href: '/calendar',  icon: Calendar },
-    { key: 'messages',   href: '/messages',  icon: MessageSquare },
+    { key: 'messages',   href: '/chat',  icon: MessageSquare },
     { key: 'settings',   href: '/settings',  icon: Settings },
 ] as const;
 

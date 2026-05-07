@@ -3,14 +3,14 @@ import { useTranslations } from 'next-intl';
 import { usePathname, useParams } from 'next/navigation';
 import { Link } from '@/i18n/routing';
 import { useWorkspace } from '@/lib/queries/workspaces';
-import { PageContainer } from '@/components/ui/PageContainer';
+import { PageContainer } from '@/components/layout/PageContainer';
 import { customToast } from '@/lib/customToast';
 import { Calendar, CalendarPlus, Clock, FileText, NotebookPen, Plus, SquarePen, User, Users, Video } from 'lucide-react';
 import StatusBadge from '@/components/StatusBadge';
 import { Button } from '@/components/ui/button';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
-import WorkspacePending from '@/components/WorkspacePending';
-import WorkspaceError from '@/components/WorkspaceError';
+import WorkspacePending from '@/components/workspace/WorkspacePending';
+import WorkspaceError from '@/components/workspace/WorkspaceError';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { authClient } from '@/lib/auth-client';
 

@@ -1,20 +1,18 @@
 'use client';
 import { useTranslations } from 'next-intl';
-import { PageContainer } from '@/components/ui/PageContainer';
+import { PageContainer } from '@/components/layout/PageContainer';
 import { useParams } from 'next/navigation';
 import { MemberItem, useWorkspace, useWorkspaceMembers, WorkspaceRole } from '@/lib/queries/workspaces';
-import WorkspacePending from '@/components/WorkspacePending';
-import WorkspaceError from '@/components/WorkspaceError';
+import WorkspacePending from '@/components/workspace/WorkspacePending';
+import WorkspaceError from '@/components/workspace/WorkspaceError';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { customToast } from '@/lib/customToast';
-import { InputGroup, InputGroupAddon, InputGroupButton, InputGroupInput } from '@/components/ui/input-group';
-import { Search, X, UserPlus, MoreHorizontal } from 'lucide-react';
+import { UserPlus, MoreHorizontal } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { useState } from 'react';
-import { useUserSearch } from '@/lib/queries/users';
 import { authClient } from '@/lib/auth-client';
-import Avatar from '@/components/Avatar';
+import Avatar from '@/components/shared/Avatar';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
+import { UserSearch } from '@/components/shared/UserSearch';
 
 function MemberRow({
     member,
@@ -162,11 +160,13 @@ function MemberRow({
     );
 }
 
-function UserSearchSection({workspaceId, workspaceSlug}: {workspaceId: string, workspaceSlug: string}) {
+export default function WorkspaceMembersPage() {
     const t = useTranslations('dashboard.workspace.members');
     const queryClient = useQueryClient();
-    const [search, setSearch] = useState('');
-    const { data: results = [], isFetching } = useUserSearch(search);
+    const { slug } = useParams<{ slug: string }>();
+    const { data: workspace, isPending: workspaceIsPending, isError: workspaceIsError } = useWorkspace(slug);
+    const { data: members = [], isPending: membersIsPending, isError: membersIsError } = useWorkspaceMembers(slug);
+
 
     class AuthError extends Error {
         code?: string;
@@ -176,10 +176,9 @@ function UserSearchSection({workspaceId, workspaceSlug}: {workspaceId: string, w
             this.code = code;
         }
     }
-
     const inviteMutation = useMutation({
         mutationFn: async ({ email, role }: { email: string, role: 'admin' | 'member' | 'viewer'}) => {
-                const res = await authClient.organization.inviteMember({ email, role, organizationId: workspaceId });
+                const res = await authClient.organization.inviteMember({ email, role, organizationId: workspace!.id });
                 if (res?.error) {
                    throw new AuthError(res.error.message, res.error.code);
                 }
@@ -187,7 +186,7 @@ function UserSearchSection({workspaceId, workspaceSlug}: {workspaceId: string, w
             },
 
             onSuccess: (_, { email }) => {
-            queryClient.invalidateQueries({ queryKey: ['workspaces', workspaceSlug] });
+            queryClient.invalidateQueries({ queryKey: ['workspaces', slug] });
             customToast.success(t('successInvite', { email: email }));
         },
         onError: (err: AuthError) => {
@@ -197,7 +196,7 @@ function UserSearchSection({workspaceId, workspaceSlug}: {workspaceId: string, w
                     case "USER_IS_ALREADY_INVITED_TO_THIS_ORGANIZATION":
                         customToast.error(t('errorUserAlreadyInvited'));
                         break;
-                    case "USER_IS_ALREADY_MEMBER_OF_THIS_ORGANIZATION":
+                    case "USER_IS_ALREADY_A_MEMBER_OF_THIS_ORGANIZATION":
                         customToast.error(t('errorUserAlreadyMember'));
                         break;
                     default:
@@ -205,80 +204,10 @@ function UserSearchSection({workspaceId, workspaceSlug}: {workspaceId: string, w
                         break;
                 }
             } else {
-                customToast.error(t('errorInvite'))}
+                customToast.error(t('error'))}
             }
     });
-
-    return (
-        <div className="space-y-4">
-            <div className="flex flex-col w-full max-w-lg items-center space-y-4">
-                <InputGroup>
-                    <InputGroupInput
-                    id="search"
-                    type="text"
-                    value={search}
-                    onChange={e => setSearch(e.target.value)}
-                    placeholder={t('searchPlaceholder')}
-                    className="w-full font-normal"
-                    />
-                    <InputGroupAddon>
-                        <Search className='w-4 h-4 text-text-secondary' />
-                    </InputGroupAddon>
-                    {search && (
-                        <InputGroupButton
-                        type="button"
-                        variant="ghost"
-                        onClick={() => setSearch('')}
-                        >
-                            <X className="w-4 h-4" />
-                        </InputGroupButton>
-                    )}
-                </InputGroup>
-            </div>
-            {search.length > 2 && (
-                <div className="flex flex-col w-full max-w-lg items-center space-y-4">
-                    {isFetching && results.length === 0  && (
-                        <p className="text-sm text-text-secondary">{t('searchLoading')}</p>
-                    )}
-                    {!isFetching && results.length === 0  && (
-                        <p className="text-sm text-text-secondary">{t('searchNotFound')}</p>
-                    )}
-                    { results.length > 0 &&
-                        <div className="flex flex-col items-center justify-between border border-border rounded-lg">
-                            {results.map((result) => (
-                                <div key={result.id} className="flex flex-col w-full items-center space-y-4 px-4 py-2">
-                                    <div className="flex w-full items-center justify-between gap-2">
-                                        <div className="flex items-center gap-2">
-                                            <Avatar {...result} />
-                                            <p className="font-semibold">{result.name}</p>
-                                            <p className="font-normal text-text-secondary text-sm">{result.email}</p>
-                                        </div>
-                                        <Button
-                                        type="button"
-                                        variant="ghost"
-                                        className="border"
-                                        onClick={() => inviteMutation.mutate({ email: result.email, role: 'member' })}
-                                        >
-                                            <UserPlus className="w-4 h-4" />
-                                            {t('invite')}
-                                        </Button>
-                                    </div>
-                                </div>
-                            ))}
-                        </div>
-                    }
-                </div>
-            )}
-        </div>
-    );
-}
-
-export default function WorkspaceMembersPage() {
-    const t = useTranslations('dashboard.workspace.members');
-    const { slug } = useParams<{ slug: string }>();
-    const { data: workspace, isPending: workspaceIsPending, isError: workspaceIsError } = useWorkspace(slug);
-    const { data: members = [], isPending: membersIsPending, isError: membersIsError } = useWorkspaceMembers(slug);
-
+    
     if (workspaceIsPending || membersIsPending)
         return <WorkspacePending />;
     if (workspaceIsError || !workspace || membersIsError || !members)
@@ -301,7 +230,7 @@ export default function WorkspaceMembersPage() {
    
                 {/* Search section */}
                 {isOwnerOrAdmin && (
-                    <UserSearchSection workspaceId={workspace.id} workspaceSlug={slug} />
+                    <UserSearch onSelect={(user) => inviteMutation.mutate({ email: user.email, role: 'member' })} actionLabel={t('invite') } actionIcon={<UserPlus className="w-4 h-4" />} />
                 )}
    
                 {/* Members list section */}

@@ -1,4 +1,4 @@
-import { relations } from "drizzle-orm";
+import { sql, relations } from "drizzle-orm";
 import { 
     boolean, integer, jsonb, numeric, text, timestamp, uuid,
     pgEnum, pgTable,
@@ -25,6 +25,17 @@ export const eventTypeEnum = pgEnum('event_type', [
     'meeting',
     'deadline',
     'exam'
+])
+export const messageStatusEnum = pgEnum('message_status', [
+    'pending',
+    'sent',
+    'delivered',
+    'read'
+])
+export const messageTypeEnum = pgEnum('message_type', [
+    'text',
+    'image',
+    'file'
 ])
 export interface WorkspaceSettings {
     notifications?: {
@@ -211,6 +222,57 @@ export const workspaceInvitationRelations = relations(workspaceInvitations, ({ o
         references: [users.id],
     }),
 }));
+
+//
+// Chat tables
+//
+export const conversations = pgTable('conversations', {
+    id: uuid('id').defaultRandom().primaryKey(),
+    participantAId: text('participant_a_id').references(() => users.id, { onDelete: 'cascade' }).notNull(),
+    participantBId: text('participant_b_id').references(() => users.id, { onDelete: 'cascade' }).notNull(),
+    createdAt: timestamp('created_at').defaultNow().notNull(),
+    updatedAt: timestamp('updated_at').defaultNow().notNull(),
+}, (table) => [
+    index('conversations_participantAId_idx').on(table.participantAId),
+    index('conversations_participantBId_idx').on(table.participantBId),
+    uniqueIndex('conversations_participants_unique_idx').on(
+        sql`LEAST(${table.participantAId}, ${table.participantBId})`,
+        sql`GREATEST(${table.participantAId}, ${table.participantBId})`,
+    ),
+])
+
+export const messages = pgTable('messages', {
+    id: uuid('id').defaultRandom().primaryKey(),
+    conversationId: uuid('conversation_id').references(() => conversations.id, { onDelete: 'cascade' }).notNull(),
+    senderId: text('sender_id').references(() => users.id, { onDelete: 'set null' }),
+    replyToId: uuid('reply_to_id'),
+    type: messageTypeEnum('type').default('text').notNull(),
+    content: text('content').notNull(),
+    createdAt: timestamp('created_at').defaultNow().notNull(),
+    updatedAt: timestamp('updated_at').defaultNow().notNull(),
+    deletedAt: timestamp('deleted_at'),
+}, (table) => [
+    index('messages_conversationId_idx').on(table.conversationId),
+    index('messages_senderId_idx').on(table.senderId),
+])
+
+export const messageStatuses = pgTable('message_statuses', {
+    id: uuid('id').defaultRandom().primaryKey(),
+    messageId: uuid('message_id').references(() => messages.id, { onDelete: 'cascade' }).notNull(),
+    userId: text('user_id').references(() => users.id, { onDelete: 'cascade' }).notNull(),
+    status: messageStatusEnum('status').default('sent').notNull(),
+    createdAt: timestamp('created_at').defaultNow().notNull(),
+    updatedAt: timestamp('updated_at').defaultNow().notNull(),
+}, (table) => [
+    index('message_statuses_messageId_idx').on(table.messageId),
+    index('message_statuses_userId_idx').on(table.userId),
+])
+export const messageRelations = relations(messages, ({ one }) => ({
+    replyTo: one(messages, {
+        fields: [messages.replyToId],
+        references: [messages.id],
+    })
+}))
 
 export const posts = pgTable('posts', {
     id: uuid('id').defaultRandom().primaryKey(),

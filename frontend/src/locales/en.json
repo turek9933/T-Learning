@@ -34,7 +34,7 @@
   "sidebar": {
     "workspaces": "Workspaces",
     "calendar": "Calendar",
-    "messages": "Messages",
+    "messages": "Chat",
     "settings": "Settings",
     "workspaceMain": "Pulpit",
     "workspaceMembers": "Members",
@@ -52,6 +52,27 @@
     "workspaceDescriptionTooLong": "Workspace description must be at most {descriptionMaxLength} characters",
     "workspacePriceInvalid": "Please enter a valid price",
     "workspacePriceTooLow": "Price must be positive"
+  },
+  "components": {
+    "search": {
+      "search": "Search",
+      "searchPlaceholder": "Type to search",
+      "searchLoading": "Searching...",
+      "searchNotFound": "No results found",
+      "error": "Action failed"
+    },
+    "chat": {
+      "newConversation": "New conversation",
+      "selectConversation": "Select conversation",
+      "selectConversationDescription": "Select a conversation to start a chat",
+      "noConversations": "No conversations",
+      "newMessage": "New message",
+      "loading": "Loading...",
+      "deletedMessage": "Message deleted",
+      "user": "User",
+      "isTyping": "{userName} is writing...",
+      "inputPlaceholder": "Type a message..."
+    }
   },
   "auth": {
     "login": {

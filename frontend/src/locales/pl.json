@@ -53,6 +53,27 @@
     "workspacePriceInvalid": "Podaj prawidłową cene",
     "workspacePriceTooLow": "Cena musi być dodatnia"
   },
+  "components": {
+    "search": {
+      "search": "Szukaj",
+      "searchPlaceholder": "Wpisz tutaj szukane słowo",
+      "searchLoading": "Szukanie...",
+      "searchNotFound": "Nie znaleziono wyników",
+      "error": "Błąd nie udało się wykonać akcji"
+    },
+    "chat": {
+      "newConversation": "Nowa konwersacja",
+      "selectConversation": "Wybierz konwersacje",
+      "selectConversationDescription": "Wybierz konwersacje, aby rozpoczynać rozmowę",
+      "noConversations": "Brak konwersacji",
+      "newMessage": "Nowa wiadomość",
+      "loading": "Ładowanie...",
+      "deletedMessage": "Wiadomość została usunięta",
+      "user": "Użytkownik",
+      "isTyping": "{userName} pisze...",
+      "inputPlaceholder": "Wpisz wiadomość..."
+    }
+  },
   "auth": {
     "login": {
       "title": "Witaj ponownie",
