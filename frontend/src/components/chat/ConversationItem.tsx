@@ -17,8 +17,8 @@ export function ConversationItem({ conversation }: { conversation: Conversation 
         >
             <Avatar avatarUrl={conversation.otherParticipantAvatarUrl} name={conversation.otherParticipantName} />
             <div className="flex-1">
-                <p className="text-sm font-medium text-text">{conversation.otherParticipantName}</p>
-                <p className="text-xs text-text-muted">
+                <p className="text-sm font-medium text-text hover:text-primary break-all line-clamp-1 max-w-8/9">{conversation.otherParticipantName}</p>
+                <p className="text-xs text-text-muted hover:text-text break-all line-clamp-1 max-w-8/9">
                     {conversation.lastMessageType === 'image' 
                         ? <Image className="w-4 h-4" />
                         : conversation.lastMessageType === 'file'

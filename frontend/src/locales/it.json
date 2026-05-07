@@ -63,6 +63,8 @@
     },
     "chat": {
       "newConversation": "Nuova conversazione",
+      "selectConversation": "Seleziona una conversazione",
+      "selectConversationDescription": "Seleziona una conversazione per iniziare una chat",
       "noConversations": "Nessuna conversazione",
       "newMessage": "Nuovo messaggio",
       "loading": "Caricamento...",

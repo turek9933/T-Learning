@@ -21,7 +21,7 @@ export function MessageItem({ message }: { message: Message }) {
             `}>
                 {isDeleted
                 ? t('deletedMessage')
-                : message.content // TODO dodać obsługę obrazów i plików
+                : message.content // TODO add images and files support
                 }
             </div>
         </div>
