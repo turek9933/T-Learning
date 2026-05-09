@@ -128,6 +128,13 @@ export const userRelations = relations(users, ({ many }) => ({
     accounts: many(accounts),
     workspaceMembers: many(workspaceMembers),
     workspaceInvitations: many(workspaceInvitations),
+    conversations: many(conversations),
+    posts: many(posts),
+    postComments: many(postComments),
+    events: many(events),
+    homeworks: many(homeworks),
+    homeworkSubmissions: many(homeworkSubmissions),
+    materials: many(materials),
 }));
 
 export const sessionRelations = relations(sessions, ({ one }) => ({
@@ -199,25 +206,29 @@ export const workspaceInvitations = pgTable('workspace_invitations', {
 export const workspaceRelations = relations(workspaces, ({ many }) => ({
     workspaceMembers: many(workspaceMembers),
     workspaceInvitations: many(workspaceInvitations),
+    posts: many(posts),
+    events: many(events),
+    homeworks: many(homeworks),
+    materials: many(materials),
 }))
 
 export const workspaceMemberRelations = relations(workspaceMembers, ({ one }) => ({
-    workspaces: one(workspaces, {
+    workspace: one(workspaces, {
         fields: [workspaceMembers.workspaceId],
         references: [workspaces.id],
     }),
-    users: one(users, {
+    user: one(users, {
         fields: [workspaceMembers.userId],
         references: [users.id],
     }),
 }));
 
 export const workspaceInvitationRelations = relations(workspaceInvitations, ({ one }) => ({
-    workspaces: one(workspaces, {
+    workspace: one(workspaces, {
         fields: [workspaceInvitations.workspaceId],
         references: [workspaces.id],
     }),
-    users: one(users, {
+    inviter: one(users, {
         fields: [workspaceInvitations.inviterId],
         references: [users.id],
     }),
@@ -226,6 +237,7 @@ export const workspaceInvitationRelations = relations(workspaceInvitations, ({ o
 //
 // Chat tables
 //
+
 export const conversations = pgTable('conversations', {
     id: uuid('id').defaultRandom().primaryKey(),
     participantAId: text('participant_a_id').references(() => users.id, { onDelete: 'cascade' }).notNull(),
@@ -267,29 +279,267 @@ export const messageStatuses = pgTable('message_statuses', {
     index('message_statuses_messageId_idx').on(table.messageId),
     index('message_statuses_userId_idx').on(table.userId),
 ])
+
+// Metadata of the file attached to the message 
+// message.content = MinIO URL while message.type = 'image' | 'file'.
+export const chatAttachments = pgTable('chat_attachments', {
+    id: uuid('id').defaultRandom().primaryKey(),
+    messageId: uuid('message_id').references(() => messages.id, { onDelete: 'cascade' }).notNull().unique(),
+    name: text('name').notNull(),
+    mimeType: text('mime_type').notNull(),
+    size: integer('size').notNull(),
+    createdAt: timestamp('created_at').defaultNow().notNull(),
+}, (table) => [
+    index('chat_attachments_messageId_idx').on(table.messageId),
+])
+
 export const messageRelations = relations(messages, ({ one }) => ({
     replyTo: one(messages, {
         fields: [messages.replyToId],
         references: [messages.id],
-    })
+    }),
+    attachment: one(chatAttachments, {
+        fields: [messages.id],
+        references: [chatAttachments.messageId],
+    }),
 }))
+
+export const chatAttachmentRelations = relations(chatAttachments, ({ one }) => ({
+    message: one(messages, {
+        fields: [chatAttachments.messageId],
+        references: [messages.id],
+    }),
+}))
+
+//
+// Post tables
+//
 
 export const posts = pgTable('posts', {
     id: uuid('id').defaultRandom().primaryKey(),
     userId: text('user_id').references(() => users.id, { onDelete: 'set null' }),
     workspaceId: text('workspace_id').references(() => workspaces.id, { onDelete: 'cascade' }).notNull(),
     content: text('content').notNull(),
-    pinned: boolean('pinned'),
+    pinned: boolean('pinned').default(false).notNull(),
     createdAt: timestamp('created_at').defaultNow().notNull(),
     updatedAt: timestamp('updated_at').defaultNow().notNull(),
-});
+    deletedAt: timestamp('deleted_at'),
+}, (table) => [
+    index('posts_workspaceId_idx').on(table.workspaceId),
+    index('posts_userId_idx').on(table.userId),
+]);
 
 export const postAttachments = pgTable('post_attachments', {
     id: uuid('id').defaultRandom().primaryKey(),
     postId: uuid('post_id').references(() => posts.id, { onDelete: 'cascade'}).notNull(),
+    // Object key in MinIO, e.g. "workspaces/{workspaceId}/posts/{postId}/{fileId}"
+    // Backend generates presigned URL on request — we don't store the URL in the database
+    storageKey: text('storage_key').notNull(),
     name: text('name').notNull(),
-    type: text('type').notNull(),
-    url: text('url').notNull(),
+    mimeType: text('mime_type').notNull(),
     size: integer('size').notNull(),
     createdAt: timestamp('created_at').defaultNow().notNull(),
-});
+}, (table) => [
+    index('post_attachments_postId_idx').on(table.postId),
+]);
+
+export const postComments = pgTable('post_comments', {
+    id: uuid('id').defaultRandom().primaryKey(),
+    postId: uuid('post_id').references(() => posts.id, { onDelete: 'cascade' }).notNull(),
+    userId: text('user_id').references(() => users.id, { onDelete: 'set null' }),
+    content: text('content').notNull(),
+    createdAt: timestamp('created_at').defaultNow().notNull(),
+    updatedAt: timestamp('updated_at').defaultNow().notNull(),
+    deletedAt: timestamp('deleted_at'),
+}, (table) => [
+    index('post_comments_postId_idx').on(table.postId),
+    index('post_comments_userId_idx').on(table.userId),
+]);
+
+export const postRelations = relations(posts, ({ one, many }) => ({
+    author: one(users, {
+        fields: [posts.userId],
+        references: [users.id],
+    }),
+    workspace: one(workspaces, {
+        fields: [posts.workspaceId],
+        references: [workspaces.id],
+    }),
+    attachments: many(postAttachments),
+    comments: many(postComments),
+}));
+
+export const postAttachmentRelations = relations(postAttachments, ({ one }) => ({
+    post: one(posts, {
+        fields: [postAttachments.postId],
+        references: [posts.id],
+    }),
+}));
+
+export const postCommentRelations = relations(postComments, ({ one }) => ({
+    post: one(posts, {
+        fields: [postComments.postId],
+        references: [posts.id],
+    }),
+    author: one(users, {
+        fields: [postComments.userId],
+        references: [users.id],
+    }),
+}));
+
+//
+// Event tables
+//
+
+export const events = pgTable('events', {
+    id: uuid('id').defaultRandom().primaryKey(),
+    workspaceId: text('workspace_id').references(() => workspaces.id, { onDelete: 'cascade' }).notNull(),
+    userId: text('user_id').references(() => users.id, { onDelete: 'set null' }),
+    type: eventTypeEnum('type').notNull(),
+    title: text('title').notNull(),
+    description: text('description'),
+    // URL or phisical location
+    location: text('location'),
+    startsAt: timestamp('starts_at').notNull(),
+    endsAt: timestamp('ends_at'),// Can be null
+    createdAt: timestamp('created_at').defaultNow().notNull(),
+    updatedAt: timestamp('updated_at').defaultNow().notNull(),
+}, (table) => [
+    index('events_workspaceId_idx').on(table.workspaceId),
+    index('events_startsAt_idx').on(table.startsAt),
+]);
+
+export const eventRelations = relations(events, ({ one }) => ({
+    workspace: one(workspaces, {
+        fields: [events.workspaceId],
+        references: [workspaces.id],
+    }),
+    author: one(users, {
+        fields: [events.userId],
+        references: [users.id],
+    }),
+}));
+
+//
+// Homework tables
+//
+
+export const homeworks = pgTable('homeworks', {
+    id: uuid('id').defaultRandom().primaryKey(),
+    workspaceId: text('workspace_id').references(() => workspaces.id, { onDelete: 'cascade' }).notNull(),
+    userId: text('user_id').references(() => users.id, { onDelete: 'set null' }),
+    title: text('title').notNull(),
+    description: text('description'),
+    dueAt: timestamp('due_at'),
+    createdAt: timestamp('created_at').defaultNow().notNull(),
+    updatedAt: timestamp('updated_at').defaultNow().notNull(),
+}, (table) => [
+    index('homeworks_workspaceId_idx').on(table.workspaceId),
+]);
+
+// Homework attachments, can be seen by all workspace users
+export const homeworkAttachments = pgTable('homework_attachments', {
+    id: uuid('id').defaultRandom().primaryKey(),
+    homeworkId: uuid('homework_id').references(() => homeworks.id, { onDelete: 'cascade' }).notNull(),
+    storageKey: text('storage_key').notNull(),
+    name: text('name').notNull(),
+    mimeType: text('mime_type').notNull(),
+    size: integer('size').notNull(),
+    createdAt: timestamp('created_at').defaultNow().notNull(),
+}, (table) => [
+    index('homework_attachments_homeworkId_idx').on(table.homeworkId),
+]);
+
+export const homeworkSubmissions = pgTable('homework_submissions', {
+    id: uuid('id').defaultRandom().primaryKey(),
+    homeworkId: uuid('homework_id').references(() => homeworks.id, { onDelete: 'cascade' }).notNull(),
+    userId: text('user_id').references(() => users.id, { onDelete: 'cascade' }).notNull(),
+    content: text('content'),
+    submittedAt: timestamp('submitted_at').defaultNow().notNull(),
+    updatedAt: timestamp('updated_at').defaultNow().notNull(),
+}, (table) => [
+    index('homework_submissions_homeworkId_idx').on(table.homeworkId),
+    index('homework_submissions_userId_idx').on(table.userId),
+    uniqueIndex('homework_submissions_unique_idx').on(table.homeworkId, table.userId),
+]);
+
+export const submissionAttachments = pgTable('submission_attachments', {
+    id: uuid('id').defaultRandom().primaryKey(),
+    submissionId: uuid('submission_id').references(() => homeworkSubmissions.id, { onDelete: 'cascade' }).notNull(),
+    storageKey: text('storage_key').notNull(),
+    name: text('name').notNull(),
+    mimeType: text('mime_type').notNull(),
+    size: integer('size').notNull(),
+    createdAt: timestamp('created_at').defaultNow().notNull(),
+}, (table) => [
+    index('submission_attachments_submissionId_idx').on(table.submissionId),
+]);
+
+export const homeworkRelations = relations(homeworks, ({ one, many }) => ({
+    workspace: one(workspaces, {
+        fields: [homeworks.workspaceId],
+        references: [workspaces.id],
+    }),
+    author: one(users, {
+        fields: [homeworks.userId],
+        references: [users.id],
+    }),
+    attachments: many(homeworkAttachments),
+    submissions: many(homeworkSubmissions),
+}));
+
+export const homeworkAttachmentRelations = relations(homeworkAttachments, ({ one }) => ({
+    homework: one(homeworks, {
+        fields: [homeworkAttachments.homeworkId],
+        references: [homeworks.id],
+    }),
+}));
+
+export const homeworkSubmissionRelations = relations(homeworkSubmissions, ({ one, many }) => ({
+    homework: one(homeworks, {
+        fields: [homeworkSubmissions.homeworkId],
+        references: [homeworks.id],
+    }),
+    user: one(users, {
+        fields: [homeworkSubmissions.userId],
+        references: [users.id],
+    }),
+    attachments: many(submissionAttachments),
+}));
+
+export const submissionAttachmentRelations = relations(submissionAttachments, ({ one }) => ({
+    submission: one(homeworkSubmissions, {
+        fields: [submissionAttachments.submissionId],
+        references: [homeworkSubmissions.id],
+    }),
+}));
+
+//
+// Materials table
+//
+
+export const materials = pgTable('materials', {
+    id: uuid('id').defaultRandom().primaryKey(),
+    workspaceId: text('workspace_id').references(() => workspaces.id, { onDelete: 'cascade' }).notNull(),
+    uploaderId: text('uploader_id').references(() => users.id, { onDelete: 'set null' }),
+    name: text('name').notNull(),
+    description: text('description'),
+    storageKey: text('storage_key').notNull(),
+    mimeType: text('mime_type').notNull(),
+    size: integer('size').notNull(),
+    createdAt: timestamp('created_at').defaultNow().notNull(),
+    updatedAt: timestamp('updated_at').defaultNow().notNull(),
+}, (table) => [
+    index('materials_workspaceId_idx').on(table.workspaceId),
+]);
+
+export const materialRelations = relations(materials, ({ one }) => ({
+    workspace: one(workspaces, {
+        fields: [materials.workspaceId],
+        references: [workspaces.id],
+    }),
+    uploader: one(users, {
+        fields: [materials.uploaderId],
+        references: [users.id],
+    }),
+}));
