@@ -1,7 +1,7 @@
 import { Elysia, t } from 'elysia';
 import { and, or, eq, desc, lt, sql, isNull } from 'drizzle-orm';
 import { db } from '@/db/index';
-import { conversations, messages, users } from '@/db/schema';
+import { conversations, messages, chatAttachments, users } from '@/db/schema';
 import { auth } from '@/auth/config';
 import { alias } from 'drizzle-orm/pg-core';
 
@@ -134,7 +134,7 @@ export const chatRoute = new Elysia({ prefix: '/api/conversations' })
     // GET /api/:id/messages
     // Get a conversation by id, cursor is createdAt of last message, limit how much to load
     .get('/:id/messages', async ({ user, params, query, status }) => {
-        const conversation = await db
+        const [conv] = await db
             .select()
             .from(conversations)
             .where(
@@ -146,29 +146,43 @@ export const chatRoute = new Elysia({ prefix: '/api/conversations' })
                     ),
                 )
             )
-            .limit(1)
+            .limit(1);
 
-        if (conversation.length === 0) {
-            return status(404, { message: 'Conversation not found' });
-        }
+        if (!conv) return status(404, { message: 'Conversation not found' });
 
         const limit = query.limit ? parseInt(query.limit) : 30;
         
-        const result = await db
-            .select()
+        return await db
+            .select({
+                id:             messages.id,
+                conversationId: messages.conversationId,
+                senderId:       messages.senderId,
+                replyToId:      messages.replyToId,
+                type:           messages.type,
+                content:        messages.content,
+                createdAt:      messages.createdAt,
+                updatedAt:      messages.updatedAt,
+                deletedAt:      messages.deletedAt,
+                
+                // not null only if type === 'image' | 'file'
+                attachment: {
+                    name:     chatAttachments.name,
+                    mimeType: chatAttachments.mimeType,
+                    size:     chatAttachments.size,
+                },
+            })
             .from(messages)
+            .leftJoin(chatAttachments, eq(chatAttachments.messageId, messages.id))
             .where(
                 and(
                     eq(messages.conversationId, params.id),
                     query.cursor
-                    ? lt(messages.createdAt, new Date(query.cursor))
-                    : undefined,
+                        ? lt(messages.createdAt, new Date(query.cursor))
+                        : undefined,
                 )
             )
             .orderBy(desc(messages.createdAt))
-            .limit(limit)
-            
-        return result;
+            .limit(limit);
     }, {
         query: t.Object({
             limit: t.Optional(t.String()),

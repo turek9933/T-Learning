@@ -1,3 +1,4 @@
+import type { WorkspaceRole } from "@/routes/workspaces.route";
 import { createAccessControl } from "better-auth/plugins/access";
 import { defaultStatements, adminAc } from 'better-auth/plugins/organization/access'
 
@@ -42,3 +43,10 @@ export const owner = ac.newRole({
     payment: ["create", "read", "update", "delete", "refund"],
     organization: ["create", "read", "update", "delete"],
 });
+
+export function canModerate(role: WorkspaceRole) {
+    return role === 'owner' || role === 'admin';
+}
+export function canParticipate(role: WorkspaceRole) {
+    return role === 'owner' || role === 'admin' || role === 'member';
+}
