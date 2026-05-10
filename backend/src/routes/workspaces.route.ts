@@ -4,9 +4,9 @@ import { db } from '@/db/index';
 import { users, workspaces, workspaceMembers } from '@/db/schema';
 import { authRoute } from '@/routes/auth.route';
 
-type Role = 'owner' | 'admin' | 'member' | 'viewer';
+export type WorkspaceRole = 'owner' | 'admin' | 'member' | 'viewer';
 
-export async function getUserRole(userId: string, workspaceId: string): Promise<Role | null> {
+export async function getUserRole(userId: string, workspaceId: string): Promise<WorkspaceRole | null> {
     const [membership] = await db
         .select({ role: workspaceMembers.role })
         .from(workspaceMembers)

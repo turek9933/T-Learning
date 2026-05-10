@@ -27,7 +27,7 @@ function isOwnerOrAdmin(role: string) {
     return role === 'owner' || role === 'admin';
 }
 
-export const filesRoute = new Elysia({ prefix: '/api/files' })
+export const fileRoute = new Elysia({ prefix: '/api/files' })
     .derive(async ({ status, request: { headers } }) => {
         const session = await auth.api.getSession({ headers });
         if (!session) {
