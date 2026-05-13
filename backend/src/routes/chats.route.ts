@@ -73,7 +73,7 @@ export const chatRoute = new Elysia({ prefix: '/api/conversations' })
                 )
             )
             .orderBy(desc(conversations.updatedAt))
-        return result
+            return result
     })
 
     // POST /api/conversations
@@ -166,9 +166,11 @@ export const chatRoute = new Elysia({ prefix: '/api/conversations' })
                 
                 // not null only if type === 'image' | 'file'
                 attachment: {
-                    name:     chatAttachments.name,
-                    mimeType: chatAttachments.mimeType,
-                    size:     chatAttachments.size,
+                    id:        chatAttachments.id,
+                    name:      chatAttachments.name,
+                    mimeType:  chatAttachments.mimeType,
+                    size:      chatAttachments.size,
+                    createdAt: chatAttachments.createdAt,
                 },
             })
             .from(messages)

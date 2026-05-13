@@ -118,7 +118,7 @@ export const fileRoute = new Elysia({ prefix: '/api/files' })
         }),
     })
 
-    // GET /api/files/view/:storageKey
+    // GET /api/files/view?key={storageKey}
     // Returns presigned GET URL for a file view.
     // Verifies user permissions.
     .get('/view', async ({ user, query, status }) => {

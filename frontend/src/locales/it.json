@@ -71,7 +71,10 @@
       "deletedMessage": "Messaggio eliminato",
       "user": "Utente",
       "isTyping": "{userName} sta scrivendo...",
-      "inputPlaceholder": "Scrivi un messaggio..."
+      "inputPlaceholder": "Scrivi un messaggio...",
+      "errorFileTooLarge": "Il file é troppo grande. La dimensione massima del file é {size}",
+      "errorSendingMessage": "Si è verificato un errore durante l'invio del messaggio",
+      "errorLoadImage": "Si è verificato un errore durante il caricamento dell'immagine"
     }
   },
   "auth": {

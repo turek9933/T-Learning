@@ -71,7 +71,10 @@
       "deletedMessage": "Wiadomość została usunięta",
       "user": "Użytkownik",
       "isTyping": "{userName} pisze...",
-      "inputPlaceholder": "Wpisz wiadomość..."
+      "inputPlaceholder": "Wpisz wiadomość...",
+      "errorFileTooLarge": "Plik jest za duży. Maksymalny rozmiar pliku to {size}",
+      "errorSendingMessage": "Podczas wysyłania wiadomości wystąpił błąd",
+      "errorLoadImage": "Podczas ładowania obrazu wystąpił błąd"
     }
   },
   "auth": {
