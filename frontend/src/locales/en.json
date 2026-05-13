@@ -71,7 +71,10 @@
       "deletedMessage": "Message deleted",
       "user": "User",
       "isTyping": "{userName} is writing...",
-      "inputPlaceholder": "Type a message..."
+      "inputPlaceholder": "Type a message...",
+      "errorFileTooLarge": "File is too large. Maximum file size is {size}",
+      "errorSendingMessage": "Error accurred while sending a message",
+      "errorLoadImage": "Error accurred while loading an image"
     }
   },
   "auth": {

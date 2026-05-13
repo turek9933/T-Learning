@@ -31,9 +31,7 @@ export default function LoginForm() {
   const { loginSchema } = useValidationSchemas();
   const router = useRouter();
   const searchParams = useSearchParams();
-  console.log('\t', searchParams.get('callbackUrl'));
   const callbackUrl = getSafeCallbackURL(searchParams.get('callbackUrl'), '');
-  console.log(callbackUrl);
 
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -71,7 +69,6 @@ export default function LoginForm() {
       rememberMe: data.rememberMe,
         fetchOptions: {
           onSuccess: () => {
-            console.log("Login successful fired");
             customToast.success(t("loginSuccess"));
             router.push(callbackUrl.startsWith('/') ? callbackUrl : '/dashboard');
           },

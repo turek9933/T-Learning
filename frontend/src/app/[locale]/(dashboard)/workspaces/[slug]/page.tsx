@@ -21,7 +21,6 @@ function WorkspaceTabs({ slug }: { slug: string }) {
     const isActive = (href: string) => {
         const path = pathname.replace(/^\/[a-z]{2}(\/|$)/, '/');
         const result = path === href || path.startsWith(href + '/');
-        console.log('[isActive]:', path, href, result);
         return result;
     }
 

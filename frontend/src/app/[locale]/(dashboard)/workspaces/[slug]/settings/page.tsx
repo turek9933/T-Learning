@@ -223,11 +223,9 @@ function DeleteSection({ slug }: { slug: string }) {
 
     const mutation = useMutation({
         mutationFn: async () => {
-            console.log(workspace?.id);
             const res = await authClient.organization.delete({
                 organizationId: workspace?.id || '',
             });
-            console.log(res);
             if (res?.error) {
                 throw new Error(res.error.message);
             }

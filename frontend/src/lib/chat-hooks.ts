@@ -3,17 +3,18 @@ import { Conversation, Message, WsIncomingEvent } from "@/types/chat";
 import { useQuery, useMutation, useQueryClient, useInfiniteQuery, InfiniteData } from "@tanstack/react-query";
 import { wsClient } from "./ws-client";
 import { env } from "@/lib/env";
+import { useFileUpload } from "@/lib/file-hooks";
 
 export function useWsEvent(handler: (event: WsIncomingEvent) => void) {
     useEffect(() => {
-        const unsubscribe = wsClient.subscribe(handler)
+        const unsubscribe = wsClient.subscribe(handler);
         return () => { unsubscribe() }
-    }, [handler])
+    }, [handler]);
 }
 
 export function useCreateConversation() {
-    const queryClient = useQueryClient()
-    
+    const queryClient = useQueryClient();
+
     return useMutation({
         mutationFn: (participantId: string) =>
             fetch(`${env.apiUrl}/api/conversations`, {
@@ -23,9 +24,9 @@ export function useCreateConversation() {
                 body: JSON.stringify({ participantId }),
             }).then(r => r.json()) as Promise<Conversation>,
         onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: ['conversations'] })
+            queryClient.invalidateQueries({ queryKey: ['conversations'] });
         },
-    })
+    });
 }
 
 export function useConversation(conversationId: string) {
@@ -39,46 +40,100 @@ export function useConversation(conversationId: string) {
 export function useConversations() {
     return useQuery({
         queryKey: ['conversations'],
-        queryFn: () => fetch(`${env.apiUrl}/api/conversations`, { credentials: 'include' }).then(r => r.json()) as Promise<Conversation[]>,
-    })
+        queryFn: () =>
+            fetch(`${env.apiUrl}/api/conversations`, { credentials: 'include' })
+                .then(r => r.json()) as Promise<Conversation[]>,
+    });
 }
-
 
 export function useMessages(conversationId: string) {
     return useInfiniteQuery({
         queryKey: ['messages', conversationId],
         queryFn: ({ pageParam }) => {
             const url = `${env.apiUrl}/api/conversations/${conversationId}/messages?limit=30`
-            + (pageParam ? `&cursor=${pageParam}` : '');
+                + (pageParam ? `&cursor=${pageParam}` : '');
             return fetch(url, { credentials: 'include' }).then(r => r.json()) as Promise<Message[]>;
         },
         initialPageParam: null as string | null,
         getNextPageParam: (lastPage) => {
             if (lastPage.length < 30) return null;
             return lastPage[lastPage.length - 1].createdAt;
-        }
+        },
+    });
+}
+
+export function useSendTextMessage() {
+    return useCallback((conversationId: string, content: string, replyToId?: string) => {
+        wsClient.send({
+            eventType: 'message.send',
+            conversationId,
+            contentType: 'text',
+            content,
+            replyToId,
+        });
+    }, []);
+}
+
+// Sends message with file
+// 1. Uploads file to MinIO
+// 2. Sends message with metadata
+export function useSendFileMessage() {
+    const uploadFile = useFileUpload();
+
+    return useMutation({
+        mutationFn: async ({
+            conversationId,
+            file,
+        }: {
+            conversationId: string;
+            file: File;
+        }) => {
+            // MinIO upload
+            const storageKey = await uploadFile.mutateAsync({
+                context: 'chat',
+                contextId: conversationId,
+                file,
+            });
+
+            // WS with metadata
+            const contentType = file.type.startsWith('image/') ? 'image' : 'file';
+
+            wsClient.send({
+                eventType: 'message.send',
+                conversationId,
+                contentType,
+                content: storageKey,
+                attachment: {
+                    name:     file.name,
+                    mimeType: file.type,
+                    size:     file.size,
+                },
+            });
+
+            return storageKey;
+        },
     });
 }
 
 export function useChatSync() {
-    const queryClient = useQueryClient()
+    const queryClient = useQueryClient();
 
     useWsEvent(useCallback((event) => {
         if (event.eventType === 'message.new') {
             queryClient.setQueryData(
                 ['messages', event.message.conversationId],
                 (old: InfiniteData<Message[]> | undefined) => {
-                    if (!old) return old
+                    if (!old) return old;
                     return {
                         ...old,
                         pages: [
                             [event.message, ...old.pages[0]],
                             ...old.pages.slice(1),
                         ],
-                    }
+                    };
                 }
-            )
-            queryClient.invalidateQueries({ queryKey: ['conversations'] })
+            );
+            queryClient.invalidateQueries({ queryKey: ['conversations'] });
         }
-    }, [queryClient]))
+    }, [queryClient]));
 }

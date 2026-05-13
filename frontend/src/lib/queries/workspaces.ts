@@ -36,7 +36,6 @@ export type MemberItem = {
 
 
 async function fetchMyWorkspaces(): Promise<WorkspaceItem[]> {
-    console.log('[fetchMyWorkspaces] '+ env.apiUrl+'/api/workspaces/me');
     const res = await fetch(`${env.apiUrl}/api/workspaces/me`, {
         credentials: 'include',
     });
