@@ -1,5 +1,5 @@
 'use client';
-import { useMessages, useWsEvent } from "@/lib/chat-hooks";
+import { useMessages, useWsEvent } from "@/lib/hooks/chat-hooks";
 import React, { useCallback, useEffect, useRef } from "react";
 import { MessageItem } from "@/components/chat/MessageItem";
 import { useTranslations } from "next-intl";

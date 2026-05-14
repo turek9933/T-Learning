@@ -5,7 +5,7 @@ import { useEffect, useState } from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { authClient } from '@/lib/auth-client';
-import { customToast } from '@/lib/customToast';
+import { customToast } from '@/components/CustomToast';
 import { useValidationSchemas, WorkspaceFormData } from '@/lib/validation';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';

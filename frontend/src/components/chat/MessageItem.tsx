@@ -1,7 +1,7 @@
 import type { Message } from '@/types/chat';
 import { authClient } from '@/lib/auth-client';
 import { useTranslations } from 'next-intl';
-import { useFileUrl, getFilePreviewType, formatFileSize } from '@/lib/file-hooks';
+import { useFileUrl, getFilePreviewType, formatFileSize } from '@/lib/hooks/file-hooks';
 import { Download, FileIcon, FileTextIcon, Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 

@@ -8,7 +8,7 @@ import { PageContainer } from "@/components/layout/PageContainer";
 import { useTranslations } from "next-intl";
 import { Banner } from "@/components/shared/Banner";
 import { MoveLeft } from "lucide-react";
-import { customToast } from "@/lib/customToast";
+import { customToast } from "@/components/CustomToast";
 
 
 export default function VerifyEmailView() {

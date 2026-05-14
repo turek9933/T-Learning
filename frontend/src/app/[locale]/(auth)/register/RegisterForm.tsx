@@ -7,7 +7,7 @@ import { Mail, Lock, MoveLeft, UserPen, EyeOff, Eye } from "lucide-react";
 import { PageContainer } from "@/components/layout/PageContainer";
 import { Banner } from "@/components/shared/Banner";
 import { InputGroup, InputGroupInput, InputGroupAddon, InputGroupButton } from "@/components/ui/input-group";
-import { customToast } from "@/lib/customToast";
+import { customToast } from "@/components/CustomToast";
 import { authClient } from "@/lib/auth-client";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm, type FieldErrors } from "react-hook-form";

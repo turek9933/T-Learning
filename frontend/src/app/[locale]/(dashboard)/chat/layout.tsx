@@ -2,7 +2,7 @@
 import { useEffect } from "react";
 import { wsClient } from "@/lib/ws-client";
 import { ConversationList } from "@/components/chat/ConversationList";
-import { useChatSync } from "@/lib/chat-hooks"
+import { useChatSync } from "@/lib/hooks/chat-hooks"
 
 export default function ChatLayout({ children }: { children: React.ReactNode }) {
     useChatSync();

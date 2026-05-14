@@ -4,7 +4,7 @@ import { Link } from "@/i18n/routing";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import { Mail, Lock, MoveLeft, Eye, EyeOff } from "lucide-react";
-import { customToast } from "@/lib/customToast";
+import { customToast } from "@/components/CustomToast";
 import { PageContainer } from "@/components/layout/PageContainer";
 import { Banner } from "@/components/shared/Banner";
 import { InputGroup, InputGroupInput, InputGroupAddon, InputGroupButton } from "@/components/ui/input-group";

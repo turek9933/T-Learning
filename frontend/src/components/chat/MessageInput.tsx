@@ -5,9 +5,9 @@ import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { FileIcon, Loader2, Paperclip, Send, X } from "lucide-react";
 import { useTranslations } from "next-intl";
-import { useSendTextMessage, useSendFileMessage } from "@/lib/chat-hooks";
-import { MAX_FILE_SIZE, formatFileSize } from "@/lib/file-hooks";
-import { customToast } from "@/lib/customToast";
+import { useSendTextMessage, useSendFileMessage } from "@/lib/hooks/chat-hooks";
+import { MAX_FILE_SIZE, formatFileSize } from "@/lib/hooks/file-hooks";
+import { customToast } from "@/components/CustomToast";
 
 interface PendingFile {
     file: File;

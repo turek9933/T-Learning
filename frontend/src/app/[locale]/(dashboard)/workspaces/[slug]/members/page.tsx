@@ -6,7 +6,7 @@ import { MemberItem, useWorkspace, useWorkspaceMembers, WorkspaceRole } from '@/
 import WorkspacePending from '@/components/workspace/WorkspacePending';
 import WorkspaceError from '@/components/workspace/WorkspaceError';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { customToast } from '@/lib/customToast';
+import { customToast } from '@/components/CustomToast';
 import { UserPlus, MoreHorizontal } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { authClient } from '@/lib/auth-client';

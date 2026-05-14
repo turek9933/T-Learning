@@ -11,7 +11,6 @@ import { getUserRole, type WorkspaceRole } from "@/routes/workspaces.route";
 export const workspacePlugin = new Elysia({ name: 'workspacePlugin' })
     .derive({ as: 'scoped'}, async ({ request: { headers }, params }) => {
         const session = await auth.api.getSession({ headers });
-console.info('workspacePlugin: session.user', session?.user);
         const slug = params?.slug as string | undefined;
 
         let workspace: typeof workspaces.$inferSelect | null = null;
@@ -24,10 +23,8 @@ console.info('workspacePlugin: session.user', session?.user);
                 .limit(1)
 
             workspace = workspaceResult ?? null;
-console.info('workspacePlugin: workspace', workspace);
             if (workspace) {
                 role = await getUserRole(session.user.id, workspace.id);
-console.info('workspacePlugin: role', role);
             }
         }
 
