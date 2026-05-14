@@ -4,6 +4,7 @@ import { useTranslations } from 'next-intl';
 import { useFileUrl, getFilePreviewType, formatFileSize } from '@/lib/hooks/file-hooks';
 import { Download, FileIcon, FileTextIcon, Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { FilePreview } from '@/components/shared/FilePreview';
 
 function ImageMessage({ storageKey, fileName, errorMessage }: { storageKey: string, fileName: string, errorMessage?: string }) {
     const { data: fileUrl, isPending, isError } = useFileUrl(storageKey);
@@ -103,18 +104,13 @@ export function MessageItem({ message }: { message: Message }) {
                     <span className='italic'>{t('deletedMessage')}</span>
                 ) : message.type === 'text' ? (
                     <span className='whitespace-pre-wrap'>{message.content}</span>
-                ) : message.type === 'image' ? (
-                    <ImageMessage
-                        storageKey={message.content}
-                        fileName={message.attachment?.name ?? 'image'}
-                        errorMessage={t('errorLoadImage')}
-                    />
                 ) : (
-                    <FileMessage
+                    <FilePreview
                     storageKey={message.content}
-                    fileName={message.attachment?.name ?? 'file'}
-                    mimeType={message.attachment?.mimeType ?? 'application/octet-stream'}
-                    fileSize={message.attachment?.size ?? 0}
+                    name={message.attachment?.name ?? message.type === 'image' ? 'image' : 'file'}
+                    mimeType={message.attachment?.mimeType || 'application/octet-stream'}
+                    size={message.attachment?.size ?? 0}
+                    invisibleBg
                     />
                 )}
             </div>
