@@ -36,7 +36,7 @@ function ImagePreview({ storageKey, name, invisibleBg = false }: { storageKey: s
             <button
             type="button"
             onClick={() => setLightboxOpen(true)}
-            className="relative group rounded-lg overflow-hidden focus:outline-none"
+            className="relative group rounded-lg overflow-hidden focus:outline-none cursor-zoom-in"
             title={name}
             >
                 <img
@@ -116,9 +116,9 @@ function DownloadPreview({ storageKey, name, mimeType, size, invisibleBg = false
                     type="button"
                     variant="ghost"
                     size="icon"
-                    className="h-7 w-7"
+                    className="h-7 w-7 cursor-pointer"
                     >
-                        <Download className="w-4 h-4 text-accent cursor-pointer" />
+                        <Download className="w-4 h-4 text-accent" />
                     </Button>
                 </a>
             ) : null}
@@ -128,9 +128,6 @@ function DownloadPreview({ storageKey, name, mimeType, size, invisibleBg = false
 
 export function FilePreview(props: FilePreviewProps) {
     const previewType = getFilePreviewType(props.mimeType);
-
-    console.log('[file-preview]:', props);
-    console.log('[file-preview]:', previewType);
 
     if (previewType === 'image') return <ImagePreview storageKey={props.storageKey} name={props.name} />;
     return <DownloadPreview {...props} />;

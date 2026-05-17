@@ -7,7 +7,7 @@ import WorkspacePending from '@/components/workspace/WorkspacePending';
 import WorkspaceError from '@/components/workspace/WorkspaceError';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useValidationSchemas, EditWorkspaceFormData } from '@/lib/validation';
-import { customToast } from '@/lib/customToast';
+import { customToast } from '@/components/CustomToast';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { InputGroup, InputGroupAddon, InputGroupInput } from '@/components/ui/input-group';

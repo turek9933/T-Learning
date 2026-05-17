@@ -1,28 +1,36 @@
 'use client';
 import { useTranslations } from 'next-intl';
 import { usePathname, useParams } from 'next/navigation';
-import { Link } from '@/i18n/routing';
-import { useWorkspace } from '@/lib/queries/workspaces';
+import { Link, useRouter } from '@/i18n/routing';
+import { useWorkspace, useActivateWorkspace } from '@/lib/queries/workspaces';
+import { useFeed, useUpcomingEvents, useUpcomingHomeworks } from '@/lib/hooks/feed-hooks';
+import type { FeedItem } from '@/types/feed';
+import type { UpcomingEvent } from '@/types/event';
+import type { UpcomingHomework } from '@/types/homework';
 import { PageContainer } from '@/components/layout/PageContainer';
-import { customToast } from '@/lib/customToast';
-import { Calendar, CalendarPlus, Clock, FileText, NotebookPen, Plus, SquarePen, User, Users, Video } from 'lucide-react';
+import { customToast } from '@/components/CustomToast';
+import {
+    Calendar, CalendarPlus, Clock, FileText, Loader2,
+    NotebookPen, Plus, SquarePen, User, Users,
+} from 'lucide-react';
 import StatusBadge from '@/components/StatusBadge';
 import { Button } from '@/components/ui/button';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import WorkspacePending from '@/components/workspace/WorkspacePending';
 import WorkspaceError from '@/components/workspace/WorkspaceError';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { authClient } from '@/lib/auth-client';
+import { useQueryClient } from '@tanstack/react-query';
+import { PostCard } from '@/components/workspace/feed/PostCard';
+import { EventFeedCard } from '@/components/workspace/feed/EventFeedCard';
+import { HomeworkFeedCard } from '@/components/workspace/feed/HomeworkFeedCard';
 
 function WorkspaceTabs({ slug }: { slug: string }) {
     const t = useTranslations('dashboard.workspace.tabs');
-
     const pathname = usePathname();
+
     const isActive = (href: string) => {
         const path = pathname.replace(/^\/[a-z]{2}(\/|$)/, '/');
-        const result = path === href || path.startsWith(href + '/');
-        return result;
-    }
+        return path === href || path.startsWith(href + '/');
+    };
 
     const tabs = [
         { key: 'main',     href: `/workspaces/${slug}`,          label: t('main') },
@@ -47,61 +55,145 @@ function WorkspaceTabs({ slug }: { slug: string }) {
     );
 }
 
-const mockUpcoming = [
-    {
-        id: '1', type: 'event', createdAt: '2022-01-01',
-        title: 'Lekcja online',
-        eventType: 'meeting',
-        startsAt: new Date(Date.now() + 2 * 24 * 60 * 60 * 1000).toISOString(),
-        endsAt: null,
-        meetingUrl: 'https://meet.google.com/abc',
-    },
-    {
-        id: '2', type: 'homework', createdAt: '',
-        title: 'Termin oddania pracy',
-        eventType: 'deadline',
-        startsAt: new Date(Date.now() + 3 * 24 * 60 * 60 * 1000).toISOString(),
-        endsAt: null,
-        meetingUrl: null,
-    }
-];
+type UpcomingItem =
+    | { type: 'event'; data: UpcomingEvent }
+    | { type: 'homework'; data: UpcomingHomework };
 
-function eventTypeIcon(type: any) {
-    if (type === 'event') return <Video className="w-3 h-3" />;
-    if (type === 'homework') return <NotebookPen className="w-3 h-3" />;
-    return <Clock className="w-3 h-3" />;
-}
+function UpcomingSection({ slug }: { slug: string }) {
+    const t = useTranslations('dashboard.workspace.upcoming');
+    const { data: events = [] } = useUpcomingEvents(slug);
+    const { data: homeworks = [] } = useUpcomingHomeworks(slug);
 
-function UpcomingSection({ slug, upcoming }: { slug: string, upcoming: string }) {
-    // TODO: zastąpić useUpcoming(slug)
-    const items = mockUpcoming;
+    const now = Date.now();
+    const twoWeeks = now + 14 * 24 * 60 * 60 * 1000;
+
+    // Filter out events and homeworks that have already happened
+    // Sort by event date and homework due date
+    // Take first 5 upcoming items
+    const eventItems: UpcomingItem[] = events
+        .filter(e => new Date(e.startsAt).getTime() >= now)
+        .map(e => ({ type: 'event', data: e }));
+
+    const homeworkItems: UpcomingItem[] = homeworks
+        .filter(h => h.dueAt && !h.submittedAt && new Date(h.dueAt).getTime() <= twoWeeks)
+        .map(h => ({ type: 'homework', data: h }));
+
+    const items = [...eventItems, ...homeworkItems]
+        .sort((a, b) => {
+            const dateA = a.type === 'event'
+                ? new Date(a.data.startsAt).getTime()
+                : new Date(a.data.dueAt!).getTime();
+            const dateB = b.type === 'event'
+                ? new Date(b.data.startsAt).getTime()
+                : new Date(b.data.dueAt!).getTime();
+            return dateA - dateB;
+        })
+        .slice(0, 5);
+
     if (items.length === 0) return null;
 
+    function formatUpcomingDate(dateStr: string): string {
+        const date = new Date(dateStr);
+        const diffDays = Math.ceil((date.getTime() - now) / (1000 * 60 * 60 * 24));
+        if (diffDays <= 0) return t('today');
+        if (diffDays === 1) return t('tomorrow');
+        return date.toLocaleDateString(undefined, { day: 'numeric', month: 'short' });
+    }
+
     return (
-        <div className="bg-bg rounded-xl border border-border my-2 p-1">
+        <div className="bg-bg rounded-xl border border-border my-2 p-1 w-full">
             <div className="flex items-center justify-center py-1 border-b border-border">
                 <Link
                 href={`/workspaces/${slug}/calendar`}
                 className="text-primary font-semibold hover:underline flex items-center gap-2"
                 >
                     <Calendar className="w-4 h-4" />
-                    {upcoming}
+                    {t('title')}
                 </Link>
             </div>
             <div>
-                {items.map((item) => (
-                    <div key={item.id} className="grid grid-cols-3 items-center">
-                        <span className={`flex items-center gap-1 font-normal text-sm text-text-secondary px-2 py-1`}>
-                            {eventTypeIcon(item.type)}
-                            {/* TODO: zastąpić eventType */}
-                            {item.eventType === 'meeting' ? 'Spotkanie' : item.eventType === 'deadline' ? 'Deadline' : 'Egzamin'}
-                        </span>
-                        {/* TODO: Dodać link do szczegółów wydarzenia */}
-                        <p className="text-sm font-medium text-text text-center">{item.title}</p>
-                        <span className="text-sm text-text-secondary text-right px-2 py-1">{item.createdAt}</span>
-                    </div>
-                ))}
-            </div>  
+                {items.map((item, idx) => {
+                    if (item.type === 'event') {
+                        const e = item.data;
+                        return (
+                            <div
+                            key={`e-${e.id}`}
+                            className="grid grid-cols-3 items-center border-b border-border"
+                            >
+                                <span className="flex items-center gap-1 font-normal text-sm text-text-secondary px-2 py-1">
+                                    <Calendar className="w-3 h-3" />
+                                    {t(`eventType.${e.type}`)}
+                                </span>
+                                <Link
+                                href={`/workspaces/${slug}/events/${e.id}`}
+                                className="text-sm font-medium text-text text-center hover:text-primary hover:underline"
+                                >
+                                    {e.title}
+                                </Link>
+                                <span className="text-sm text-text-secondary text-right px-2 py-1">
+                                    {formatUpcomingDate(e.startsAt)}
+                                </span>
+                            </div>
+                        );
+                    } else {
+                        const h = item.data;
+                        return (
+                            <div
+                            key={`h-${h.id}`}
+                            className="grid grid-cols-3 items-center border-b border-border"
+                            >
+                                <span className="flex items-center gap-1 font-normal text-sm text-text-secondary px-2 py-1">
+                                    <NotebookPen className="w-3 h-3" />
+                                    {t('homework')}
+                                </span>
+                                <Link
+                                href={`/workspaces/${slug}/homeworks/${h.id}`}
+                                className="text-sm font-medium text-text text-center hover:text-primary hover:underline"
+                                >
+                                    {h.title}
+                                </Link>
+                                <span className="text-sm text-text-secondary text-right px-2 py-1">
+                                    {h.dueAt ? formatUpcomingDate(h.dueAt) : '—'}
+                                </span>
+                            </div>
+                        );
+                    }
+                })}
+            </div>
+        </div>
+    );
+}
+
+function FeedList({ slug, canModerate, canParticipate, workspaceActive, items }: {
+    slug: string;
+    canModerate: boolean;
+    canParticipate: boolean;
+    workspaceActive: boolean;
+    items: FeedItem[];
+}) {
+    return (
+        <div className="space-y-3 w-full">
+            {items.map(item => {
+                if (item.type === 'post') {
+                    return (
+                        <PostCard
+                        key={item.id}
+                        slug={slug}
+                        post={item}
+                        canModerate={canModerate}
+                        canParticipate={canParticipate}
+                        workspaceActive={workspaceActive}
+                        />
+                    );
+                }
+                if (item.type === 'event') {
+                    return <EventFeedCard key={item.id} slug={slug} event={item} />;
+                } else if (item.type === 'homework') {   
+                    return <HomeworkFeedCard key={item.id} slug={slug} homework={item} />;
+                } else {
+                    return null;
+                }
+            })}
         </div>
     );
 }
@@ -109,9 +201,14 @@ function UpcomingSection({ slug, upcoming }: { slug: string, upcoming: string })
 export default function WorkspacePage() {
     const t = useTranslations('dashboard.workspace.main');
     const { slug } = useParams<{ slug: string }>();
+    const router = useRouter();
+    const queryClient = useQueryClient();
     const { data: workspace, isPending, isError } = useWorkspace(slug);
+    const activateWorkspace = useActivateWorkspace(workspace?.slug!, workspace?.id!);
+    const { data: feedData, isPending: feedLoading, fetchNextPage, hasNextPage, isFetchingNextPage } = useFeed(slug);
+
     const canModerate = workspace?.role === 'owner' || workspace?.role === 'admin';
-    const items = [];
+    const canParticipate = canModerate || workspace?.role === 'member';
 
     const avatarColor: Record<string, string> = {
         owner:  'text-accent',
@@ -120,46 +217,34 @@ export default function WorkspacePage() {
         viewer: 'text-text-muted',
     };
 
-    // Workspace activation
-    const queryClient = useQueryClient();
-    const activateMutation = useMutation({
-        mutationFn: async () => {
-            const res = await authClient.organization.update({
-                organizationId: workspace?.id,
-                data: {
-                    status: 'active'
-                }
-            });
-            if (res?.error) {
-                throw new Error(res.error.message);
-            }
-            return res.data;
-        },
-        onSuccess: (_, data) => {
-            queryClient.invalidateQueries({ queryKey: ['workspaces', slug] });
-            queryClient.invalidateQueries({ queryKey: ['workspaces', 'me'] });
-            customToast.success(t(`successStatusActive`));
-        },
-        onError: () => customToast.error(t('errorStatus')),
-    });
-    function activateWorkspace() {
-        activateMutation.mutate();
+    const handleActivate = () => {
+        console.log('handleActivate\t', workspace);
+        if (!workspace) {
+            customToast.error(t('errorStatus'));
+            return;
+        }
+        activateWorkspace.mutate(undefined, {
+            onSuccess: () => {
+                customToast.success(t('successStatusActive'));
+            },
+            onError: () => customToast.error(t('errorStatus')),
+        });
     }
 
-    if (isPending)
-        return <WorkspacePending />;
-    if (isError || !workspace)
-        return <WorkspaceError errorMessage={t('errorLoad')} />
+    if (isPending) return <WorkspacePending />;
+    if (isError || !workspace) return <WorkspaceError errorMessage={t('errorLoad')} />;
+
+    const feedItems = feedData?.pages.flat() ?? [];
 
     return (
         <PageContainer>
             <WorkspaceTabs slug={slug} />
 
-            {/* Header in the center*/}
+            {/* Header */}
             <div className="flex flex-row w-full flex-auto gap-4 items-center justify-center">
-                {workspace.type === 'group' ? 
-                    <Users className={`w-6 h-6 ${avatarColor[workspace.role]}`} /> :
-                    <User className={`w-6 h-6 ${avatarColor[workspace.role]}`} />
+                {workspace.type === 'group'
+                    ? <Users className={`w-6 h-6 ${avatarColor[workspace.role]}`} />
+                    : <User  className={`w-6 h-6 ${avatarColor[workspace.role]}`} />
                 }
                 <h2 className="text-text">{workspace.name}</h2>
                 <StatusBadge status={workspace.status} size='6' />
@@ -173,83 +258,110 @@ export default function WorkspacePage() {
             {/* Additional content for owner and admin */}
             {canModerate && (
                 <>
-                {/* Adding new content and workspace members */}
-                <div className="flex flex-row w-full flex-auto gap-4 items-center justify-center my-2">
-                    <DropdownMenu>
-                        <DropdownMenuTrigger asChild>
-                            <Button variant="ghost" className="cursor-pointer gap-2">
-                                <p>{t("addContent")}</p>
-                                <Plus className="h-5 w-5" />
-                            </Button>
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent align="end">
-                            {/* //TODO Add real buttons, currently just placeholders */}
-                            <DropdownMenuItem asChild className='cursor-pointer'>
-                                <div className="flex items-center gap-2 hover:text-text-contrast hover:bg-bg-hover"> 
+                    <div className="flex flex-row w-full flex-auto gap-4 items-center justify-center my-2">
+                        <DropdownMenu>
+                            <DropdownMenuTrigger asChild>
+                                <Button variant="ghost" className="cursor-pointer gap-2">
+                                    <p>{t('addContent')}</p>
+                                    <Plus className="h-5 w-5" />
+                                </Button>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent align="end">
+                                <DropdownMenuItem
+                                className="cursor-pointer"
+                                onClick={() => router.push(`/workspaces/${slug}/posts/new`)}
+                                >
                                     <SquarePen className="w-4 h-4" />
                                     <span className="ml-2">{t("addPost")}</span>
-                                </div>
-                            </DropdownMenuItem>
-                            <DropdownMenuItem asChild className='cursor-pointer'>
-                                <div className="flex items-center gap-2 hover:text-text-contrast hover:bg-bg-hover"> 
+                                </DropdownMenuItem>
+                                <DropdownMenuItem
+                                className="cursor-pointer"
+                                onClick={() => router.push(`/workspaces/${slug}/events/new`)}
+                                >
                                     <CalendarPlus className="w-4 h-4" />
-                                    <span className="ml-2">{t("addEvent")}</span>
-                                </div>
-                            </DropdownMenuItem>
-                            <DropdownMenuItem asChild className='cursor-pointer'>
-                                <div className="flex items-center gap-2 hover:text-text-contrast hover:bg-bg-hover"> 
+                                    <span className="ml-2">{t('addEvent')}</span>
+                                </DropdownMenuItem>
+                                <DropdownMenuItem
+                                className="cursor-pointer"
+                                onClick={() => router.push(`/workspaces/${slug}/homeworks/new`)}
+                                >
                                     <NotebookPen className="w-4 h-4" />
-                                    <span className="ml-2">{t("addHomework")}</span>
-                                </div>
-                            </DropdownMenuItem>
-                            <DropdownMenuItem asChild className='cursor-pointer'>
-                                <div className="flex items-center gap-2 hover:text-text-contrast hover:bg-bg-hover"> 
+                                    <span className="ml-2">{t('addHomework')}</span>
+                                </DropdownMenuItem>
+                                <DropdownMenuItem
+                                className="cursor-pointer"
+                                onClick={() => router.push(`/workspaces/${slug}/materials`)}
+                                >
                                     <FileText className="w-4 h-4" />
-                                    <span className="ml-2">{t("addFile")}</span>
-                                </div>
-                            </DropdownMenuItem>
-                        </DropdownMenuContent>
-                    </DropdownMenu>
-
-                    <Button asChild variant="ghost" className="text-text">
-                        <Link href={`/workspaces/${slug}/members`}>
-                            {t("addMember")}
-                            <Plus className="h-5 w-5" />
-                        </Link>
-                    </Button>
-                </div>
-
-                {/* Information about workspace status */}
-                {workspace.status === "draft" && (
-                    <div className="text-center max-w-md border border-warning rounded-lg p-4 space-y-2">
-                        <h3 className="text-text-secondary">{t("workspaceDraft")}</h3>
-                        <p className="text-text-secondary">{t("workspaceDraftInfo")}</p>
+                                    <span className="ml-2">{t('addFile')}</span>
+                                </DropdownMenuItem>
+                            </DropdownMenuContent>
+                        </DropdownMenu>
                         <Button
-                        className="text-text-contrast"
-                        onClick={() => activateWorkspace()}
-                        disabled={activateMutation.isPending}
+                        variant="ghost"
+                        className="text-text cursor-pointer gap-2"
+                        onClick={() => router.push(`/workspaces/${slug}/members`)}
                         >
-                            {activateMutation.isPending ? t("activating") : t("activate")}
+                            {t('addMember')}
+                            <Plus className="h-5 w-5" />
                         </Button>
                     </div>
-                )}
+
+                    {/* Information about workspace status */}
+                    {workspace.status === 'draft' && (
+                        <div className="text-center max-w-md border border-warning rounded-lg p-4 space-y-2">
+                            <h3 className="text-text-secondary">{t("workspaceDraft")}</h3>
+                            <p className="text-text-secondary">{t("workspaceDraftInfo")}</p>
+                            <Button
+                            className="text-text-contrast"
+                            onClick={() => handleActivate()}
+                            disabled={activateWorkspace.isPending}
+                            >
+                                {activateWorkspace.isPending ? t("activating") : t("activate")}
+                            </Button>
+                        </div>
+                    )}
                 </>
             )}
 
-            {/* Upcoming events */}
-            <UpcomingSection slug={slug} upcoming={t('upcoming')} />
+            {/* Upcoming events and homeworks */}
+            <UpcomingSection slug={slug} />
 
-            {/* Wall */}
-            <div>
-                {items.length === 0 ? (
-                    <div className="text-center max-w-md">
-                        <h3 className="text-text m-4">
-                            {t('noContent')}
-                        </h3>
-                        <p>{t('noContentInfo')}</p>
+            {/* Feed */}
+            <div className="w-full mt-2">
+                {feedLoading ? (
+                    <div className="flex justify-center py-8">
+                        <Loader2 className="w-6 h-6 animate-spin text-primary" />
+                    </div>
+                ) : feedItems.length === 0 ? (
+                    <div className="text-center max-w-md mx-auto py-8">
+                        <h3 className="text-text m-4">{t('noContent')}</h3>
+                        <p className="text-text-secondary">{t('noContentInfo')}</p>
                     </div>
                 ) : (
-                    items.map((item) => <p>{item.title}</p>)
+                    <>
+                        <FeedList
+                        slug={slug}
+                        canModerate={canModerate}
+                        canParticipate={canParticipate}
+                        workspaceActive={workspace.status === 'active'}
+                        items={feedItems}
+                        />
+                        {hasNextPage && (
+                            <div className="flex justify-center mt-4">
+                                <Button
+                                variant="ghost"
+                                onClick={() => fetchNextPage()}
+                                disabled={isFetchingNextPage}
+                                >
+                                    {isFetchingNextPage
+                                        ? <Loader2 className="w-4 h-4 animate-spin" />
+                                        : t('loadMore')
+                                    }
+                                </Button>
+                            </div>
+                        )}
+                    </>
                 )}
             </div>
         </PageContainer>
