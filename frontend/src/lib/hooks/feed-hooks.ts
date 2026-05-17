@@ -3,8 +3,7 @@ import { env } from '@/lib/env';
 import { HomeworkItem, UpcomingHomework } from '@/types/homework';
 import { PostItem } from '@/types/post';
 import { EventItem, EventType, UpcomingEvent } from '@/types/event';
-
-export type FeedItem = PostItem | EventItem | HomeworkItem;
+import { FeedItem } from '@/types/feed';
 
 async function fetchFeed(slug: string, cursor?: string): Promise<FeedItem[]> {
     const params = new URLSearchParams({ limit: '20' });
@@ -12,7 +11,10 @@ async function fetchFeed(slug: string, cursor?: string): Promise<FeedItem[]> {
     const res = await fetch(`${env.apiUrl}/api/workspaces/${slug}/feed?${params}`, {
         credentials: 'include',
     });
-    if (!res.ok) throw new Error('Failed to fetch feeds');
+    if (!res.ok) {
+        const text = await res.text();
+        throw new Error(`Failed to fetch feeds: ${res.status} ${res.statusText} - ${text}`);
+    }
     return res.json();
 }
 export function useFeed(slug: string) {
@@ -35,7 +37,10 @@ async function fetchUpcomingEvents(slug: string): Promise<UpcomingEvent[]> {
         `${env.apiUrl}/api/workspaces/${slug}/events?from=${encodeURIComponent(from)}&to=${encodeURIComponent(to)}`,
         { credentials: 'include' },
     );
-    if (!res.ok) throw new Error('Failed to fetch events');
+    if (!res.ok) {
+        const text = await res.text();
+        throw new Error(`Failed to fetch events: ${res.status} ${res.statusText} - ${text}`);
+    }
     return res.json();
 }
 export function useUpcomingEvents(slug: string) {
@@ -50,7 +55,10 @@ async function fetchUpcomingHomeworks(slug: string): Promise<UpcomingHomework[]>
     const res = await fetch(`${env.apiUrl}/api/workspaces/${slug}/homeworks`, {
         credentials: 'include',
     });
-    if (!res.ok) throw new Error('Failed to fetch homeworks');
+    if (!res.ok) {
+        const text = await res.text();
+        throw new Error(`Failed to fetch homeworks: ${res.status} ${res.statusText} - ${text}`);
+    }
     return res.json();
 }
 export function useUpcomingHomeworks(slug: string) {

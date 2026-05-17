@@ -1,5 +1,5 @@
 import { Elysia, t } from 'elysia';
-import { eq, and, isNull, gte, desc, sql } from 'drizzle-orm';
+import { eq, and, isNull, inArray, gte, desc, sql } from 'drizzle-orm';
 import { db } from '@/db/index';
 import { posts, postAttachments, events, homeworks, users } from '@/db/schema';
 import { workspacePlugin } from '@/lib/workspace.plugin';
@@ -108,15 +108,23 @@ export const feedRoute = new Elysia({ prefix: '/api/workspaces/:slug/feed' })
 
         // Post attachments
         const postIds = postRows.map(p => p.id);
-        const attachments = postIds.length > 0
-            ? await db
+        let attachments: any[] = [];
+        if (postIds.length > 0) {
+            console.log('111');
+            try {
+            attachments = await db
                 .select()
                 .from(postAttachments)
-                .where(sql`${postAttachments.postId} = ANY(${postIds})`)
-            : [];
+                .where(inArray(postAttachments.postId, postIds));
+            } catch(error) {
+                console.error('Error fetching attachments:', error);
+            }
+        }
 
         const attachmentsByPost = attachments.reduce<Record<string, typeof attachments>>((acc, a) => {
-            if (!acc[a.postId]) acc[a.postId] = [];
+            if (!acc[a.postId]) {
+                acc[a.postId] = [];
+            }
             acc[a.postId]!.push(a);
             return acc;
         }, {});

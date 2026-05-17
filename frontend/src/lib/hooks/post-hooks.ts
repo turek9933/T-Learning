@@ -48,7 +48,11 @@ async function fetchComments(slug: string, postId: string): Promise<Comment[]> {
     const res = await fetch(`${env.apiUrl}/api/workspaces/${slug}/posts/${postId}/comments`, {
         credentials: 'include',
     });
-    if (!res.ok) throw new Error('Failed to fetch comments');
+    if (!res.ok) {
+        const err = await res.json().catch(() => ({}));
+        console.error('Comment error response:', err);
+        throw new Error((err as any).message ?? `Failed to fetch comment: ${res.status}`);
+    }
     return res.json();
 }
 export function useComments(slug: string, postId: string, enabled: boolean) {
@@ -66,7 +70,11 @@ async function addComment(slug: string, postId: string, content: string): Promis
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ content }),
     });
-    if (!res.ok) throw new Error('Failed to add comment');
+    if (!res.ok) {
+        const err = await res.json().catch(() => ({}));
+        console.error('Comment error response:', err);
+        throw new Error((err as any).message ?? `Failed to add comment: ${res.status}`);
+    }
     return res.json();
 }
 export function useAddComment(slug: string, postId: string) {

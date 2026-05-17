@@ -259,6 +259,7 @@ export const postRoute = new Elysia({ prefix: '/api/workspaces/:slug/posts' })
             .orderBy(desc(postComments.createdAt));
     }, {
         params: t.Object({
+            slug: t.String(),
             id: t.String(),
         }),
     })
@@ -297,6 +298,7 @@ export const postRoute = new Elysia({ prefix: '/api/workspaces/:slug/posts' })
         return comment;
     }, {
         params: t.Object({
+            slug: t.String(),
             id: t.String(),
         }),
         body: t.Object({
@@ -336,6 +338,7 @@ export const postRoute = new Elysia({ prefix: '/api/workspaces/:slug/posts' })
         return status(204, { message: 'Comment deleted' });
     }, {
         params: t.Object({
+            slug:      t.String(),
             id:        t.String(),
             commentId: t.String(),
         }),

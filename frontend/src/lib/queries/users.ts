@@ -14,7 +14,8 @@ async function fetchUserSearch(q: string): Promise<UserSearchItem[]> {
     });
 
     if (!res.ok) {
-        throw new Error(`Failed to search users: ${res.status}`);
+        const text = await res.text();
+        throw new Error(`Failed to search users: ${res.status} ${res.statusText} - ${text}`);
     }
 
     return res.json();
