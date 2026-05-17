@@ -19,7 +19,7 @@ interface PendingFile {
 }
 
 export default function NewPostPage() {
-    const t = useTranslations('dashboard.workspace.post.new');
+    const t = useTranslations('post.new');
     const { slug } = useParams<{ slug: string }>();
     const router = useRouter();
 

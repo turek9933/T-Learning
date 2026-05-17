@@ -27,7 +27,7 @@ function generateSlug(name: string): string {
 }
 
 export default function NewWorkspaceForm() {
-    const t = useTranslations('dashboard.workspace.new');
+    const t = useTranslations('workspace.new');
     const router = useRouter();
     const { workspaceSchema } = useValidationSchemas();
 

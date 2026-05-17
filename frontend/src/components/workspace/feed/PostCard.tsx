@@ -29,7 +29,7 @@ interface PostCardProps {
 }
 
 export function PostCard({ slug, post, canModerate, canParticipate, workspaceActive }: PostCardProps) {
-    const t = useTranslations('dashboard.workspace.post');
+    const t = useTranslations('post');
     const { data: session } = authClient.useSession();
     const [commentsOpen, setCommentsOpen] = useState(false);
     const deletePost = useDeletePost(slug);

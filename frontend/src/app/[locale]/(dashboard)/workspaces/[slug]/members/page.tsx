@@ -27,7 +27,7 @@ function MemberRow({
     workspaceId: string;
     workspaceSlug: string;
 }) {
-    const t = useTranslations('dashboard.workspace.members');
+    const t = useTranslations('workspace.members');
     const queryClient = useQueryClient();
 
     const roleMutation = useMutation({
@@ -161,7 +161,7 @@ function MemberRow({
 }
 
 export default function WorkspaceMembersPage() {
-    const t = useTranslations('dashboard.workspace.members');
+    const t = useTranslations('workspace.members');
     const queryClient = useQueryClient();
     const { slug } = useParams<{ slug: string }>();
     const { data: workspace, isPending: workspaceIsPending, isError: workspaceIsError } = useWorkspace(slug);

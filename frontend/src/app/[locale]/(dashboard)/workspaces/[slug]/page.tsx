@@ -24,7 +24,7 @@ import { EventFeedCard } from '@/components/workspace/feed/EventFeedCard';
 import { HomeworkFeedCard } from '@/components/workspace/feed/HomeworkFeedCard';
 
 function WorkspaceTabs({ slug }: { slug: string }) {
-    const t = useTranslations('dashboard.workspace.tabs');
+    const t = useTranslations('workspace.tabs');
     const pathname = usePathname();
 
     const isActive = (href: string) => {
@@ -60,7 +60,7 @@ type UpcomingItem =
     | { type: 'homework'; data: UpcomingHomework };
 
 function UpcomingSection({ slug }: { slug: string }) {
-    const t = useTranslations('dashboard.workspace.upcoming');
+    const t = useTranslations('workspace.upcoming');
     const { data: events = [] } = useUpcomingEvents(slug);
     const { data: homeworks = [] } = useUpcomingHomeworks(slug);
 
@@ -208,7 +208,7 @@ function FeedList({ slug, canModerate, canParticipate, workspaceActive, items }:
 }
 
 export default function WorkspacePage() {
-    const t = useTranslations('dashboard.workspace.main');
+    const t = useTranslations('workspace.main');
     const { slug } = useParams<{ slug: string }>();
     const router = useRouter();
     const queryClient = useQueryClient();

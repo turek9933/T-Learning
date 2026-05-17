@@ -12,7 +12,7 @@ import { customToast } from "@/components/CustomToast";
 
 
 export default function InviteView() {
-  const t = useTranslations("dashboard.workspace.invite");
+  const t = useTranslations("workspace.invite");
   const router = useRouter();
   const { id } = useParams<{ id: string }>();
 

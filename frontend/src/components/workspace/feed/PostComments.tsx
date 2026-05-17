@@ -29,7 +29,7 @@ interface PostCommentsProps {
 }
 
 export function PostComments({ slug, postId, canParticipate, canModerate }: PostCommentsProps) {
-    const t = useTranslations('dashboard.workspace.post');
+    const t = useTranslations('post');
     const { data: session } = authClient.useSession();
     const { data: comments, isPending } = useComments(slug, postId, true);
     const addComment = useAddComment(slug, postId);
