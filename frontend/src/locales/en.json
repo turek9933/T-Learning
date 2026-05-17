@@ -1,19 +1,4 @@
 {
-  "common": {
-    "appName": "T-Learning",
-    "or": "or",
-    "loading": "Loading...",
-    "error": "Error",
-    "success": "Success",
-    "cancel": "Cancel",
-    "save": "Save",
-    "delete": "Delete",
-    "edit": "Edit",
-    "close": "Close",
-    "back": "Back",
-    "next": "Next",
-    "submit": "Submit"
-  },
   "notFound": {
     "title": "Not found",
     "description": "The page you are looking for has not been found",
@@ -218,7 +203,19 @@
         "upcoming": "Upcoming",
         "noContent": "No content",
         "noContentInfo": "Here will appear announcements, events or tasks",
+        "loadMore": "Load more",
         "errorLoad": "Failed to load workspace data"
+      },
+      "upcoming": {
+        "title": "Upcoming",
+        "today": "Today",
+        "tomorrow": "Tomorrow",
+        "eventType": {
+          "event": "Event",
+          "deadline": "Deadline",
+          "homework": "Task"
+        },
+        "homework": "Homework"
       },
       "settings": {
         "title": "Workspace settings",
@@ -326,6 +323,30 @@
         "goBack": "Go back to the main page",
         "error": "Link to add user to workspace is invalid",
         "errorInvite": "Failed to add user to workspace"
+      },
+      "post": {
+        "title": "Post",
+        "unknownUser": "Unknown user",
+        "hideComments": "Hide comments",
+        "showComments": "Show comments",
+        "emptyComments": "No comments",
+        "commentPlaceholder": "Add comment...",
+        "new": {
+          "title": "New post",
+          "contentPlaceholder": "What do you want to share?",
+          "attachFiles": "Attach files",
+          "pin": "Pin",
+          "pinned": "Pinned",
+          "cancel": "Cancel",
+          "publish": "Publish",
+          "publishing": "Publishing...",
+          "success": "Post was successfully published",
+          "error": "Failed to publish post",
+          "errorUpload": "Failed to upload attachments",
+          "errorMaxFiles": "You can add up to {max} files",
+          "errorFileTooLarge": "File {name} exceeds the maximum allowed size of {max}",
+          "errorLoad": "Failed to load workspace data"
+        }
       }
     }
   },
@@ -333,6 +354,11 @@
     "dashboard": "Dashboard",
     "workspaces": "Workspaces",
     "new": "New"
+  },
+  "toast": {
+    "successWorkspaceStatusActive": "Workspace status has been changed to active",
+    "successWorkspaceStatusArchived": "Workspace status has been changed to archived",
+    "successWorkspaceDelete": "Workspace has been deleted"
   },
   "landing": {
     "heroTitle": "Modular platform for online learning",

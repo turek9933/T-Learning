@@ -171,9 +171,18 @@ function FeedList({ slug, canModerate, canParticipate, workspaceActive, items }:
     workspaceActive: boolean;
     items: FeedItem[];
 }) {
+    // Separate non-pinned items and pinned items
+    const nonPinnedItems = items.filter(item => !(item.type === 'post' && item.pinned));
+    const pinnedItems = items.filter(item => item.type === 'post' && item.pinned);
+
+    console.log(pinnedItems);
+
+    // Pinned items at the end
+    const orderedItems = [...nonPinnedItems, ...pinnedItems];
+
     return (
         <div className="space-y-3 w-full">
-            {items.map(item => {
+            {orderedItems.map(item => {
                 if (item.type === 'post') {
                     return (
                         <PostCard

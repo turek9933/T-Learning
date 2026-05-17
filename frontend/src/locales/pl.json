@@ -1,19 +1,4 @@
 {
-  "common": {
-    "appName": "T-Learning",
-    "or": "lub",
-    "loading": "Ładowanie...",
-    "error": "Błąd",
-    "success": "Sukces",
-    "cancel": "Anuluj",
-    "save": "Zapisz",
-    "delete": "Usuń",
-    "edit": "Edytuj",
-    "close": "Zamknij",
-    "back": "Wstecz",
-    "next": "Dalej",
-    "submit": "Wyślij"
-  },
   "notFound": {
     "title": "Nie znaleziono",
     "description": "Strona, która szukasz, nie została odnaleziona",
@@ -218,7 +203,19 @@
         "upcoming": "Nadchodzące",
         "noContent": "Brak treści",
         "noContentInfo": "Tutaj pojawią się treści, ogłoszenia, wydarzenia lub zadania",
+        "loadMore": "Załaduj więcej",
         "errorLoad": "Nie udało się wczytać danych o przestrzeni roboczej"
+      },
+      "upcoming": {
+        "title": "Nadchodzące",
+        "today": "Dzisiaj",
+        "tomorrow": "Jutro",
+        "eventType": {
+          "meeting": "Spotkanie",
+          "deadline": "Termin końcowy",
+          "exam": "Egzamin"
+        },
+        "homework": "Zadanie domowe"
       },
       "settings": {
         "title": "Ustawienia przestrzeni roboczej",
@@ -326,6 +323,30 @@
         "goBack": "Powrót do strony głównej",
         "error": "Link do dołączenia do przestrzeni roboczej jest nieprawidłowy",
         "errorInvite": "Nie udało się dołączyć do przestrzeni roboczej"
+      },
+      "post": {
+        "title": "Ogłoszenie",
+        "unknownUser": "Użytkownik nieznany",
+        "hideComments": "Ukryj komentarze",
+        "showComments": "Pokaż komentarze",
+        "emptyComments": "Brak komentarzy",
+        "commentPlaceholder": "Dodaj komentarz...",
+        "new": {
+          "title": "Nowe ogłoszenie",
+          "contentPlaceholder": "Co chcesz ogłosić?",
+          "attachFiles": "Załącz pliki",
+          "pin": "Przypnij",
+          "pinned": "Przypięto",
+          "cancel": "Anuluj",
+          "publish": "Opublikuj",
+          "publishing": "Publikowanie...",
+          "success": "Ogłoszenie zostało opublikowane",
+          "error": "Nie udało się opublikować ogłoszenia",
+          "errorUpload": "Nie udało się wgrać załączników",
+          "errorMaxFiles": "Możesz dodać maksymalnie {max} pliki",
+          "errorFileTooLarge": "Plik {name} przekracza dozwolony rozmiar {max}",
+          "errorLoad": "Nie udało się wczytać danych o przestrzeni roboczej"
+        }
       }
     }
   },
@@ -333,6 +354,11 @@
     "dashboard": "Pulpit",
     "workspaces": "Przestrzenie robocze",
     "new": "Stwórz"
+  },
+  "toast": {
+    "successWorkspaceStatusActive": "Przestrzeń robocza została aktywowana",
+    "successWorkspaceStatusArchived": "Przestrzeń robocza została archiwizowana",
+    "successWorkspaceDelete": "Przestrzeń robocza została usunięta"
   },
   "landing": {
     "heroTitle": "Modułowa platforma do nauczania online",

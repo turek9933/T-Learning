@@ -1,19 +1,4 @@
 {
-  "common": {
-    "appName": "T-Learning",
-    "or": "o",
-    "loading": "Caricamento...",
-    "error": "Errore",
-    "success": "Successo",
-    "cancel": "Annulla",
-    "save": "Salva",
-    "delete": "Elimina",
-    "edit": "Modifica",
-    "close": "Chiudi",
-    "back": "Indietro",
-    "next": "Avanti",
-    "submit": "Invia"
-  },
   "notFound": {
     "title": "Non trovato",
     "description": "La pagina che stai cercando non esiste",
@@ -218,7 +203,19 @@
         "upcoming": "Prossimi",
         "noContent": "Nessun contenuto",
         "noContentInfo": "Qui appariranno annunci, eventi o compiti",
+        "loadMore": "Carica di più",
         "errorLoad": "Impossibile caricare i dati della zone di lavoro"
+      },
+      "upcoming": {
+        "title": "Prossimi",
+        "today": "Oggi",
+        "tomorrow": "Domani",
+        "eventType": {
+          "meeting": "Riunione",
+          "deadline": "Scadenza",
+          "exam": "Esame"
+        },
+        "homework": "Compito"
       },
       "settings": {
         "title": "Impostazioni zone di lavoro",
@@ -326,6 +323,30 @@
         "goBack": "Torna alla homepage",
         "error": "Impossibile inviare l'invito",
         "errorInvite": "Impossibile inviare l'invito"
+      },
+      "post": {
+        "title": "Post",
+        "unknownUser": "Utente sconosciuto",
+        "hideComments": "Nascondi commenti",
+        "showComments": "Mostra commenti",
+        "emptyComments": "Nessun commento",
+        "commentPlaceholder": "Aggiungi commento...",
+        "new": {
+          "title": "Nuovo post",
+          "contentPlaceholder": "Cosa vuoi condividere?",
+          "attachFiles": "Allega file",
+          "pin": "Pin",
+          "pinned": "Pinned",
+          "cancel": "Annulla",
+          "publish": "Pubblica",
+          "publishing": "Pubblicazione in corso...",
+          "success": "Post pubblicato con successo",
+          "error": "Impossibile pubblicare il post",
+          "errorUpload": "Impossibile caricare i file",
+          "errorMaxFiles": "Puoi allegare fino a {max} file",
+          "errorFileTooLarge": "File {name} supera la dimensione massima di {max}",
+          "errorLoad": "Impossibile caricare i dati del workspace"
+        }
       }
     }
   },
@@ -333,6 +354,11 @@
     "dashboard": "Pulpit",
     "workspaces": "Workspace",
     "new": "Nuovo"
+  },
+  "toast": {
+    "successWorkspaceStatusActive": "Workspace attiva",
+    "successWorkspaceStatusArchived": "Workspace archiviata",
+    "successWorkspaceDelete": "Workspace eliminata"
   },
   "landing": {
     "heroTitle": "Piattaforma modulare per l'apprendimento online",

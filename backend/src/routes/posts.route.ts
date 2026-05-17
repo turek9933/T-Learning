@@ -1,5 +1,5 @@
 import { Elysia, t } from 'elysia';
-import { eq, lt, and, sql, isNull, desc } from 'drizzle-orm';
+import { eq, lt, and, sql, isNull, desc, asc } from 'drizzle-orm';
 import { db } from '@/db';
 import { posts, postComments, postAttachments, users } from '@/db/schema';
 import { workspacePlugin, type WorkspaceCtx } from '@/lib/workspace.plugin';
@@ -256,7 +256,7 @@ export const postRoute = new Elysia({ prefix: '/api/workspaces/:slug/posts' })
                     isNull(postComments.deletedAt),
                 )
             )
-            .orderBy(desc(postComments.createdAt));
+            .orderBy(asc(postComments.createdAt));
     }, {
         params: t.Object({
             slug: t.String(),
