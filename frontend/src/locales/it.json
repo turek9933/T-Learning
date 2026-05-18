@@ -211,10 +211,12 @@
       "title": "Prossimi",
       "today": "Oggi",
       "tomorrow": "Domani",
-      "eventType": {
+      "upcomingType": {
+        "event": "Evento",
         "meeting": "Riunione",
         "deadline": "Scadenza",
-        "exam": "Esame"
+        "exam": "Esame",
+        "homework": "Compito"
       },
       "homework": "Compito"
     },
@@ -333,6 +335,7 @@
     "showComments": "Mostra commenti",
     "emptyComments": "Nessun commento",
     "commentPlaceholder": "Aggiungi commento...",
+    "delete": "Elimina",
     "new": {
       "title": "Nuovo post",
       "contentPlaceholder": "Cosa vuoi condividere?",
@@ -358,7 +361,22 @@
     "day": "giorno",
     "days": "giorni",
     "new": {
-      "title": "Nuovo compito"
+      "title": "Nuovo compito",
+      "homeworkTitle": "Titolo compito",
+      "homeworkTitlePlaceholder": "Inserisci qui il titolo del compito",
+      "description": "Descrizione",
+      "descriptionPlaceholder": "Inserisci qui la descrizione del compito",
+      "dueAt": "Scadenza",
+      "attachments": "Allegati",
+      "attachFiles": "Allega file",
+      "cancel": "Annulla",
+      "publish": "Pubblica",
+      "publishing": "Pubblicazione in corso...",
+      "success": "Compito pubblicato con successo",
+      "error": "Impossibile pubblicare il compito",
+      "errorMaxFiles": "Puoi allegare fino a {max} file",
+      "errorFileTooLarge": "File {name} supera la dimensione massima di {max}",
+      "errorUpload": "Impossibile caricare i file"
     }
   },
   "event": {
@@ -370,7 +388,23 @@
     "details": "Dettagli",
     "downloadIcs": "Scarica evento",
     "new": {
-      "title": "Nuovo evento"
+      "title": "Nuovo evento",
+      "type": "Tipo",
+      "typeMeeting": "Riunione",
+      "typeDeadline": "Scadenza",
+      "typeExam": "Esame",
+      "eventTitle": "Titolo evento",
+      "eventTitlePlaceholder": "Inserisci qui il titolo dell'evento",
+      "description": "Descrizione",
+      "descriptionPlaceholder": "Inserisci qui la descrizione dell'evento",
+      "startsAt": "Inizio",
+      "endsAt": "Fine",
+      "cancel": "Annulla",
+      "publish": "Pubblica",
+      "publishing": "Pubblicazione in corso...",
+      "success": "Evento pubblicato con successo",
+      "error": "Impossibile pubblicare l'evento",
+      "errorLoad": "Impossibile caricare i dati del workspace"
     }
   },
   "breadcrumb": {

@@ -211,9 +211,11 @@
       "title": "Upcoming",
       "today": "Today",
       "tomorrow": "Tomorrow",
-      "eventType": {
+      "upcomingType": {
         "event": "Event",
+        "meeting": "Meeting",
         "deadline": "Deadline",
+        "exam": "Exam",
         "homework": "Task"
       },
       "homework": "Homework"
@@ -294,12 +296,12 @@
     "new": {
       "title": "Create new workspace",
       "subtitle": "Workspace is a place to store materials, tasks and announcements",
-      "name": "Name",
       "type": "Type",
       "typeSingle": "Single",
       "typeSingleDescription": "Suitable for learning for one student",
       "typeGroup": "Group",
       "typeGroupDescription": "Suitable for learning for multiple students",
+      "name": "Name",
       "placeholderName": "My workspace",
       "slug": "Slug",
       "slugHint": "End of url workspace, e.g. my-workspace",
@@ -333,6 +335,7 @@
     "showComments": "Show comments",
     "emptyComments": "No comments",
     "commentPlaceholder": "Add comment...",
+    "delete": "Delete post",
     "new": {
       "title": "New post",
       "contentPlaceholder": "What do you want to share?",
@@ -358,7 +361,22 @@
     "day": "day",
     "days": "days",
     "new": {
-      "title": "New homework"
+      "title": "New homework",
+      "homeworkTitle": "Homework title",
+      "homeworkTitlePlaceholder": "Enter homework title",
+      "description": "Description",
+      "descriptionPlaceholder": "Enter description",
+      "dueAt": "Due date",
+      "attachments": "Attachments",
+      "attachFiles": "Attach files",
+      "cancel": "Cancel",
+      "publish": "Publish",
+      "publishing": "Publishing...",
+      "success": "Homework was successfully published",
+      "error": "Failed to publish homework",
+      "errorMaxFiles": "You can add up to {max} files",
+      "errorFileTooLarge": "File {name} exceeds the maximum allowed size of {max}",
+      "errorUpload": "Failed to upload attachments"
     }
   },
   "event": {
@@ -370,7 +388,25 @@
     "details": "Details",
     "downloadIcs": "Download event",
     "new": {
-      "title": "New event"
+      "title": "New event",
+      "type": "Type",
+      "typeMeeting": "Meeting",
+      "typeDeadline": "Deadline",
+      "typeExam": "Exam",
+      "eventTitle": "Event title",
+      "eventTitlePlaceholder": "Enter event title",
+      "description": "Description",
+      "descriptionPlaceholder": "Enter description",
+      "location": "Location",
+      "locationPlaceholder": "Enter here address or link to event location",
+      "startsAt": "Start time",
+      "endsAt": "End time",
+      "cancel": "Cancel",
+      "publish": "Publish",
+      "publishing": "Publishing...",
+      "success": "Event was successfully published",
+      "error": "Failed to publish event",
+      "errorLoad": "Failed to load workspace data"
     }
   },
   "breadcrumb": {

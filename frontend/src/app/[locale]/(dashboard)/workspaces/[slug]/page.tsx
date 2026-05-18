@@ -20,8 +20,8 @@ import WorkspacePending from '@/components/workspace/WorkspacePending';
 import WorkspaceError from '@/components/workspace/WorkspaceError';
 import { useQueryClient } from '@tanstack/react-query';
 import { PostCard } from '@/components/workspace/feed/PostCard';
-import { EventFeedCard } from '@/components/workspace/feed/EventFeedCard';
-import { HomeworkFeedCard } from '@/components/workspace/feed/HomeworkFeedCard';
+import { EventCard } from '@/components/workspace/feed/EventCard';
+import { HomeworkCard } from '@/components/workspace/feed/HomeworkCard';
 
 function WorkspaceTabs({ slug }: { slug: string }) {
     const t = useTranslations('workspace.tabs');
@@ -122,7 +122,7 @@ function UpcomingSection({ slug }: { slug: string }) {
                             >
                                 <span className="flex items-center gap-1 font-normal text-sm text-text-secondary px-2 py-1">
                                     <Calendar className="w-3 h-3" />
-                                    {t(`eventType.${e.type}`)}
+                                    {t(`upcomingType.${e.type}`)}
                                 </span>
                                 <Link
                                 href={`/workspaces/${slug}/events/${e.id}`}
@@ -196,9 +196,9 @@ function FeedList({ slug, canModerate, canParticipate, workspaceActive, items }:
                     );
                 }
                 if (item.type === 'event') {
-                    return <EventFeedCard key={item.id} slug={slug} event={item} />;
+                    return <EventCard key={item.id} slug={slug} event={item} />;
                 } else if (item.type === 'homework') {   
-                    return <HomeworkFeedCard key={item.id} slug={slug} homework={item} />;
+                    return <HomeworkCard key={item.id} slug={slug} homework={item} />;
                 } else {
                     return null;
                 }

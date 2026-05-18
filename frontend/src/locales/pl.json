@@ -211,10 +211,12 @@
       "title": "Nadchodzące",
       "today": "Dzisiaj",
       "tomorrow": "Jutro",
-      "eventType": {
+      "upcomingType": {
+        "event": "Wydarzenie",
         "meeting": "Spotkanie",
-        "deadline": "Termin końcowy",
-        "exam": "Egzamin"
+        "deadline": "Termin",
+        "exam": "Egzamin",
+        "homework": "Zadanie domowe"
       },
       "homework": "Zadanie domowe"
     },
@@ -294,12 +296,12 @@
     "new": {
       "title": "Stwórz nową przestrzeń roboczą",
       "subtitle": "Przestrzenia robocza to miejsce na materiały, zadania oraz ogłoszenia",
-      "name": "Nazwa",
       "type": "Rodzaj",
       "typeSingle": "Indywidualna",
       "typeSingleDescription": "Służy do nauki dla jednego ucznia",
       "typeGroup": "Grupowa",
       "typeGroupDescription": "Służy do nauki grupowej",
+      "name": "Nazwa",
       "placeholderName": "Moja przestrzeń robocza",
       "slug": "Slug",
       "slugHint": "Końcowka adresu url przestrzeni roboczej, np. moja-przestrzen-robocza",
@@ -333,6 +335,7 @@
     "showComments": "Pokaż komentarze",
     "emptyComments": "Brak komentarzy",
     "commentPlaceholder": "Dodaj komentarz...",
+    "delete": "Usuń ogłoszenie",
     "new": {
       "title": "Nowe ogłoszenie",
       "contentPlaceholder": "Co chcesz ogłosić?",
@@ -358,7 +361,22 @@
     "day": "dzień",
     "days": "dni",
     "new": {
-      "title": "Nowe zadanie"
+      "title": "Nowe zadanie",
+      "homeworkTitle": "Tytuł zadania",
+      "homeworkTitlePlaceholder": "Wpisz tutaj tytuł zadania",
+      "description": "Opis",
+      "descriptionPlaceholder": "Wpisz tutaj opis zadania",
+      "dueAt": "Termin",
+      "attachments": "Załączniki",
+      "attachFiles": "Załącz pliki",
+      "cancel": "Anuluj",
+      "publish": "Stwórz",
+      "publishing": "Publikowanie...",
+      "success": "Zadanie zostało utworzone",
+      "error": "Nie udało się utworzyć zadania",
+      "errorMaxFiles": "Możesz dodać maksymalnie {max} pliki",
+      "errorFileTooLarge": "Plik {name} przekracza dozwolony rozmiar {max}",
+      "errorUpload": "Nie udało się wgrać załączników"
     }
   },
   "event": {
@@ -368,9 +386,27 @@
       "exam": "Egzamin"
     },
     "details": "Szczegóły",
-    "downloadIcs": "Pobierz zdanienie",
+    "downloadIcs": "Pobierz zdarzenie",
     "new": {
-      "title": "Nowe wydarzenie"
+      "title": "Nowe wydarzenie",
+      "type": "Rodzaj",
+      "typeMeeting": "Spotkanie",
+      "typeDeadline": "Termin końcowy",
+      "typeExam": "Egzamin",
+      "eventTitle": "Tytuł wydarzenia",
+      "eventTitlePlaceholder": "Wpisz tutaj tytuł wydarzenia",
+      "description": "Opis",
+      "descriptionPlaceholder": "Wpisz tutaj opis wydarzenia",
+      "location": "Lokalizacja",
+      "locationPlaceholder": "Wpisz tutaj adres lub link do lokalizacji wydarzenia",
+      "startsAt": "Czas rozpoczecia",
+      "endsAt": "Czas zakonczenia",
+      "cancel": "Anuluj",
+      "publish": "Stwórz",
+      "publishing": "Publikowanie...",
+      "success": "Wydarzenie zostało utworzone",
+      "error": "Nie udało się utworzyć wydarzenia",
+      "errorLoad": "Nie udało się wczytać danych o przestrzeni roboczej"
     }
   },
   "breadcrumb": {
