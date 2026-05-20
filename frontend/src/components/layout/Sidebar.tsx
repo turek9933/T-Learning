@@ -1,13 +1,14 @@
 'use client';
 import { useTranslations } from 'next-intl';
 import { Link, usePathname } from '@/i18n/routing';
-import { Calendar, MessageSquare, Settings, LayoutDashboard, Cog, Users, BookOpen } from 'lucide-react';
+import { Calendar, ClipboardList, MessageSquare, Settings, LayoutDashboard, Cog, Users, BookOpen } from 'lucide-react';
 
 const NAV_ITEMS = [
-    { key: 'workspaces', href: '/dashboard', icon: LayoutDashboard },
-    { key: 'calendar',   href: '/calendar',  icon: Calendar },
-    { key: 'messages',   href: '/chat',  icon: MessageSquare },
-    { key: 'settings',   href: '/settings',  icon: Settings },
+    { key: 'workspaces', href: '/dashboard',    icon: LayoutDashboard },
+    { key: 'calendar',   href: '/calendar',     icon: Calendar },
+    { key: 'homeworks',  href: '/homeworks',    icon: ClipboardList },
+    { key: 'messages',   href: '/chat',         icon: MessageSquare },
+    { key: 'settings',   href: '/settings',     icon: Settings },
 ] as const;
 
 const WORKSPACE_SUB_ITEMS = [

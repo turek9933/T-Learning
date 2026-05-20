@@ -110,7 +110,6 @@ export const feedRoute = new Elysia({ prefix: '/api/workspaces/:slug/feed' })
         const postIds = postRows.map(p => p.id);
         let attachments: any[] = [];
         if (postIds.length > 0) {
-            console.log('111');
             try {
             attachments = await db
                 .select()

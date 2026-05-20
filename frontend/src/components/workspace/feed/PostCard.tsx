@@ -9,16 +9,7 @@ import Avatar from '@/components/shared/Avatar';
 import { FilePreviewList } from '@/components/shared/FilePreview';
 import { authClient } from '@/lib/auth-client';
 import { Button } from '@/components/ui/button';
-
-function formatDate(dateStr: string): string {
-    return new Date(dateStr).toLocaleDateString(undefined, {
-        day: 'numeric',
-        month: 'short',
-        year: 'numeric',
-        hour: '2-digit',
-        minute: '2-digit',
-    });
-}
+import { useDateFormat } from '@/lib/utils/date';
 
 interface PostCardProps {
     slug: string;
@@ -31,6 +22,7 @@ interface PostCardProps {
 export function PostCard({ slug, post, canModerate, canParticipate, workspaceActive }: PostCardProps) {
     const t = useTranslations('post');
     const { data: session } = authClient.useSession();
+    const { formatDateTime } = useDateFormat();
     const [commentsOpen, setCommentsOpen] = useState(false);
     const deletePost = useDeletePost(slug);
 
@@ -47,7 +39,7 @@ export function PostCard({ slug, post, canModerate, canParticipate, workspaceAct
                         <p className="text-sm font-medium text-text">
                             {post.userName ?? t('unknownUser')}
                         </p>
-                        <p className="text-xs text-text-muted">{formatDate(post.createdAt)}</p>
+                        <p className="text-xs text-text-muted">{formatDateTime(post.createdAt)}</p>
                     </div>
                 </div>
                 <div className="flex items-center gap-1 shrink-0">

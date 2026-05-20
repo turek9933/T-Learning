@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@source "../../node_modules/@ilamy/calendar/dist";
 
 @custom-variant dark (&:where(.dark, .dark *));
 @custom-variant accessible (&:where(.accessible, .accessible *));

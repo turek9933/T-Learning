@@ -50,32 +50,34 @@ function ImagePreview({
 
     return (
         <>
-            <button
-            type="button"
-            onClick={() => setLightboxOpen(true)}
-            className="relative group rounded-lg overflow-hidden focus:outline-none cursor-zoom-in"
-            title={name}
-            >
-                <img
-                src={imageUrl}
-                alt={name}
-                className="max-w-48 max-h-36 object-cover rounded-md cursor-zoom-in"
-                loading="lazy"
-                />
-                <div className="absolute inset-0 group-hover:bg-bg/40 transition-colors flex items-center justify-center">
-                    <ZoomIn className="w-5 h-5 text-text opacity-0 group-hover:opacity-100 transition-opacity" />
-                </div>
+            <div className="relative group rounded-lg overflow-hidden">
+                <button
+                type="button"
+                onClick={() => setLightboxOpen(true)}
+                className="block focus:outline-none cursor-zoom-in"
+                title={name}
+                >
+                    <img
+                    src={imageUrl}
+                    alt={name}
+                    className="max-w-48 max-h-36 object-cover rounded-md cursor-zoom-in"
+                    loading="lazy"
+                    />
+                    <div className="absolute inset-0 group-hover:bg-bg/40 transition-colors flex items-center justify-center pointer-events-none">
+                        <ZoomIn className="w-5 h-5 text-text opacity-0 group-hover:opacity-100 transition-opacity" />
+                    </div>
+                </button>
                 {onRemove && (
                     <Button
                     variant="ghost"
                     size="icon"
-                    onClick={(e) => { e.stopPropagation(); onRemove(); }}
+                    onClick={onRemove}
                     className="absolute top-2 right-2 w-6 h-6 bg-bg text-text border border-border rounded-full opacity-0 group-hover:opacity-100 transition-opacity hover:bg-bg-hover hover:text-error p-0"
                     >
                         <X className="w-3 h-3" />
                     </Button>
                 )}
-            </button>
+            </div>
 
             {lightboxOpen && (
                 <div

@@ -3,27 +3,24 @@ import { useTranslations } from 'next-intl';
 import { ClipboardList, Clock } from 'lucide-react';
 import { Link } from '@/i18n/routing';
 import type { HomeworkItem } from '@/types/homework';
+import { useDateFormat } from '@/lib/utils/date';
 
-function formatDueDate(dueAt: string | null, t: (key: string) => string): { label: string; urgent: boolean } {
+function getDueStatus(dueAt: string | null, t: (key: string) => string, shortDate: string): { label: string; urgent: boolean } {
     if (!dueAt) return { label: t('noDue'), urgent: false };
 
-    const due = new Date(dueAt);
-    const now = new Date();
-
-    const diffMs = due.getTime() - now.getTime();
+    const diffMs = new Date(dueAt).getTime() - Date.now();
     const diffDays = Math.ceil(diffMs / (1000 * 60 * 60 * 24));
 
-    const dateStr = due.toLocaleDateString(undefined, { day: 'numeric', month: 'short', year: 'numeric' });
-
-    if (diffMs < 0) return { label: t('overdue'), urgent: true };
+    if (diffMs < 0)    return { label: t('overdue'), urgent: true };
     if (diffDays <= 1) return { label: `${t('dueIn')} < 1 ${t('day')}`, urgent: true };
     if (diffDays <= 3) return { label: `${t('dueIn')} ${diffDays} ${t('days')}`, urgent: true };
-    return { label: dateStr, urgent: false };
+    return { label: shortDate, urgent: false };
 }
 
 export function HomeworkCard({ slug, homework }: { slug: string, homework: HomeworkItem }) {
     const t = useTranslations('homework');
-    const { label: dueLabel, urgent } = formatDueDate(homework.dueAt, t);
+    const { formatShortDate } = useDateFormat();
+    const { label: dueLabel, urgent } = getDueStatus(homework.dueAt, t, homework.dueAt ? formatShortDate(homework.dueAt) : '');
 
     return (
         <div className="bg-bg border border-border rounded-xl p-4 space-y-2">

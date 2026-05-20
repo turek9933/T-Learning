@@ -24,36 +24,6 @@ export async function getUserRole(userId: string, workspaceId: string): Promise<
 export const workspaceRoute = new Elysia({ prefix: '/api/workspaces' })
     .use(authRoute)
 
-    // GET /api/workspaces/me
-    // Returns the current user's workspaces
-    .get('/me', async ({ user }) => {
-        const rows = await db
-            .select({
-                id:          workspaces.id,
-                name:        workspaces.name,
-                slug:        workspaces.slug,
-                logo:        workspaces.logo,
-                type:        workspaces.type,
-                description: workspaces.description,
-                status:      workspaces.status,
-                metadata:    workspaces.metadata,
-                createdAt:   workspaces.createdAt,
-                role:        workspaceMembers.role,
-                hasPaid:     workspaceMembers.hasPaid,
-                expiresAt:   workspaceMembers.expiresAt,
-            })
-            .from(workspaceMembers)
-            .innerJoin(
-                workspaces,
-                eq(workspaceMembers.workspaceId, workspaces.id),
-            )
-            .where(eq(workspaceMembers.userId, user.id));
-
-        return rows;
-    }, {
-        auth: true
-    })
-
     // GET /api/workspaces/:slug
     // Returns the workspace with the given slug and role of the current user
     .get('/:slug', async ({ user, params: { slug }, status }) => {

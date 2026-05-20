@@ -4,6 +4,7 @@ import { Calendar, Clock, Download, MapPin } from 'lucide-react';
 import { Link } from '@/i18n/routing';
 import type { EventItem } from '@/types/event';
 import { env } from '@/lib/env';
+import { useDateFormat } from '@/lib/utils/date';
 
 const EVENT_TYPE_COLORS = {
     meeting:  'text-primary border-primary',
@@ -11,20 +12,9 @@ const EVENT_TYPE_COLORS = {
     exam:     'text-error border-error',
 };
 
-function formatEventDate(startsAt: string, endsAt: string | null): string {
-    const start = new Date(startsAt);
-    const dateStr = start.toLocaleDateString(undefined, { day: 'numeric', month: 'short', year: 'numeric' });
-    const timeStr = start.toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit' });
-    
-    if (!endsAt) return `${dateStr}, ${timeStr}`;
-
-    const end = new Date(endsAt);
-    const endTime = end.toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit' });
-    return `${dateStr}, ${timeStr} – ${endTime}`;
-}
-
 export function EventCard({ slug, event }: { slug: string, event: EventItem }) {
     const t = useTranslations('event');
+    const { formatEventDateRange } = useDateFormat();
     const colorClass = EVENT_TYPE_COLORS[event.eventType] ?? EVENT_TYPE_COLORS.meeting;
 
     return (
@@ -47,7 +37,7 @@ export function EventCard({ slug, event }: { slug: string, event: EventItem }) {
             <div className="flex flex-wrap gap-3 text-xs text-text-muted">
                 <span className="flex items-center gap-1">
                     <Clock className="w-4 h-4" />
-                    {formatEventDate(event.startsAt, event.endsAt)}
+                    {formatEventDateRange(event.startsAt, event.endsAt)}
                 </span>
                 {event.location && (
                     <span className="flex items-center gap-1">

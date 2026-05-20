@@ -22,6 +22,7 @@ import { useQueryClient } from '@tanstack/react-query';
 import { PostCard } from '@/components/workspace/feed/PostCard';
 import { EventCard } from '@/components/workspace/feed/EventCard';
 import { HomeworkCard } from '@/components/workspace/feed/HomeworkCard';
+import { useDateFormat } from '@/lib/utils/date';
 
 function WorkspaceTabs({ slug }: { slug: string }) {
     const t = useTranslations('workspace.tabs');
@@ -61,6 +62,7 @@ type UpcomingItem =
 
 function UpcomingSection({ slug }: { slug: string }) {
     const t = useTranslations('workspace.upcoming');
+    const { formatDayMonth } = useDateFormat();
     const { data: events = [] } = useUpcomingEvents(slug);
     const { data: homeworks = [] } = useUpcomingHomeworks(slug);
 
@@ -93,11 +95,10 @@ function UpcomingSection({ slug }: { slug: string }) {
     if (items.length === 0) return null;
 
     function formatUpcomingDate(dateStr: string): string {
-        const date = new Date(dateStr);
-        const diffDays = Math.ceil((date.getTime() - now) / (1000 * 60 * 60 * 24));
+        const diffDays = Math.ceil((new Date(dateStr).getTime() - now) / (1000 * 60 * 60 * 24));
         if (diffDays <= 0) return t('today');
         if (diffDays === 1) return t('tomorrow');
-        return date.toLocaleDateString(undefined, { day: 'numeric', month: 'short' });
+        return formatDayMonth(dateStr);
     }
 
     return (
