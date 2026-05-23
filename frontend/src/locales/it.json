@@ -1,4 +1,15 @@
 {
+  "calendar": {
+    "title": "Calendario",
+    "monthView": "Mese",
+    "weekView": "Settimana",
+    "typeMeeting": "Riunione",
+    "typeDeadline": "Scadenza",
+    "typeExam": "Esame",
+    "homeworkDeadline": "Compito",
+    "today": "Oggi",
+    "more": "altro"
+  },
   "notFound": {
     "title": "Non trovato",
     "description": "La pagina che stai cercando non esiste",
@@ -19,6 +30,7 @@
   "sidebar": {
     "workspaces": "Zone di lavoro",
     "calendar": "Calendario",
+    "homeworks": "Compiti",
     "messages": "Messaggi",
     "settings": "Impostazioni",
     "workspaceMain": "Principale",
@@ -354,12 +366,17 @@
     }
   },
   "homework": {
-    "details": "Dettagli",
+    "details": "Dettagli del compito",
     "noDue": "Nessuna scadenza",
     "overdue": "Scaduto",
     "dueIn": "Scade in",
     "day": "giorno",
     "days": "giorni",
+    "submitted": "Inviato",
+    "dueToday": "Scade oggi",
+    "dueTomorrow": "Scade domani",
+    "dueInDays": "Scade in {days} giorni",
+    "noDueDate": "Nessuna scadenza",
     "new": {
       "title": "Nuovo compito",
       "homeworkTitle": "Titolo compito",
@@ -374,6 +391,42 @@
       "publishing": "Pubblicazione in corso...",
       "success": "Compito pubblicato con successo",
       "error": "Impossibile pubblicare il compito",
+      "errorMaxFiles": "Puoi allegare fino a {max} file",
+      "errorFileTooLarge": "File {name} supera la dimensione massima di {max}",
+      "errorUpload": "Impossibile caricare i file"
+    },
+    "list": {
+      "title": "Compiti",
+      "empty": "Nessun compito",
+      "pending": "In corso",
+      "done": "Completato",
+      "errorLoad": "Impossibile caricare i dati dei compiti"
+    },
+    "details": {
+      "back": "Indietro",
+      "noDueDate": "Nessuna scadenza",
+      "overdue": "Scaduto",
+      "dueToday": "Scade oggi",
+      "dueAt": "Scadenza",
+      "submittedAt": "Inviato",
+      "attachments": "Allegati",
+      "mySubmission": "Mio sottomissione",
+      "resubmit": "Risubmetti",
+      "attachFiles": "Allega file",
+      "contentPlaceholder": "Scrivi la tua risposta...",
+      "attachmentsNote": "Nota: I precedenti allegati verranno cancellati!",
+      "cancel": "Annulla",
+      "update": "Aggiorna",
+      "updated": "aggiornato",
+      "submit": "Invia",
+      "submitting": "Invio in corso...",
+      "viewerNoSubmit": "L'utente non può inviare il compito",
+      "submissions": "Sottomissioni",
+      "submissionsNote": "Qui trovi tutte le sottomissioni per questo compito.",
+      "successSubmit": "Sottomissione inviata con successo",
+      "successUpdate": "Compito aggiornato con successo",
+      "error": "Impossibile pubblicare il compito",
+      "errorLoad": "Impossibile caricare i dati del compito",
       "errorMaxFiles": "Puoi allegare fino a {max} file",
       "errorFileTooLarge": "File {name} supera la dimensione massima di {max}",
       "errorUpload": "Impossibile caricare i file"
@@ -397,6 +450,8 @@
       "eventTitlePlaceholder": "Inserisci qui il titolo dell'evento",
       "description": "Descrizione",
       "descriptionPlaceholder": "Inserisci qui la descrizione dell'evento",
+      "location": "Luogo",
+      "locationPlaceholder": "Inserisci qui l'indirizzo o il link al luogo dell'evento",
       "startsAt": "Inizio",
       "endsAt": "Fine",
       "cancel": "Annulla",
@@ -405,6 +460,19 @@
       "success": "Evento pubblicato con successo",
       "error": "Impossibile pubblicare l'evento",
       "errorLoad": "Impossibile caricare i dati del workspace"
+    },
+    "detail": {
+      "type": {
+        "meeting": "Riunione",
+        "deadline": "Scadenza",
+        "exam": "Esame"
+      },
+      "downloadIcs": "Scarica evento",
+      "until": "Fino a",
+      "createdBy": "Creato da",
+      "unknownUser": "Utente sconosciuto",
+      "back": "Indietro",
+      "errorLoad": "Impossibile caricare i dati dell'evento"
     }
   },
   "breadcrumb": {

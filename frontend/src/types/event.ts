@@ -25,3 +25,31 @@ export type UpcomingEvent = {
     endsAt: string | null;
     location: string | null;
 };
+
+export type EventDetail = {
+    id: string;
+    type: EventType;
+    title: string;
+    description: string | null;
+    location: string | null;
+    startsAt: string;
+    endsAt: string | null;
+    createdAt: string;
+    updatedAt: string;
+    userId: string;
+    userName: string | null;
+    userAvatar: string | null;
+};
+
+export type MyEvent = {
+    id: string;
+    type: EventType;
+    title: string;
+    description: string | null;
+    location: string | null;
+    startsAt: string;
+    endsAt: string | null;
+    workspaceId: string;
+    workspaceName: string;
+    workspaceSlug: string;
+};

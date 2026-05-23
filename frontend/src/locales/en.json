@@ -1,4 +1,15 @@
 {
+  "calendar": {
+    "title": "Calendar",
+    "monthView": "Month",
+    "weekView": "Week",
+    "typeMeeting": "Meeting",
+    "typeDeadline": "Deadline",
+    "typeExam": "Exam",
+    "homeworkDeadline": "Homework",
+    "today": "Today",
+    "more": "more"
+  },
   "notFound": {
     "title": "Not found",
     "description": "The page you are looking for has not been found",
@@ -19,6 +30,7 @@
   "sidebar": {
     "workspaces": "Workspaces",
     "calendar": "Calendar",
+    "homeworks": "Homeworks",
     "messages": "Chat",
     "settings": "Settings",
     "workspaceMain": "Pulpit",
@@ -354,12 +366,17 @@
     }
   },
   "homework": {
-    "details": "Details",
+    "details": "Details of homework",
     "noDue": "No due date",
     "overdue": "Overdue",
     "dueIn": "Due in",
     "day": "day",
     "days": "days",
+    "submitted": "Submitted",
+    "dueToday": "Due today",
+    "dueTomorrow": "Due tomorrow",
+    "dueInDays": "Due in {days} days",
+    "noDueDate": "No due date",
     "new": {
       "title": "New homework",
       "homeworkTitle": "Homework title",
@@ -375,6 +392,42 @@
       "success": "Homework was successfully published",
       "error": "Failed to publish homework",
       "errorMaxFiles": "You can add up to {max} files",
+      "errorFileTooLarge": "File {name} exceeds the maximum allowed size of {max}",
+      "errorUpload": "Failed to upload attachments"
+    },
+    "list": {
+      "title": "Homeworks",
+      "empty": "No homeworks",
+      "pending": "Pending homeworks",
+      "done": "Done homeworks",
+      "errorLoad": "Failed to load homework data"
+    },
+    "detail": {
+      "back": "Back",
+      "noDueDate": "No due date",
+      "overdue": "Overdue",
+      "dueToday": "Due today",
+      "dueAt": "Due date",
+      "submittedAt": "Submitted at",
+      "attachments": "Attachments",
+      "mySubmissions": "My submissions",
+      "resubmit": "Resubmit",
+      "attachFiles": "Attach files",
+      "contentPlaceholder": "Write your answer...",
+      "attachmentsNote": "Note: Previous attachments will be deleted!",
+      "cancel": "Cancel",
+      "update": "Update",
+      "updated": "updated",
+      "submit": "Submit",
+      "submitting": "Submitting...",
+      "viewerNoSubmit": "Viewer can't submit homework",
+      "submissions": "Submissions",
+      "submissionsNote": "Below is the list of all submissions for this homework.",
+      "successSubmit": "Homework was successfully submitted",
+      "successUpdate": "Homework was successfully updated",
+      "error": "Failed to submit homework",
+      "errorLoad": "Failed to load homework data",
+      "errorMaxFiles":"You can add up to {max} files",
       "errorFileTooLarge": "File {name} exceeds the maximum allowed size of {max}",
       "errorUpload": "Failed to upload attachments"
     }
@@ -407,6 +460,19 @@
       "success": "Event was successfully published",
       "error": "Failed to publish event",
       "errorLoad": "Failed to load workspace data"
+    },
+    "detail": {
+      "type": {
+        "meeting": "Meeting",
+        "deadline": "Deadline",
+        "exam": "Exam"
+      },
+      "downloadIcs": "Download event",
+      "until": "Until",
+      "createdBy": "Created by",
+      "unknownUser": "Unknown user",
+      "back": "Back",
+      "errorLoad": "Failed to load event data"
     }
   },
   "breadcrumb": {

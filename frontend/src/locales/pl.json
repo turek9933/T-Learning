@@ -1,4 +1,15 @@
 {
+  "calendar": {
+    "title": "Kalendarz",
+    "monthView": "Miesiąc",
+    "weekView": "Tydzień",
+    "typeMeeting": "Spotkanie",
+    "typeDeadline": "Termin",
+    "typeExam": "Egzamin",
+    "homeworkDeadline": "Zadanie",
+    "today": "Dzisiaj",
+    "more": "więcej"
+  },
   "notFound": {
     "title": "Nie znaleziono",
     "description": "Strona, która szukasz, nie została odnaleziona",
@@ -17,8 +28,9 @@
     "toggleMenu": "Przełącz menu"
   },
   "sidebar": {
-    "workspaces": "Przestrzenie robocze",
+    "workspaces": "Przestrzenie",
     "calendar": "Kalendarz",
+    "homeworks": "Zadania",
     "messages": "Wiadomości",
     "settings": "Ustawienia",
     "workspaceMain": "Pulpit",
@@ -354,12 +366,17 @@
     }
   },
   "homework": {
-    "details": "Szczegóły",
+    "details": "Szczegóły zadania",
     "noDue": "Bez terminu",
     "overdue": "Po terminie",
     "dueIn": "Za",
     "day": "dzień",
     "days": "dni",
+    "submitted": "Zrealizowane",
+    "dueToday": "Do dzisiaj",
+    "dueTomorrow": "Do jutra",
+    "dueInDays": "Za {days} dni",
+    "noDueDate": "Bez terminu",
     "new": {
       "title": "Nowe zadanie",
       "homeworkTitle": "Tytuł zadania",
@@ -375,6 +392,42 @@
       "success": "Zadanie zostało utworzone",
       "error": "Nie udało się utworzyć zadania",
       "errorMaxFiles": "Możesz dodać maksymalnie {max} pliki",
+      "errorFileTooLarge": "Plik {name} przekracza dozwolony rozmiar {max}",
+      "errorUpload": "Nie udało się wgrać załączników"
+    },
+    "list": {
+      "title": "Zadania",
+      "empty": "Brak zadań",
+      "pending": "Nadchodzące zadania",
+      "done": "Zadania zrealizowane",
+      "errorLoad": "Nie udało się wczytać danych o zadaniach domowych"
+    },
+    "detail": {
+      "back": "Powrót",
+      "noDueDate": "Bez terminu",
+      "overdue": "Po terminie",
+      "dueToday": "Do dzisiaj",
+      "dueAt": "Termin",
+      "submittedAt": "Przesłano w terminie",
+      "attachments": "Załączniki",
+      "mySubmission": "Moje rozwiązanie",
+      "resubmit": "Zrealizuj ponownie",
+      "attachFiles": "Załącz pliki",
+      "contentPlaceholder": "Wpisz swoją odpowiedź...",
+      "attachmentsNote": "Uwaga: Poprzednie załączniki zostą usunięte!",
+      "cancel": "Anuluj",
+      "update": "Zaktualizuj",
+      "updated": "zaktualizowano",
+      "submit": "Zrealizuj",
+      "submitting": "Wysyłanie...",
+      "viewerNoSubmit": "Obserwator nie może zrealizować zadania",
+      "submissions": "Rozwiązania",
+      "submissionsNote": "Poniżej znajduje się lista wszystkich rozwiązań za zadania domowego.",
+      "successSubmit": "Zadanie zostało zrealizowane",
+      "successUpdate": "Zadanie zostało zaktualizowane",
+      "error": "Nie udało się wysłać odpowiedzi do zadania",
+      "errorLoad": "Nie udało się wczytać danych o zadaniu domowym",
+      "errorMaxFiles":"Możesz dodać maksymalnie {max} pliki",
       "errorFileTooLarge": "Plik {name} przekracza dozwolony rozmiar {max}",
       "errorUpload": "Nie udało się wgrać załączników"
     }
@@ -407,6 +460,19 @@
       "success": "Wydarzenie zostało utworzone",
       "error": "Nie udało się utworzyć wydarzenia",
       "errorLoad": "Nie udało się wczytać danych o przestrzeni roboczej"
+    },
+    "detail": {
+      "type": {
+        "meeting": "Spotkanie",
+        "deadline": "Termin końcowy",
+        "exam": "Egzamin"
+      },
+      "downloadIcs": "Pobierz zdarzenie",
+      "until": "Do",
+      "createdBy": "Utworzono przez",
+      "unknownUser": "Użytkownik nieznany",
+      "back": "Powrót",
+      "errorLoad": "Nie udało się wczytać danych o wydarzeniu"
     }
   },
   "breadcrumb": {

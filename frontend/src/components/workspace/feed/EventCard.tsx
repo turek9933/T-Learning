@@ -1,10 +1,12 @@
 'use client';
 import { useTranslations } from 'next-intl';
-import { Calendar, Clock, Download, MapPin } from 'lucide-react';
+import { Calendar, Clock, Download, MapPin, Loader2 } from 'lucide-react';
 import { Link } from '@/i18n/routing';
 import type { EventItem } from '@/types/event';
 import { env } from '@/lib/env';
 import { useDateFormat } from '@/lib/utils/date';
+import { useDownloadEventIcs } from '@/lib/hooks/event-hooks';
+import { Button } from '@/components/ui/button';
 
 const EVENT_TYPE_COLORS = {
     meeting:  'text-primary border-primary',
@@ -15,6 +17,8 @@ const EVENT_TYPE_COLORS = {
 export function EventCard({ slug, event }: { slug: string, event: EventItem }) {
     const t = useTranslations('event');
     const { formatEventDateRange } = useDateFormat();
+    const { mutate: downloadIcs, isPending: isDownloading } = useDownloadEventIcs(slug, event.id);
+
     const colorClass = EVENT_TYPE_COLORS[event.eventType] ?? EVENT_TYPE_COLORS.meeting;
 
     return (
@@ -58,13 +62,19 @@ export function EventCard({ slug, event }: { slug: string, event: EventItem }) {
                 >
                     {t('details')}
                 </Link>
-                <a
-                    href={`${env.apiUrl}/api/workspaces/${slug}/events/${event.id}/ical`}
-                    className="flex items-center gap-1 text-xs text-text-muted hover:text-primary transition-colors"
+                <Button
+                variant="outline"
+                size="sm"
+                className='text-text hover:text-text-contrast cursor-pointer'
+                disabled={isDownloading}
+                onClick={() => downloadIcs(`${event.title.replace(/[^a-z0-9]/gi, '_')}.ics`)}
                 >
-                    <Download className="w-4 h-4" />
+                    {isDownloading
+                        ? <Loader2 className="w-4 h-4 animate-spin" />
+                        : <Download className="w-4 h-4" />
+                    }
                     {t('downloadIcs')}
-                </a>
+                </Button>
             </div>
         </div>
     );

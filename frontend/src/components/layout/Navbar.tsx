@@ -1,8 +1,8 @@
 "use client"
-import { useTranslations } from "next-intl";
+import { useTranslations, useLocale } from "next-intl";
 import { Link, usePathname, useRouter } from "@/i18n/routing";
 import { Button } from "@/components/ui/button";
-import { Globe, Moon, Sun, Contrast, Menu, X, LogOut } from "lucide-react";
+import { Globe, Moon, Sun, Contrast, Menu, X, LogOut, Check } from "lucide-react";
 import { useState, useEffect } from "react";
 import { useTheme } from "@/components/ThemeProvider";
 import {
@@ -20,6 +20,7 @@ export function Navbar() {
     const pathname = usePathname();
     const router = useRouter();
     const {theme, setTheme} = useTheme();
+    const locale = useLocale();
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
     const {data: session, isPending} = authClient.useSession();
     const [isMounted, setMounted] = useState(false);
@@ -61,21 +62,23 @@ export function Navbar() {
                             </Button>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end">
-                            <DropdownMenuItem asChild>
-                                <Link href={pathname} locale="pl" className="w-full cursor-pointer text-text">
-                                    Polski 🇵🇱
-                                </Link>
-                            </DropdownMenuItem>
-                            <DropdownMenuItem asChild>
-                                <Link href={pathname} locale="en" className="w-full cursor-pointer text-text">
-                                    English 🇬🇧
-                                </Link>
-                            </DropdownMenuItem>
-                            <DropdownMenuItem asChild>
-                                <Link href={pathname} locale="it" className="w-full cursor-pointer text-text">
-                                    Italiano 🇮🇹
-                                </Link>
-                            </DropdownMenuItem>
+                            {([
+                                { loc: 'pl', label: 'Polski 🇵🇱' },
+                                { loc: 'en', label: 'English 🇬🇧' },
+                                { loc: 'it', label: 'Italiano 🇮🇹' },
+                            ] as const).map(({ loc, label }) => (
+                                <DropdownMenuItem key={loc} asChild>
+                                    <Link
+                                    href={pathname}
+                                    locale={loc}
+                                    className={`w-full cursor-pointer flex items-center justify-between gap-2
+                                        ${locale === loc ? 'font-semibold text-primary' : 'text-text'}`}
+                                    >
+                                        {label}
+                                        {locale === loc && <Check className="h-4 w-4 shrink-0" />}
+                                    </Link>
+                                </DropdownMenuItem>
+                            ))}
                         </DropdownMenuContent>
                     </DropdownMenu>
                 )}
@@ -92,18 +95,24 @@ export function Navbar() {
                       </Button>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="end">
-                        <DropdownMenuItem onClick={() => setTheme("light")} className="cursor-pointer">
-                            <Sun className="mr-2 h-4 w-4" />
-                            {t("light")}
-                        </DropdownMenuItem>
-                        <DropdownMenuItem onClick={() => setTheme("dark")} className="cursor-pointer">
-                            <Moon className="mr-2 h-4 w-4" />
-                            {t("dark")}
-                        </DropdownMenuItem>
-                        <DropdownMenuItem onClick={() => setTheme("accessible")} className="cursor-pointer">
-                            <Contrast className="mr-2 h-4 w-4" />
-                            {t("accessible")}
-                        </DropdownMenuItem>
+                        {([
+                            { value: 'light',      Icon: Sun,      label: t('light') },
+                            { value: 'dark',       Icon: Moon,     label: t('dark') },
+                            { value: 'accessible', Icon: Contrast, label: t('accessible') },
+                        ] as const).map(({ value, Icon, label }) => (
+                            <DropdownMenuItem
+                            key={value}
+                            onClick={() => setTheme(value)}
+                            className={`cursor-pointer flex items-center justify-between gap-2
+                                ${theme === value ? 'font-semibold text-primary' : ''}`}
+                            >
+                                <span className="flex items-center">
+                                    <Icon className="mr-2 h-4 w-4" />
+                                    {label}
+                                </span>
+                                {theme === value && <Check className="h-4 w-4 shrink-0" />}
+                            </DropdownMenuItem>
+                        ))}
                     </DropdownMenuContent>
                 </DropdownMenu>
                 )}
@@ -208,36 +217,25 @@ export function Navbar() {
                             {t("changeLanguage")}
                         </p>
                         <div className="grid gap-2">
-                            <Button
-                            variant="ghost"
-                            className="w-full justify-start"
-                            asChild
-                            onClick={() => setMobileMenuOpen(false)}
-                            >
-                                <Link href={pathname} locale="pl" className="text-text">
-                                    Polski 🇵🇱
-                                </Link>
-                            </Button>
-                            <Button
-                            variant="ghost"
-                            className="w-full justify-start"
-                            asChild
-                            onClick={() => setMobileMenuOpen(false)}
-                            >
-                                <Link href={pathname} locale="en" className="text-text">
-                                    English 🇬🇧
-                                </Link>
-                            </Button>
-                            <Button
-                            variant="ghost"
-                            className="w-full justify-start"
-                            asChild
-                            onClick={() => setMobileMenuOpen(false)}
-                            >
-                                <Link href={pathname} locale="it" className="text-text">
-                                    Italiano 🇮🇹
-                                </Link>
-                            </Button>
+                            {([
+                                { loc: 'pl', label: 'Polski 🇵🇱' },
+                                { loc: 'en', label: 'English 🇬🇧' },
+                                { loc: 'it', label: 'Italiano 🇮🇹' },
+                            ] as const).map(({ loc, label }) => (
+                                <Button
+                                key={loc}
+                                variant="ghost"
+                                className={`w-full justify-between
+                                    ${locale === loc ? 'font-semibold text-primary' : 'text-text'}`}
+                                asChild
+                                onClick={() => setMobileMenuOpen(false)}
+                                >
+                                    <Link href={pathname} locale={loc}>
+                                        {label}
+                                        {locale === loc && <Check className="h-4 w-4 shrink-0" />}
+                                    </Link>
+                                </Button>
+                            ))}
                         </div>
                     </div>
             
@@ -246,39 +244,28 @@ export function Navbar() {
                             {t("changeTheme")}
                         </p>
                         <div className="grid gap-2">
-                            <Button
-                            variant="ghost"
-                            className="w-full justify-start cursor-pointer"
-                            onClick={() => {
-                                setTheme("light");
-                                setMobileMenuOpen(false);
-                            }}
-                            >
-                                <Sun className="mr-2 h-4 w-4" />
-                                {t("light")}
-                            </Button>
-                            <Button
-                            variant="ghost"
-                            className="w-full justify-start cursor-pointer"
-                            onClick={() => {
-                                setTheme("dark");
-                                setMobileMenuOpen(false);
-                            }}
-                            >
-                                <Moon className="mr-2 h-4 w-4" />
-                                {t("dark")}
-                            </Button>
-                            <Button
-                            variant="ghost"
-                            className="w-full justify-start cursor-pointer"
-                            onClick={() => {
-                                setTheme("accessible");
-                                setMobileMenuOpen(false);
-                            }}
-                            >
-                                <Contrast className="mr-2 h-4 w-4" />
-                                {t("accessible")}
-                            </Button>
+                            {([
+                                { value: 'light',      Icon: Sun,      label: t('light') },
+                                { value: 'dark',       Icon: Moon,     label: t('dark') },
+                                { value: 'accessible', Icon: Contrast, label: t('accessible') },
+                            ] as const).map(({ value, Icon, label }) => (
+                                <Button
+                                key={value}
+                                variant="ghost"
+                                className={`w-full justify-between cursor-pointer
+                                    ${theme === value ? 'font-semibold text-primary' : ''}`}
+                                onClick={() => {
+                                    setTheme(value);
+                                    setMobileMenuOpen(false);
+                                }}
+                                >
+                                    <span className="flex items-center">
+                                        <Icon className="mr-2 h-4 w-4" />
+                                        {label}
+                                    </span>
+                                    {theme === value && <Check className="h-4 w-4 shrink-0" />}
+                                </Button>
+                            ))}
                         </div>
                     </div>
 

@@ -53,6 +53,25 @@ export function useEvent(slug: string, id: string) {
     });
 }
 
+async function downloadEventIcs(slug: string, id: string, filename: string): Promise<void> {
+    const res = await fetch(`${env.apiUrl}/api/workspaces/${slug}/events/${id}/ical`, {
+        credentials: 'include',
+    });
+    if (!res.ok) throw new Error('Failed to download ICS');
+    const blob = await res.blob();
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = filename;
+    a.click();
+    URL.revokeObjectURL(url);
+}
+export function useDownloadEventIcs(slug: string, id: string) {
+    return useMutation({
+        mutationFn: (filename: string) => downloadEventIcs(slug, id, filename),
+    });
+}
+
 async function fetchMyEvents(from?: string, to?: string): Promise<MyEvent[]> {
     const params = new URLSearchParams();
     if (from) params.set('from', from);
@@ -72,3 +91,4 @@ export function useMyEvents(from?: string, to?: string) {
         queryFn: () => fetchMyEvents(from, to),
     });
 }
+
