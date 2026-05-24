@@ -176,8 +176,6 @@ function FeedList({ slug, canModerate, canParticipate, workspaceActive, items }:
     const nonPinnedItems = items.filter(item => !(item.type === 'post' && item.pinned));
     const pinnedItems = items.filter(item => item.type === 'post' && item.pinned);
 
-    console.log(pinnedItems);
-
     // Pinned items at the end
     const orderedItems = [...nonPinnedItems, ...pinnedItems];
 
@@ -300,7 +298,7 @@ export default function WorkspacePage() {
                                 </DropdownMenuItem>
                                 <DropdownMenuItem
                                 className="cursor-pointer"
-                                onClick={() => router.push(`/workspaces/${slug}/materials`)}
+                                onClick={() => router.push(`/workspaces/${slug}/files`)}
                                 >
                                     <FileText className="w-4 h-4" />
                                     <span className="ml-2">{t('addFile')}</span>

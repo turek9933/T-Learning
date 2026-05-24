@@ -1,5 +1,5 @@
 import { Elysia, t } from 'elysia';
-import { eq, and, sql, inArray } from 'drizzle-orm';
+import { eq, and, gte, lte, inArray } from 'drizzle-orm';
 import { db } from '@/db/index';
 import {
     homeworks,
@@ -24,7 +24,12 @@ export const homeworkRoute = new Elysia({ prefix: '/api/workspaces/:slug/homewor
 
     // GET /api/workspaces/:slug/homeworks
     // Members and viewer can see all homeworks
-    .get('/', async ({ user, workspace }) => {
+    // Optional filters: ?from=ISO&to=ISO
+    .get('/', async ({ user, workspace, query }) => {
+        const conditions = [eq(homeworks.workspaceId, workspace.id)];
+
+        if (query.from) conditions.push(gte(homeworks.dueAt, new Date(query.from)));
+        if (query.to)   conditions.push(lte(homeworks.dueAt, new Date(query.to)));
         const submissionStatusSubquery = db
             .select({
                 homeworkId:  homeworkSubmissions.homeworkId,
@@ -48,8 +53,13 @@ export const homeworkRoute = new Elysia({ prefix: '/api/workspaces/:slug/homewor
             .from(homeworks)
             .leftJoin(users, eq(users.id, homeworks.userId))
             .leftJoin(submissionStatusSubquery, eq(submissionStatusSubquery.homeworkId, homeworks.id))
-            .where(eq(homeworks.workspaceId, workspace.id))
+            .where(and(...conditions))
             .orderBy(homeworks.dueAt);
+    }, {
+        query: t.Object({
+            from: t.Optional(t.String()),
+            to:   t.Optional(t.String()),
+        }),
     })
 
     // GET /api/workspaces/:slug/homeworks/:id

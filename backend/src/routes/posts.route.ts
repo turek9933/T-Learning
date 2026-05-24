@@ -166,16 +166,18 @@ export const postRoute = new Elysia({ prefix: '/api/workspaces/:slug/posts' })
         return updatedPost;
     }, {
         params: t.Object({
-            id: t.String(),
+            slug: t.String(),
+            id:   t.String(),
         }),
         body: t.Object({
-            content:        t.Optional(t.String({ minLength: 1 })),
-            pinned:         t.Optional(t.Boolean()),
+            content: t.Optional(t.String({ minLength: 1 })),
+            pinned:  t.Optional(t.Boolean()),
         }),
     })
 
     // DELETE /api/workspaces/:slug/posts/:id
     .delete('/:id', async ({ user, workspace, role, params, status }) => {
+        console.log('DELETE /api/workspaces/:slug/posts/:id');
         const [post] = await db
             .select()
             .from(posts)
@@ -216,7 +218,8 @@ export const postRoute = new Elysia({ prefix: '/api/workspaces/:slug/posts' })
         return status(204, { message: 'Post deleted' });
     }, {
         params: t.Object({
-            id: t.String(),
+            slug: t.String(),
+            id:   t.String(),
         }),
     })
 

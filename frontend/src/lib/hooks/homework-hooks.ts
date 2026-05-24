@@ -71,6 +71,26 @@ export function useMyHomeworks(from?: string, to?: string) {
     });
 }
 
+async function fetchWorkspaceHomeworks(slug: string, from?: string, to?: string): Promise<MyHomework[]> {
+    const params = new URLSearchParams();
+    if (from) params.set('from', from);
+    if (to)   params.set('to', to);
+    const res = await fetch(`${env.apiUrl}/api/workspaces/${slug}/homeworks?${params}`, {
+        credentials: 'include',
+    });
+    if (!res.ok) {
+        const err = await res.json().catch(() => ({}));
+        throw new Error((err as any).message ?? 'Failed to fetch workspace homeworks');
+    }
+    return res.json();
+}
+export function useWorkspaceHomeworks(slug: string, from?: string, to?: string) {
+    return useQuery({
+        queryKey: ['homeworks', slug, from, to],
+        queryFn:  () => fetchWorkspaceHomeworks(slug, from, to),
+    });
+}
+
 async function fetchMySubmission(slug: string, homeworkId: string): Promise<Submission | null> {
     const res = await fetch(
         `${env.apiUrl}/api/workspaces/${slug}/homeworks/${homeworkId}/submissions`,

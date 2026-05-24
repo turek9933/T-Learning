@@ -270,6 +270,20 @@
       "errorEdit": "Nie udało się edytować przestrzeni roboczej",
       "errorDelete": "Nie udało się usunięć przestrzeni roboczej"
     },
+    "files": {
+      "title": "Pliki",
+      "empty": "Brak plików",
+      "emptyInfo": "Nie dodano jeszcze żadnych plików do tej przestrzeni",
+      "addFile": "Dodaj plik",
+      "uploadedBy": "Dodał:",
+      "uploading": "Przesyłanie...",
+      "successUpload": "Plik został dodany",
+      "successDelete": "Plik został usunięty",
+      "errorLoad": "Nie udało się wczytać plików",
+      "errorUpload": "Nie udało się przesłać pliku",
+      "errorDelete": "Nie udało się usunąć pliku",
+      "errorFileTooLarge": "Plik {name} jest zbyt duży. Maksymalny rozmiar to {max}."
+    },
     "members": {
       "title": "Uczestnicy",
       "subtitle": "Tutaj zobaczysz uczestników przestrzeni roboczej",

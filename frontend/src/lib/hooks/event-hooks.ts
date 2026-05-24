@@ -1,6 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { env } from '@/lib/env';
-import type { EventDetail, EventType, MyEvent } from '@/types/event';
+import type { EventDetail, EventType, MyEvent, UpcomingEvent } from '@/types/event';
 
 export interface CreateEventData {
     type: EventType;
@@ -69,6 +69,27 @@ async function downloadEventIcs(slug: string, id: string, filename: string): Pro
 export function useDownloadEventIcs(slug: string, id: string) {
     return useMutation({
         mutationFn: (filename: string) => downloadEventIcs(slug, id, filename),
+    });
+}
+
+async function fetchWorkspaceEvents(slug: string, from?: string, to?: string): Promise<UpcomingEvent[]> {
+    const params = new URLSearchParams();
+    if (from) params.set('from', from);
+    if (to)   params.set('to', to);
+    const res = await fetch(`${env.apiUrl}/api/workspaces/${slug}/events?${params}`, {
+        credentials: 'include',
+    });
+    if (!res.ok) {
+        const err = await res.json().catch(() => ({}));
+        throw new Error((err as any).message ?? 'Failed to fetch workspace events');
+    }
+    return res.json();
+}
+export function useWorkspaceEvents(slug: string, from?: string, to?: string) {
+    return useQuery({
+        queryKey: ['events', slug, 'calendar', from, to],
+        queryFn: () => fetchWorkspaceEvents(slug, from, to),
+        enabled: !!slug,
     });
 }
 

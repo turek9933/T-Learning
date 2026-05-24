@@ -27,12 +27,14 @@ export function useCreatePost(slug: string) {
 }
 
 async function deletePost(slug: string, postId: string): Promise<void> {
-    console.log(slug, postId);
     const res = await fetch(`${env.apiUrl}/api/workspaces/${slug}/posts/${postId}`, {
         method: 'DELETE',
         credentials: 'include',
     });
-    if (!res.ok) throw new Error('Failed to delete post');
+    if (!res.ok) {
+        const err = await res.json().catch(() => ({}));
+        throw new Error((err as any).message ?? 'Failed to delete post');
+    }
 }
 export function useDeletePost(slug: string) {
     const queryClient = useQueryClient();

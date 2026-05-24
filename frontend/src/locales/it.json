@@ -270,6 +270,20 @@
       "errorEdit": "Impossibile modificare la zone di lavoro",
       "errorDelete": "Impossibile eliminare la zone di lavoro"
     },
+    "files": {
+      "title": "File",
+      "empty": "Nessun file",
+      "emptyInfo": "Qui appariranno tutti i file caricati nella zone di lavoro",
+      "addFile": "Aggiungi file",
+      "uploadedBy": "Caricato da",
+      "uploading": "Caricamento...",
+      "successUpload": "Il file è stato caricato con successo",
+      "successDelete": "Il file è stato eliminato con successo",
+      "errorLoad": "Impossibile caricare i dati dei file della zone di lavoro",
+      "errorUpload": "Impossibile caricare il file",
+      "errorDelete": "Impossibile eliminare il file",
+      "errorFileTooLarge": "Il file {name} è troppo grande. La dimensione massima del file é {size}"
+    },
     "members": {
       "title": "Membri",
       "subtitle": "Qui puoi gestire i membri della zone di lavoro",

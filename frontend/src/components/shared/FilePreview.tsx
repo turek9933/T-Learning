@@ -50,7 +50,7 @@ function ImagePreview({
 
     return (
         <>
-            <div className="relative group rounded-lg overflow-hidden">
+            <div className="relative group rounded-lg overflow-hidden w-max overflow-hidden">
                 <button
                 type="button"
                 onClick={() => setLightboxOpen(true)}

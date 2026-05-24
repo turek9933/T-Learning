@@ -270,6 +270,20 @@
       "errorEdit": "Failed to edit workspace",
       "errorDelete": "Failed to delete workspace"
     },
+    "files": {
+      "title": "Files",
+      "empty": "No files",
+      "emptyInfo": "There are no files in this workspace yet",
+      "addFile": "Add file",
+      "uploadedBy": "Uploaded by",
+      "uploading": "Uploading...",
+      "successUpload": "File was successfully uploaded",
+      "successDelete": "File was successfully deleted",
+      "errorLoad": "Failed to load workspace files data",
+      "errorUpload": "Failed to upload file",
+      "errorDelete": "Failed to delete file",
+      "errorFileTooLarge": "File {name} exceeds the maximum allowed size of {max}"
+    },
     "members": {
       "title": "Workspace members",
       "subtitle": "Here you will see all workspace members",
