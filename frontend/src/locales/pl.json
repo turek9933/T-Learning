@@ -1,14 +1,13 @@
 {
   "calendar": {
-    "title": "Kalendarz",
+    "today": "Dziś",
+    "pageTitle": "Kalendarz",
     "monthView": "Miesiąc",
     "weekView": "Tydzień",
     "typeMeeting": "Spotkanie",
     "typeDeadline": "Termin",
     "typeExam": "Egzamin",
-    "homeworkDeadline": "Zadanie",
-    "today": "Dzisiaj",
-    "more": "więcej"
+    "homeworkDeadline": "Zadanie"
   },
   "notFound": {
     "title": "Nie znaleziono",
@@ -429,7 +428,14 @@
       "errorLoad": "Nie udało się wczytać danych o zadaniu domowym",
       "errorMaxFiles":"Możesz dodać maksymalnie {max} pliki",
       "errorFileTooLarge": "Plik {name} przekracza dozwolony rozmiar {max}",
-      "errorUpload": "Nie udało się wgrać załączników"
+      "errorUpload": "Nie udało się wgrać załączników",
+      "moderatorSection": "Złożone rozwiązania",
+      "submissionsCount": "Złożone: {count}",
+      "noSubmissions": "Brak złożonych rozwiązań",
+      "unknownUser": "Użytkownik nieznany",
+      "submittedOn": "Złożono",
+      "noContent": "Brak treści pisemnej",
+      "errorLoadSubmissions": "Nie udało się wczytać rozwiązań"
     }
   },
   "event": {

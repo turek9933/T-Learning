@@ -2,14 +2,15 @@
 import { useState, useRef } from 'react';
 import { useParams } from 'next/navigation';
 import { useTranslations } from 'next-intl';
-import { ArrowLeft, Clock, Loader2, Paperclip, CheckCircle2, AlertCircle, RotateCcw } from 'lucide-react';
+import { ArrowLeft, Clock, Loader2, Paperclip, CheckCircle2, AlertCircle, RotateCcw, ChevronDown, ChevronUp, Users } from 'lucide-react';
 import { Link } from '@/i18n/routing';
 import { PageContainer } from '@/components/layout/PageContainer';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { useWorkspace } from '@/lib/queries/workspaces';
 import { useDateFormat } from '@/lib/utils/date';
-import { useHomework, useMySubmission, useSubmitHomework, useUpdateSubmission } from '@/lib/hooks/homework-hooks';
+import { useHomework, useMySubmission, useSubmitHomework, useUpdateSubmission, useAllSubmissions } from '@/lib/hooks/homework-hooks';
+import Avatar from '@/components/shared/Avatar';
 import { useMultiFileUpload, MAX_FILE_SIZE, MAX_FILE_COUNT, formatFileSize } from '@/lib/hooks/file-hooks';
 import { FilePreview, FilePreviewList } from '@/components/shared/FilePreview';
 import { customToast } from '@/components/CustomToast';
@@ -39,6 +40,99 @@ function DueLabel({ dueAt, t }: { dueAt: string | null; t: ReturnType<typeof use
             <Clock className="w-3 h-3" />
             {t('dueAt')}: {formatDateTime(dueAt)}
         </span>
+    );
+}
+
+function ModeratorSubmissions({
+    slug,
+    homeworkId,
+    t,
+    formatDateTime,
+}: {
+    slug: string;
+    homeworkId: string;
+    t: ReturnType<typeof useTranslations>;
+    formatDateTime: (d: string) => string;
+}) {
+    const { data: submissions = [], isError, isPending } = useAllSubmissions(slug, homeworkId);
+    const [expanded, setExpanded] = useState<Record<string, boolean>>({});
+
+    function toggle(id: string) {
+        setExpanded(prev => ({ ...prev, [id]: !prev[id] }));
+    }
+
+    return (
+        <div className="rounded-xl border border-border bg-bg p-6 space-y-4">
+            <div className="flex items-center justify-between">
+                <h3>{t('moderatorSection')}</h3>
+                {!isPending && !isError && (
+                    <span className="text-xs text-text-muted flex items-center gap-1">
+                        <Users className="w-4 h-4" />
+                        {t('submissionsCount', { count: submissions.length })}
+                    </span>
+                )}
+            </div>
+
+            {isPending && (
+                <div className="flex justify-center py-6">
+                    <Loader2 className="w-4 h-4 animate-spin text-primary" />
+                </div>
+            )}
+
+            {isError && (
+                <p className="text-sm text-error">{t('errorLoadSubmissions')}</p>
+            )}
+
+            {!isPending && !isError && submissions.length === 0 && (
+                <p className="text-sm text-text-muted">{t('noSubmissions')}</p>
+            )}
+
+            {!isPending && !isError && submissions.length > 0 && (
+                <div className="space-y-2">
+                    {submissions.map(sub => (
+                        <div key={sub.id} className="rounded-lg border border-border overflow-hidden">
+                            <Button
+                            variant="ghost"
+                            className="w-full flex items-center justify-between px-4 py-2 hover:bg-bg-muted"
+                            onClick={() => toggle(sub.id)}
+                            >
+                                <div className="flex items-center gap-3 min-w-0">
+                                    <Avatar avatarUrl={sub.userAvatar} name={sub.userName} size={6} />
+                                    <span className="text-sm font-medium text-text truncate">{sub.userName ?? t('unknownUser')}</span>
+                                </div>
+                                <div className="flex items-center gap-3 shrink-0">
+                                    <span className="text-xs text-text-muted">
+                                        {t('submittedOn')} {formatDateTime(sub.submittedAt)}
+                                    </span>
+                                    {expanded[sub.id]
+                                        ? <ChevronUp className="w-4 h-4 text-text-muted" />
+                                        : <ChevronDown className="w-4 h-4 text-text-muted" />
+                                    }
+                                </div>
+                            </Button>
+
+                            {expanded[sub.id] && (
+                                <div className="border-t border-border p-4 space-y-3 bg-bg-muted">
+                                    {sub.content ? (
+                                        <p className="text-sm text-text whitespace-pre-wrap">{sub.content}</p>
+                                    ) : (
+                                        <p className="text-sm text-text-muted italic">{t('noContent')}</p>
+                                    )}
+                                    {sub.attachments.length > 0 && (
+                                        <FilePreviewList files={sub.attachments.map(a => ({
+                                        storageKey: a.storageKey,
+                                        name:       a.name,
+                                        mimeType:   a.mimeType,
+                                        size:       a.size,
+                                        }))} />
+                                    )}
+                                </div>
+                            )}
+                        </div>
+                    ))}
+                </div>
+            )}
+        </div>
     );
 }
 
@@ -360,11 +454,7 @@ export default function HomeworkDetailPage() {
 
                 {/* Moderator sees all submissions */}
                 {canModerate && (
-                    <div className="rounded-xl border border-border bg-bg p-6 space-y-3">
-                        <h3 className="font-semibold text-text">{t('submissions')}</h3>
-                        <p className="text-sm text-text-muted">{t('submissionsNote')}</p>
-                        {/* //TODO Dodać funkcje moderatora */}
-                    </div>
+                    <ModeratorSubmissions slug={slug} homeworkId={id} t={t} formatDateTime={formatDateTime} />
                 )}
             </div>
         </PageContainer>

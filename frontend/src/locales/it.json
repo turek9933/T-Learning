@@ -1,14 +1,13 @@
 {
   "calendar": {
-    "title": "Calendario",
+    "today": "Oggi",
+    "pageTitle": "Calendario",
     "monthView": "Mese",
     "weekView": "Settimana",
     "typeMeeting": "Riunione",
     "typeDeadline": "Scadenza",
     "typeExam": "Esame",
-    "homeworkDeadline": "Compito",
-    "today": "Oggi",
-    "more": "altro"
+    "homeworkDeadline": "Compito"
   },
   "notFound": {
     "title": "Non trovato",
@@ -429,7 +428,14 @@
       "errorLoad": "Impossibile caricare i dati del compito",
       "errorMaxFiles": "Puoi allegare fino a {max} file",
       "errorFileTooLarge": "File {name} supera la dimensione massima di {max}",
-      "errorUpload": "Impossibile caricare i file"
+      "errorUpload": "Impossibile caricare i file",
+      "moderatorSection": "Soluzioni complesse",
+      "submissionsCount": "Sottomissioni: {count}",
+      "noSubmissions": "Nessuna sottomissione",
+      "unknownUser": "Utente sconosciuto",
+      "submittedOn": "Inviato",
+      "noContent": "Nessuna risposta",
+      "errorLoadSubmissions": "Impossibile caricare le sottomissioni"
     }
   },
   "event": {

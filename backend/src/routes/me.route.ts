@@ -87,7 +87,7 @@ export const meRoute = new Elysia({ prefix: '/api' })
 
     // GET /api/homeworks/me
     // Returns homeworks from all workspaces the user is a member of, with submission status
-    .get('/homeworks/me', async ({ user }) => {
+    .get('/homeworks/me', async ({ user, query }) => {
         const memberOf = await db
             .select({ workspaceId: workspaceMembers.workspaceId })
             .from(workspaceMembers)
@@ -106,6 +106,10 @@ export const meRoute = new Elysia({ prefix: '/api' })
             .where(eq(homeworkSubmissions.userId, user.id))
             .as('my_submission');
 
+        const conditions: any[] = [inArray(homeworks.workspaceId, workspaceIds)];
+        if (query.from) conditions.push(gte(homeworks.dueAt, new Date(query.from)));
+        if (query.to)   conditions.push(lte(homeworks.dueAt, new Date(query.to)));
+
         return db
             .select({
                 id:             homeworks.id,
@@ -119,8 +123,12 @@ export const meRoute = new Elysia({ prefix: '/api' })
             .from(homeworks)
             .innerJoin(workspaces, eq(workspaces.id, homeworks.workspaceId))
             .leftJoin(submissionSubquery, eq(submissionSubquery.homeworkId, homeworks.id))
-            .where(inArray(homeworks.workspaceId, workspaceIds))
+            .where(and(...conditions))
             .orderBy(homeworks.dueAt);
     }, {
         auth: true,
+        query: t.Object({
+            from: t.Optional(t.String()),
+            to:   t.Optional(t.String()),
+        }),
     });

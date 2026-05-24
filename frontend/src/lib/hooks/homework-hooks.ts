@@ -51,8 +51,11 @@ export function useHomework(slug: string, id: string) {
     });
 }
 
-async function fetchMyHomeworks(): Promise<MyHomework[]> {
-    const res = await fetch(`${env.apiUrl}/api/homeworks/me`, {
+async function fetchMyHomeworks(from?: string, to?: string): Promise<MyHomework[]> {
+    const params = new URLSearchParams();
+    if (from) params.set('from', from);
+    if (to)   params.set('to', to);
+    const res = await fetch(`${env.apiUrl}/api/homeworks/me?${params}`, {
         credentials: 'include',
     });
     if (!res.ok) {
@@ -61,10 +64,10 @@ async function fetchMyHomeworks(): Promise<MyHomework[]> {
     }
     return res.json();
 }
-export function useMyHomeworks() {
+export function useMyHomeworks(from?: string, to?: string) {
     return useQuery({
-        queryKey: ['homeworks', 'me'],
-        queryFn: fetchMyHomeworks,
+        queryKey: ['homeworks', 'me', from, to],
+        queryFn:  () => fetchMyHomeworks(from, to),
     });
 }
 
@@ -118,6 +121,25 @@ export function useSubmitHomework(slug: string, homeworkId: string) {
             queryClient.invalidateQueries({ queryKey: ['submissions', slug, homeworkId, 'me'] });
             queryClient.invalidateQueries({ queryKey: ['homeworks', 'me'] });
         },
+    });
+}
+
+async function fetchAllSubmissions(slug: string, homeworkId: string): Promise<Submission[]> {
+    const res = await fetch(
+        `${env.apiUrl}/api/workspaces/${slug}/homeworks/${homeworkId}/submissions`,
+        { credentials: 'include' }
+    );
+    if (!res.ok) {
+        const err = await res.json().catch(() => ({}));
+        throw new Error((err as any).message ?? 'Failed to fetch submissions');
+    }
+    return res.json();
+}
+export function useAllSubmissions(slug: string, homeworkId: string) {
+    return useQuery({
+        queryKey: ['submissions', slug, homeworkId, 'all'],
+        queryFn: () => fetchAllSubmissions(slug, homeworkId),
+        enabled: !!slug && !!homeworkId,
     });
 }
 

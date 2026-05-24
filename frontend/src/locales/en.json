@@ -1,14 +1,13 @@
 {
   "calendar": {
-    "title": "Calendar",
+    "today": "Today",
+    "pageTitle": "Calendar",
     "monthView": "Month",
     "weekView": "Week",
     "typeMeeting": "Meeting",
     "typeDeadline": "Deadline",
     "typeExam": "Exam",
-    "homeworkDeadline": "Homework",
-    "today": "Today",
-    "more": "more"
+    "homeworkDeadline": "Homework"
   },
   "notFound": {
     "title": "Not found",
@@ -429,7 +428,14 @@
       "errorLoad": "Failed to load homework data",
       "errorMaxFiles":"You can add up to {max} files",
       "errorFileTooLarge": "File {name} exceeds the maximum allowed size of {max}",
-      "errorUpload": "Failed to upload attachments"
+      "errorUpload": "Failed to upload attachments",
+      "moderatorSection": "Moderator submissions",
+      "submissionsCount": "Submissions: {count}",
+      "noSubmissions": "No submissions",
+      "unknownUser": "Unknown user",
+      "submittedOn": "Submitted on",
+      "noContent": "No content",
+      "errorLoadSubmissions": "Failed to load submissions"
     }
   },
   "event": {
