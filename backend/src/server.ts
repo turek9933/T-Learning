@@ -12,11 +12,12 @@ import { eventRoute } from './routes/events.route';
 import { homeworkRoute } from './routes/homeworks.route';
 import { materialRoute } from './routes/materials.route';
 import { feedRoute } from './routes/feeds.route';
+import { meRoute } from './routes/me.route';
 
 export const app = new Elysia()
     .use(cors({
             origin: env.corsOrigin.split(',').map(origin => origin.trim()),
-            methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+            methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
             credentials: true,
             allowedHeaders: ['Content-Type', 'Authorization'],
     }))
@@ -31,6 +32,7 @@ export const app = new Elysia()
     .use(homeworkRoute)
     .use(materialRoute)
     .use(feedRoute)
+    .use(meRoute)
     .listen({
         hostname: env.host,
         port: env.port

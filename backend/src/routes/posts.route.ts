@@ -1,5 +1,5 @@
 import { Elysia, t } from 'elysia';
-import { eq, lt, and, sql, isNull, desc } from 'drizzle-orm';
+import { eq, lt, and, sql, isNull, desc, asc } from 'drizzle-orm';
 import { db } from '@/db';
 import { posts, postComments, postAttachments, users } from '@/db/schema';
 import { workspacePlugin, type WorkspaceCtx } from '@/lib/workspace.plugin';
@@ -166,16 +166,18 @@ export const postRoute = new Elysia({ prefix: '/api/workspaces/:slug/posts' })
         return updatedPost;
     }, {
         params: t.Object({
-            id: t.String(),
+            slug: t.String(),
+            id:   t.String(),
         }),
         body: t.Object({
-            content:        t.Optional(t.String({ minLength: 1 })),
-            pinned:         t.Optional(t.Boolean()),
+            content: t.Optional(t.String({ minLength: 1 })),
+            pinned:  t.Optional(t.Boolean()),
         }),
     })
 
     // DELETE /api/workspaces/:slug/posts/:id
     .delete('/:id', async ({ user, workspace, role, params, status }) => {
+        console.log('DELETE /api/workspaces/:slug/posts/:id');
         const [post] = await db
             .select()
             .from(posts)
@@ -216,7 +218,8 @@ export const postRoute = new Elysia({ prefix: '/api/workspaces/:slug/posts' })
         return status(204, { message: 'Post deleted' });
     }, {
         params: t.Object({
-            id: t.String(),
+            slug: t.String(),
+            id:   t.String(),
         }),
     })
 
@@ -256,9 +259,10 @@ export const postRoute = new Elysia({ prefix: '/api/workspaces/:slug/posts' })
                     isNull(postComments.deletedAt),
                 )
             )
-            .orderBy(desc(postComments.createdAt));
+            .orderBy(asc(postComments.createdAt));
     }, {
         params: t.Object({
+            slug: t.String(),
             id: t.String(),
         }),
     })
@@ -297,6 +301,7 @@ export const postRoute = new Elysia({ prefix: '/api/workspaces/:slug/posts' })
         return comment;
     }, {
         params: t.Object({
+            slug: t.String(),
             id: t.String(),
         }),
         body: t.Object({
@@ -336,6 +341,7 @@ export const postRoute = new Elysia({ prefix: '/api/workspaces/:slug/posts' })
         return status(204, { message: 'Comment deleted' });
     }, {
         params: t.Object({
+            slug:      t.String(),
             id:        t.String(),
             commentId: t.String(),
         }),

@@ -1,7 +1,7 @@
 'use client';
 
 import { useRouter } from "@/i18n/routing";
-import { useConversations, useCreateConversation } from "@/lib/chat-hooks";
+import { useConversations, useCreateConversation } from "@/lib/hooks/chat-hooks";
 import { UserSearch } from "../shared/UserSearch";
 import { Send } from "lucide-react";
 import { useTranslations } from "next-intl";

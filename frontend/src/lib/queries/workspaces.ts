@@ -1,4 +1,6 @@
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useMutation } from '@tanstack/react-query';
+import { authClient } from '@/lib/auth-client';
+import { useQueryClient } from '@tanstack/react-query';
 import { env } from '@/lib/env';
 
 export const WorkspaceRole = ['owner', 'admin', 'member', 'viewer'] as const
@@ -41,7 +43,8 @@ async function fetchMyWorkspaces(): Promise<WorkspaceItem[]> {
     });
 
     if (!res.ok) {
-        throw new Error(`Failed to fetch workspaces: ${res.status}`);
+        const text = await res.text();
+        throw new Error(`Failed to fetch workspaces: ${res.status} ${res.statusText} - ${text}`);
     }
 
     return res.json();
@@ -53,7 +56,8 @@ async function fetchWorkspace(slug: string): Promise<WorkspaceItem> {
     });
 
     if (!res.ok) {
-        throw new Error(`Failed to fetch workspace: ${res.status}`);
+        const text = await res.text();
+        throw new Error(`Failed to fetch workspace: ${res.status} ${res.statusText} - ${text}`);
     }
 
     return res.json();
@@ -65,7 +69,8 @@ async function fetchWorkspaceMembers(slug: string): Promise<MemberItem[]> {
     });
 
     if (!res.ok) {
-        throw new Error(`Failed to fetch workspace members: ${res.status}`);
+        const text = await res.text();
+        throw new Error(`Failed to fetch workspace members: ${res.status} ${res.statusText} - ${text}`);
     }
 
     return res.json();
@@ -91,5 +96,23 @@ export function useWorkspaceMembers(slug: string) {
         queryKey: ['workspaces', slug, 'members'],
         queryFn: () => fetchWorkspaceMembers(slug),
         enabled: !!slug,
+    });
+}
+
+export function useActivateWorkspace(slug: string, workspaceId: string) {
+    const queryClient = useQueryClient();
+    return useMutation({
+        mutationFn: async () => {
+            const res = await authClient.organization.update({
+                organizationId: workspaceId,
+                data: { status: 'active' },
+            });
+            if (res?.error) throw new Error(res.error.message || 'Failed to activate workspace');
+            return res.data;
+        },
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ['workspaces', slug] });
+            queryClient.invalidateQueries({ queryKey: ['workspaces', 'me'] });
+        },
     });
 }

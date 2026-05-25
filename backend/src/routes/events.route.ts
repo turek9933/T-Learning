@@ -117,6 +117,32 @@ export const eventRoute = new Elysia({ prefix: '/api/workspaces/:slug/events' })
         }),
     })
 
+    // GET /api/workspaces/:slug/events/:id
+    .get('/:id', async ({ workspace, params, status }) => {
+        const [event] = await db
+            .select({
+                id:           events.id,
+                type:         events.type,
+                title:        events.title,
+                description:  events.description,
+                location:     events.location,
+                startsAt:     events.startsAt,
+                endsAt:       events.endsAt,
+                createdAt:    events.createdAt,
+                updatedAt:    events.updatedAt,
+                userId:       events.userId,
+                userName:     users.name,
+                userAvatar:   users.avatarUrl,
+            })
+            .from(events)
+            .leftJoin(users, eq(users.id, events.userId))
+            .where(and(eq(events.id, params.id), eq(events.workspaceId, workspace.id)))
+            .limit(1);
+
+        if (!event) return status(404, { message: 'Event not found' });
+        return event;
+    })
+
     // POST /api/workspaces/:slug/events
     .post('/', async ({ user, workspace, role, body, status }) => {
         if (!canModerate(role)) {

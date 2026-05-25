@@ -1,5 +1,5 @@
 import { Elysia, t } from 'elysia';
-import { eq, and, isNull, sql } from 'drizzle-orm';
+import { eq, and, gte, lte, inArray } from 'drizzle-orm';
 import { db } from '@/db/index';
 import {
     homeworks,
@@ -24,7 +24,12 @@ export const homeworkRoute = new Elysia({ prefix: '/api/workspaces/:slug/homewor
 
     // GET /api/workspaces/:slug/homeworks
     // Members and viewer can see all homeworks
-    .get('/', async ({ user, workspace }) => {
+    // Optional filters: ?from=ISO&to=ISO
+    .get('/', async ({ user, workspace, query }) => {
+        const conditions = [eq(homeworks.workspaceId, workspace.id)];
+
+        if (query.from) conditions.push(gte(homeworks.dueAt, new Date(query.from)));
+        if (query.to)   conditions.push(lte(homeworks.dueAt, new Date(query.to)));
         const submissionStatusSubquery = db
             .select({
                 homeworkId:  homeworkSubmissions.homeworkId,
@@ -48,8 +53,13 @@ export const homeworkRoute = new Elysia({ prefix: '/api/workspaces/:slug/homewor
             .from(homeworks)
             .leftJoin(users, eq(users.id, homeworks.userId))
             .leftJoin(submissionStatusSubquery, eq(submissionStatusSubquery.homeworkId, homeworks.id))
-            .where(eq(homeworks.workspaceId, workspace.id))
+            .where(and(...conditions))
             .orderBy(homeworks.dueAt);
+    }, {
+        query: t.Object({
+            from: t.Optional(t.String()),
+            to:   t.Optional(t.String()),
+        }),
     })
 
     // GET /api/workspaces/:slug/homeworks/:id
@@ -251,7 +261,7 @@ export const homeworkRoute = new Elysia({ prefix: '/api/workspaces/:slug/homewor
         const submissionAttachmentResults = await db
             .select()
             .from(submissionAttachments)
-            .where(sql`${submissionAttachments.submissionId} = ANY(${subIds})`);
+            .where(inArray(submissionAttachments.submissionId, subIds));
 
         const attachmentsBySub = submissionAttachmentResults.reduce<Record<string, typeof submissionAttachmentResults>>((acc, attachment) => {
             if (!acc[attachment.submissionId]) acc[attachment.submissionId] = [];
@@ -336,7 +346,7 @@ export const homeworkRoute = new Elysia({ prefix: '/api/workspaces/:slug/homewor
     })
 
     // PATCH /api/workspaces/:slug/homeworks/:id/submissions/:submissionId
-    //TODO add date validation - no patches after deadline 
+    //TODO add date validation - no patches after deadline
     .patch('/:id/submissions/:submissionId', async ({ user, params, body, status }) => {
         const [submission] = await db
             .select()
@@ -363,9 +373,36 @@ export const homeworkRoute = new Elysia({ prefix: '/api/workspaces/:slug/homewor
             .where(eq(homeworkSubmissions.id, params.submissionId))
             .returning();
 
+        if (body.attachments !== undefined) {
+            const existing = await db
+                .select({ storageKey: submissionAttachments.storageKey })
+                .from(submissionAttachments)
+                .where(eq(submissionAttachments.submissionId, params.submissionId));
+
+            if (existing.length > 0) {
+                await deleteMultipleObjects(existing.map(a => a.storageKey));
+                await db
+                    .delete(submissionAttachments)
+                    .where(eq(submissionAttachments.submissionId, params.submissionId));
+            }
+
+            if (body.attachments.length > 0) {
+                await db.insert(submissionAttachments).values(
+                    body.attachments.map(a => ({
+                        submissionId: params.submissionId,
+                        storageKey:   a.storageKey,
+                        name:         a.name,
+                        mimeType:     a.mimeType,
+                        size:         a.size,
+                    }))
+                );
+            }
+        }
+
         return updated;
     }, {
         body: t.Object({
-            content: t.Optional(t.String()),
+            content:     t.Optional(t.String()),
+            attachments: t.Optional(t.Array(attachmentBody, { maxItems: 5 })),
         }),
     })

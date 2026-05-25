@@ -68,7 +68,7 @@ function WorkspaceSection({
 
 
 export default function DashboardPage() {
-    const t = useTranslations('dashboard');
+    const t = useTranslations('workspace.list');
     const { data: workspaces = [], isPending, isError } = useMyWorkspaces();
 
     const workspacesOwner  = workspaces.filter((w) => w.role === 'owner');

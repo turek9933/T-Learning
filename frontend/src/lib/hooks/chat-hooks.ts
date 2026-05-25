@@ -1,9 +1,9 @@
 import { useCallback, useEffect } from "react";
 import { Conversation, Message, WsIncomingEvent } from "@/types/chat";
 import { useQuery, useMutation, useQueryClient, useInfiniteQuery, InfiniteData } from "@tanstack/react-query";
-import { wsClient } from "./ws-client";
+import { wsClient } from "../ws-client";
 import { env } from "@/lib/env";
-import { useFileUpload } from "@/lib/file-hooks";
+import { useFileUpload } from "@/lib/hooks/file-hooks";
 
 export function useWsEvent(handler: (event: WsIncomingEvent) => void) {
     useEffect(() => {

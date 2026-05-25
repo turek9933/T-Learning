@@ -2,7 +2,7 @@
 import { useState } from "react";
 import { MessageList } from "@/components/chat/MessageList";
 import { MessageInput } from "@/components/chat/MessageInput";
-import { useConversation } from "@/lib/chat-hooks";
+import { useConversation } from "@/lib/hooks/chat-hooks";
 import Avatar from "@/components/shared/Avatar";
 import { ChevronLeft } from "lucide-react";
 import { Link } from "@/i18n/routing";

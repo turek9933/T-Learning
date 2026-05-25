@@ -7,7 +7,7 @@ import WorkspacePending from '@/components/workspace/WorkspacePending';
 import WorkspaceError from '@/components/workspace/WorkspaceError';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useValidationSchemas, EditWorkspaceFormData } from '@/lib/validation';
-import { customToast } from '@/lib/customToast';
+import { customToast } from '@/components/CustomToast';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { InputGroup, InputGroupAddon, InputGroupInput } from '@/components/ui/input-group';
@@ -20,7 +20,7 @@ import { authClient } from '@/lib/auth-client';
 import StatusBadge from '@/components/StatusBadge';
 
 function EditSection({ slug, isOwnerOrAdmin }: { slug: string, isOwnerOrAdmin: boolean }) {
-    const t = useTranslations('dashboard.workspace.settings');
+    const t = useTranslations('workspace.settings');
     const queryClient = useQueryClient();
     const { data: workspace } = useWorkspace(slug);
     const { editWorkspaceSchema } = useValidationSchemas();
@@ -149,7 +149,7 @@ function EditSection({ slug, isOwnerOrAdmin }: { slug: string, isOwnerOrAdmin: b
 }
 
 function StatusSection({ slug, isOwnerOrAdmin }: { slug: string, isOwnerOrAdmin: boolean }) {
-    const t = useTranslations('dashboard.workspace.settings');
+    const t = useTranslations('workspace.settings');
     const queryClient = useQueryClient();
     const { data: workspace } = useWorkspace(slug);
     const status = workspace?.status || 'draft' as 'draft' || 'active' || 'archived';
@@ -213,7 +213,7 @@ function StatusSection({ slug, isOwnerOrAdmin }: { slug: string, isOwnerOrAdmin:
 }
 
 function DeleteSection({ slug }: { slug: string }) {
-    const t = useTranslations('dashboard.workspace.settings');
+    const t = useTranslations('workspace.settings');
     const router = useRouter();
     const queryClient = useQueryClient();
     const { data: workspace } = useWorkspace(slug);
@@ -292,7 +292,7 @@ function DeleteSection({ slug }: { slug: string }) {
 }
     
 export default function WorkspaceEditPage() {
-    const t = useTranslations('dashboard.workspace.settings');
+    const t = useTranslations('workspace.settings');
     const { slug } = useParams<{ slug: string }>();
     const { data: workspace, isPending, isError } = useWorkspace(slug);
 
