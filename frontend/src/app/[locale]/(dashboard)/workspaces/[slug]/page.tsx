@@ -226,7 +226,6 @@ export default function WorkspacePage() {
     };
 
     const handleActivate = () => {
-        console.log('handleActivate\t', workspace);
         if (!workspace) {
             customToast.error(t('errorStatus'));
             return;
