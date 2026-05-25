@@ -415,7 +415,7 @@
       "done": "Completato",
       "errorLoad": "Impossibile caricare i dati dei compiti"
     },
-    "details": {
+    "detail": {
       "back": "Indietro",
       "noDueDate": "Nessuna scadenza",
       "overdue": "Scaduto",
