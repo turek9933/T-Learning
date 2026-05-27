@@ -242,16 +242,29 @@ export const conversations = pgTable('conversations', {
     id: uuid('id').defaultRandom().primaryKey(),
     participantAId: text('participant_a_id').references(() => users.id, { onDelete: 'cascade' }).notNull(),
     participantBId: text('participant_b_id').references(() => users.id, { onDelete: 'cascade' }).notNull(),
+    workspaceId: text('workspace_id').references(() => workspaces.id, { onDelete: 'cascade' }),
     createdAt: timestamp('created_at').defaultNow().notNull(),
     updatedAt: timestamp('updated_at').defaultNow().notNull(),
 }, (table) => [
     index('conversations_participantAId_idx').on(table.participantAId),
     index('conversations_participantBId_idx').on(table.participantBId),
-    uniqueIndex('conversations_participants_unique_idx').on(
+    index('conversations_workspaceId_idx').on(table.workspaceId),
+    // Global DMs: unique pair (only when not a workspace conversation)
+    uniqueIndex('conversations_global_dm_unique_idx').on(
         sql`LEAST(${table.participantAId}, ${table.participantBId})`,
         sql`GREATEST(${table.participantAId}, ${table.participantBId})`,
-    ),
+    ).where(sql`${table.workspaceId} IS NULL`),
+    // Workspace chat: unique per workspace
+    uniqueIndex('conversations_workspace_unique_idx').on(table.workspaceId)
+        .where(sql`${table.workspaceId} IS NOT NULL`),
 ])
+
+export const conversationRelations = relations(conversations, ({ one }) => ({
+    workspace: one(workspaces, {
+        fields: [conversations.workspaceId],
+        references: [workspaces.id],
+    }),
+}))
 
 export const messages = pgTable('messages', {
     id: uuid('id').defaultRandom().primaryKey(),

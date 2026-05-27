@@ -137,3 +137,33 @@ export function useChatSync() {
         }
     }, [queryClient]));
 }
+
+export interface WorkspaceChatParticipant {
+    id: string;
+    name: string;
+    avatarUrl: string | null;
+    role: 'owner' | 'member';
+}
+export interface WorkspaceChatInfo {
+    conversationId: string;
+    canSend: boolean;
+    participantA: WorkspaceChatParticipant;
+    participantB: WorkspaceChatParticipant;
+}
+// Fetches workspace chat info
+export function useWorkspaceChat(slug: string) {
+    return useQuery<WorkspaceChatInfo>({
+        queryKey: ['workspace-chat', slug],
+        queryFn: async () => {
+            const res = await fetch(`${env.apiUrl}/api/workspaces/${slug}/chat`, {
+                credentials: 'include',
+            });
+            if (!res.ok) {
+                const err = await res.json().catch(() => ({}));
+                throw new Error((err as any).message ?? 'Failed to fetch workspace chat');
+            }
+            return res.json();
+        },
+        staleTime: Infinity,
+    });
+}

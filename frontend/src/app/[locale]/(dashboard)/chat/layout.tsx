@@ -1,18 +1,11 @@
-'use client'
-import { useEffect } from "react";
-import { wsClient } from "@/lib/ws-client";
 import { ConversationList } from "@/components/chat/ConversationList";
-import { useChatSync } from "@/lib/hooks/chat-hooks"
 
 export default function ChatLayout({ children }: { children: React.ReactNode }) {
-    useChatSync();
-    useEffect(() => {
-        wsClient.connect()
-        return () => wsClient.disconnect()
-    }, [])
-
     return (
         // Calculation for height,
+        // - main (top) nav h-16 = 64px
+        // - bottom (sidebar) navbar h-16 = 64px
+        // - workspace sub-nav (mobile) h-12 = 48px
         // based on height of navbar and bottom bar on mobile (sidebar)
         // based on height of navbar on desktop
         <div className="flex h-[calc(100dvh-128px)] md:h-[calc(100dvh-64px)]">

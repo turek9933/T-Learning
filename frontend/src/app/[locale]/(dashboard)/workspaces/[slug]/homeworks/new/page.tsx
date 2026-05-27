@@ -10,6 +10,7 @@ import { Input } from '@/components/ui/input';
 import { InputGroup, InputGroupAddon, InputGroupInput, InputGroupText } from '@/components/ui/input-group';
 import { Textarea } from '@/components/ui/textarea';
 import { useWorkspace } from '@/lib/queries/workspaces';
+import { canModerate } from '@/lib/permissions/client';
 import { useCreateHomework, type CreateHomeworkData } from '@/lib/hooks/homework-hooks';
 import { useMultiFileUpload, MAX_FILE_SIZE, MAX_FILE_COUNT, formatFileSize } from '@/lib/hooks/file-hooks';
 import { FilePreviewList } from '@/components/shared/FilePreview';
@@ -28,7 +29,7 @@ export default function NewHomeworkPage() {
     const router = useRouter();
 
     const { data: workspace, isPending: wsLoading, isError: wsError } = useWorkspace(slug);
-    const canModerate = workspace?.role === 'owner' || workspace?.role === 'admin';
+    const canMod = canModerate(workspace?.role);
 
     const createHomework = useCreateHomework(slug);
     const uploadFiles = useMultiFileUpload();
@@ -41,7 +42,7 @@ export default function NewHomeworkPage() {
 
     if (wsLoading) return <WorkspacePending />;
     if (wsError || !workspace) return <WorkspaceError errorMessage={t('errorLoad')} />;
-    if (!canModerate) {
+    if (!canMod) {
         router.replace(`/workspaces/${slug}`);
         return null;
     }

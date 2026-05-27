@@ -22,8 +22,8 @@
     "light": "Light",
     "dark": "Dark",
     "accessible": "Accessible",
-    "login":"Log in",
-    "logout":"Log out",
+    "login": "Log in",
+    "logout": "Log out",
     "toggleMenu": "Toggle menu"
   },
   "sidebar": {
@@ -32,7 +32,13 @@
     "homeworks": "Homeworks",
     "messages": "Chat",
     "settings": "Settings",
-    "workspaceMain": "Pulpit",
+    "workspaceMain": "Dashboard",
+    "workspaceChat": "Chat",
+    "workspaceCalendar": "Calendar",
+    "workspaceMaterials": "Materials",
+    "workspaceHomeworks": "Homeworks",
+    "workspaceEvents": "Events",
+    "workspacePosts": "Posts",
     "workspaceMembers": "Members",
     "workspaceSettings": "Settings"
   },
@@ -70,7 +76,8 @@
       "inputPlaceholder": "Type a message...",
       "errorFileTooLarge": "File is too large. Maximum file size is {size}",
       "errorSendingMessage": "Error accurred while sending a message",
-      "errorLoadImage": "Error accurred while loading an image"
+      "errorLoadImage": "Error accurred while loading an image",
+      "readOnlyViewer": "Read-only — viewers cannot send messages"
     }
   },
   "auth": {
@@ -183,6 +190,7 @@
       "createNew": "Create new",
       "emptyTitle": "No workspaces",
       "emptySubtitle": "You don't have any workspaces yet, create new one now!",
+      "emptyDescription": "You don't have any workspaces yet, create new one now!",
       "active": "Active",
       "draft": "Draft",
       "archived": "Archived",
@@ -199,6 +207,10 @@
       "members": "Members",
       "files": "Files"
     },
+    "typeLabel": {
+      "single": "Individual lessons",
+      "group": "Group course"
+    },
     "main": {
       "addContent": "Add content",
       "addPost": "Add announcement",
@@ -206,6 +218,7 @@
       "addHomework": "Add task",
       "addFile": "Add file",
       "addMember": "Add member",
+      "openChat": "Open chat",
       "workspaceDraft": "Workspace draft",
       "workspaceDraftInfo": "Members don't have access to workspace draft content",
       "activate": "Activate",
@@ -258,6 +271,7 @@
       "statusArchived": "Archived",
       "statusDescription": "You can change status and visibility of workspace",
       "activate": "Activate",
+      "active": "Active",
       "archive": "Archive",
       "restore": "Restore",
       "successEdit": "Workspace settings were successfully updated",
@@ -315,6 +329,18 @@
       "invite": "Invite",
       "errorUserAlreadyInvited": "User was already invited",
       "errorUserAlreadyMember": "User is already a member",
+      "resendPrompt": "Send a new invitation to {email}?",
+      "resendInvite": "Resend",
+      "resendCancel": "Cancel",
+      "successResend": "Sent a new invitation to {email}",
+      "errorResend": "Failed to resend invitation",
+      "noMembers": "No members in this workspace",
+      "errorSingleMemberLimit": "Member limit for individual workspace has been reached (max. 1)",
+      "errorSingleViewerLimit": "Viewer limit for individual workspace has been reached (max. {max})",
+      "error": "An error occurred while inviting the user",
+      "successMarkPaid": "Marked as paid",
+      "successMarkUnpaid": "Marked as not paid",
+      "errorPayment": "Failed to update payment status",
       "errorLoad": "Failed to load workspace data",
       "errorPermission": "You don't have permission to manage members of this workspace"
     },
@@ -341,6 +367,11 @@
       "errorCreate": "Failed to create workspace",
       "errorSlugTaken": "Slug already taken",
       "successCreate": "Workspace successfully created"
+    },
+    "chat": {
+      "title": "Chat",
+      "errorLoad": "Failed to load workspace chat data",
+      "errorChatLoad": "Failed to load chat"
     },
     "invite": {
       "title": "Adding user to workspace",
@@ -423,7 +454,7 @@
       "dueAt": "Due date",
       "submittedAt": "Submitted at",
       "attachments": "Attachments",
-      "mySubmissions": "My submissions",
+      "mySubmission": "My submission",
       "resubmit": "Resubmit",
       "attachFiles": "Attach files",
       "contentPlaceholder": "Write your answer...",
@@ -440,7 +471,7 @@
       "successUpdate": "Homework was successfully updated",
       "error": "Failed to submit homework",
       "errorLoad": "Failed to load homework data",
-      "errorMaxFiles":"You can add up to {max} files",
+      "errorMaxFiles": "You can add up to {max} files",
       "errorFileTooLarge": "File {name} exceeds the maximum allowed size of {max}",
       "errorUpload": "Failed to upload attachments",
       "moderatorSection": "Moderator submissions",

@@ -1,18 +1,20 @@
 export type Message = {
-    id:             string;
-    conversationId: string;
-    senderId:       string;
-    replyToId:      string | null;
-    type:           'text' | 'image' | 'file';
+    id:              string;
+    conversationId:  string;
+    senderId:        string;
+    senderName:      string | null;
+    senderAvatarUrl: string | null;
+    replyToId:       string | null;
+    type:            'text' | 'image' | 'file';
     // content:
     //  for type === 'text': message text
     //  for type === 'image' | 'file': MinIO URL
     // Presigned URL would be by endpoint
-    content:        string;
-    attachment:     MessageAttachment | null;
-    createdAt:      string;
-    updatedAt:      string;
-    deletedAt:      string | null;
+    content:         string;
+    attachment:      MessageAttachment | null;
+    createdAt:       string;
+    updatedAt:       string;
+    deletedAt:       string | null;
 }
 
 export type MessageAttachment = {

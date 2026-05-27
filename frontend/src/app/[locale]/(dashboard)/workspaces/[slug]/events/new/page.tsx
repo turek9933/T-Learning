@@ -10,6 +10,7 @@ import { Input } from '@/components/ui/input';
 import { InputGroup, InputGroupAddon, InputGroupInput, InputGroupText } from '@/components/ui/input-group';
 import { Textarea } from '@/components/ui/textarea';
 import { useWorkspace } from '@/lib/queries/workspaces';
+import { canModerate } from '@/lib/permissions/client';
 import { useCreateEvent, type CreateEventData } from '@/lib/hooks/event-hooks';
 import { customToast } from '@/components/CustomToast';
 import WorkspacePending from '@/components/workspace/WorkspacePending';
@@ -35,7 +36,7 @@ export default function NewEventPage() {
     const router = useRouter();
 
     const { data: workspace, isPending: wsLoading, isError: wsError } = useWorkspace(slug);
-    const canModerate = workspace?.role === 'owner' || workspace?.role === 'admin';
+    const canMod = canModerate(workspace?.role);
     const createEvent = useCreateEvent(slug);
 
     const [type, setType]             = useState<EventType>('meeting');
@@ -48,7 +49,7 @@ export default function NewEventPage() {
     if (wsLoading) return <WorkspacePending />;
     if (wsError || !workspace) return <WorkspaceError errorMessage={t('errorLoad')} />;
 
-    if (!canModerate) {
+    if (!canMod) {
         router.replace(`/workspaces/${slug}`);
         return null;
     }

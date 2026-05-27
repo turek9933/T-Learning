@@ -1,7 +1,7 @@
 import { Elysia, t } from 'elysia';
 import { and, or, eq, desc, lt, sql, isNull } from 'drizzle-orm';
 import { db } from '@/db/index';
-import { conversations, messages, chatAttachments, users } from '@/db/schema';
+import { conversations, messages, chatAttachments, users, workspaceMembers } from '@/db/schema';
 import { auth } from '@/auth/config';
 import { alias } from 'drizzle-orm/pg-core';
 
@@ -67,9 +67,12 @@ export const chatRoute = new Elysia({ prefix: '/api/conversations' })
             .leftJoinLateral(lastMessageSubquery, sql`true`)
             .leftJoin(otherUser, eq(otherUser.id, otherParticipantIdExpression))
             .where(
-                or(
-                    eq(conversations.participantAId, user.id),
-                    eq(conversations.participantBId, user.id),
+                and(
+                    or(
+                        eq(conversations.participantAId, user.id),
+                        eq(conversations.participantBId, user.id),
+                    ),
+                    isNull(conversations.workspaceId),
                 )
             )
             .orderBy(desc(conversations.updatedAt))
@@ -137,33 +140,46 @@ export const chatRoute = new Elysia({ prefix: '/api/conversations' })
         const [conv] = await db
             .select()
             .from(conversations)
-            .where(
-                and(
-                    eq(conversations.id, params.id),
-                    or(
-                        eq(conversations.participantAId, user.id),
-                        eq(conversations.participantBId, user.id),
-                    ),
-                )
-            )
+            .where(eq(conversations.id, params.id))
             .limit(1);
 
         if (!conv) return status(404, { message: 'Conversation not found' });
 
+        // Workspace conversation - any workspace member may read
+        if (conv.workspaceId) {
+            const [membership] = await db
+                .select({ role: workspaceMembers.role })
+                .from(workspaceMembers)
+                .where(and(
+                    eq(workspaceMembers.userId, user.id),
+                    eq(workspaceMembers.workspaceId, conv.workspaceId),
+                ))
+                .limit(1);
+            if (!membership) return status(403, { message: 'Forbidden - you must be a member of this workspace' });
+        } else {
+            // Global DM: must be a participant
+            if (conv.participantAId !== user.id && conv.participantBId !== user.id) {
+                return status(403, { message: 'Forbidden - you must be a participant of this conversation' });
+            }
+        }
+
         const limit = query.limit ? parseInt(query.limit) : 30;
-        
+        const sender = alias(users, 'sender');
+
         return await db
             .select({
-                id:             messages.id,
-                conversationId: messages.conversationId,
-                senderId:       messages.senderId,
-                replyToId:      messages.replyToId,
-                type:           messages.type,
-                content:        messages.content,
-                createdAt:      messages.createdAt,
-                updatedAt:      messages.updatedAt,
-                deletedAt:      messages.deletedAt,
-                
+                id:              messages.id,
+                conversationId:  messages.conversationId,
+                senderId:        messages.senderId,
+                senderName:      sender.name,
+                senderAvatarUrl: sender.avatarUrl,
+                replyToId:       messages.replyToId,
+                type:            messages.type,
+                content:         messages.content,
+                createdAt:       messages.createdAt,
+                updatedAt:       messages.updatedAt,
+                deletedAt:       messages.deletedAt,
+
                 // not null only if type === 'image' | 'file'
                 attachment: {
                     id:        chatAttachments.id,
@@ -175,6 +191,7 @@ export const chatRoute = new Elysia({ prefix: '/api/conversations' })
             })
             .from(messages)
             .leftJoin(chatAttachments, eq(chatAttachments.messageId, messages.id))
+            .leftJoin(sender, eq(sender.id, messages.senderId))
             .where(
                 and(
                     eq(messages.conversationId, params.id),
