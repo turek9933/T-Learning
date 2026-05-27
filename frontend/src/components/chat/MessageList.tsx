@@ -4,11 +4,20 @@ import React, { useCallback, useEffect, useRef } from "react";
 import { MessageItem } from "@/components/chat/MessageItem";
 import { useTranslations } from "next-intl";
 
-export function MessageList({ conversationId, typingUserId, typingUserName, onTypingChange }: {
+export function MessageList({
+    conversationId,
+    typingUserId,
+    typingUserName,
+    onTypingChange,
+    leftSenderId,
+    showSenderName,
+}: {
     conversationId: string,
     typingUserId: string | null,
-    typingUserName?: string
-    onTypingChange: (typingUserId: string | null) => void
+    typingUserName?: string,
+    onTypingChange: (typingUserId: string | null) => void,
+    leftSenderId?: string,
+    showSenderName?: boolean,
 }) {
     const { data, fetchNextPage, hasNextPage, isFetchingNextPage } = useMessages(conversationId);
     const bottomRef = useRef<HTMLDivElement>(null);
@@ -66,7 +75,12 @@ export function MessageList({ conversationId, typingUserId, typingUserName, onTy
                 </div>
             )}
             {allMessages.map((message) => (
-                <MessageItem key={message.id} message={message} />
+                <MessageItem
+                key={message.id}
+                message={message}
+                leftSenderId={leftSenderId}
+                showSenderName={showSenderName}
+                />
             ))}
 
             {typingUserId &&

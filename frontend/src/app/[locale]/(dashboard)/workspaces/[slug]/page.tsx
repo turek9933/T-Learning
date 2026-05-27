@@ -3,6 +3,9 @@ import { useTranslations } from 'next-intl';
 import { usePathname, useParams } from 'next/navigation';
 import { Link, useRouter } from '@/i18n/routing';
 import { useWorkspace, useActivateWorkspace } from '@/lib/queries/workspaces';
+import { canModerate, canParticipate } from '@/lib/permissions/client';
+import { useWorkspaceData } from '@/lib/hooks/workspace-hooks';
+import { getWorkspaceConfig } from '@/types/workspace';
 import { useFeed, useUpcomingEvents, useUpcomingHomeworks } from '@/lib/hooks/feed-hooks';
 import type { FeedItem } from '@/types/feed';
 import type { UpcomingEvent } from '@/types/event';
@@ -10,7 +13,7 @@ import type { UpcomingHomework } from '@/types/homework';
 import { PageContainer } from '@/components/layout/PageContainer';
 import { customToast } from '@/components/CustomToast';
 import {
-    Calendar, CalendarPlus, Clock, FileText, Loader2,
+    Calendar, CalendarPlus, Clock, FileText, Loader2, MessageSquare,
     NotebookPen, Plus, SquarePen, User, Users,
 } from 'lucide-react';
 import StatusBadge from '@/components/StatusBadge';
@@ -25,33 +28,31 @@ import { HomeworkCard } from '@/components/workspace/feed/HomeworkCard';
 import { useDateFormat } from '@/lib/utils/date';
 
 function WorkspaceTabs({ slug }: { slug: string }) {
-    const t = useTranslations('workspace.tabs');
+    const t = useTranslations('sidebar');
     const pathname = usePathname();
+    const { config } = useWorkspaceData(slug);
 
     const isActive = (href: string) => {
         const path = pathname.replace(/^\/[a-z]{2}(\/|$)/, '/');
+        if (href === `/workspaces/${slug}`) return path === href;
         return path === href || path.startsWith(href + '/');
     };
 
-    const tabs = [
-        { key: 'main',     href: `/workspaces/${slug}`,          label: t('main') },
-        { key: 'members',  href: `/workspaces/${slug}/members`,  label: t('members') },
-        { key: 'settings', href: `/workspaces/${slug}/settings`, label: t('settings') },
-        { key: 'files',    href: `/workspaces/${slug}/files`,    label: t('files') },
-    ];
-
     return (
-        <div className='md:hidden flex items-center gap-2 mb-4'>
-            {tabs.map(({ key, href, label }) => (
-                <Link
-                key={key}
-                href={href}
-                className={`hover:text-text px-2 hover:border-b-2 hover:border-border-hover
-                    ${isActive(href) ? 'text-text border-b-2 border-border-focus' : 'text-text-muted'}`}
-                >
-                    {label}
-                </Link>
-            ))}
+        <div className='md:hidden flex items-center gap-2 mb-4 overflow-x-auto'>
+            {config.navItems.map(({ key, subPath }) => {
+                const href = `/workspaces/${slug}${subPath}`;
+                return (
+                    <Link
+                    key={key}
+                    href={href}
+                    className={`whitespace-nowrap hover:text-text px-2 hover:border-b-2 hover:border-border-hover
+                        ${isActive(href) ? 'text-text border-b-2 border-border-focus' : 'text-text-muted'}`}
+                    >
+                        {t(key as Parameters<typeof t>[0])}
+                    </Link>
+                );
+            })}
         </div>
     );
 }
@@ -212,11 +213,12 @@ export default function WorkspacePage() {
     const router = useRouter();
     const queryClient = useQueryClient();
     const { data: workspace, isPending, isError } = useWorkspace(slug);
+    const config = getWorkspaceConfig(workspace?.type);
     const activateWorkspace = useActivateWorkspace(workspace?.slug!, workspace?.id!);
     const { data: feedData, isPending: feedLoading, fetchNextPage, hasNextPage, isFetchingNextPage } = useFeed(slug);
 
-    const canModerate = workspace?.role === 'owner' || workspace?.role === 'admin';
-    const canParticipate = canModerate || workspace?.role === 'member';
+    const canMod = canModerate(workspace?.role);
+    const canPartic = canParticipate(workspace?.role);
 
     const avatarColor: Record<string, string> = {
         owner:  'text-accent',
@@ -245,8 +247,6 @@ export default function WorkspacePage() {
 
     return (
         <PageContainer>
-            <WorkspaceTabs slug={slug} />
-
             {/* Header */}
             <div className="flex flex-row w-full flex-auto gap-4 items-center justify-center">
                 {workspace.type === 'group'
@@ -262,8 +262,21 @@ export default function WorkspacePage() {
                 </div>
             )}
 
+            {/* Open chat */}
+            {config.features.chat && (
+                <div className="flex justify-center w-full py-4">
+                    <Button
+                    onClick={() => router.push(`/workspaces/${slug}/chat`)}
+                    className="text-text-contrast gap-2"
+                    >
+                        <MessageSquare className="w-4 h-4" />
+                        {t('openChat')}
+                    </Button>
+                </div>
+            )}
+
             {/* Additional content for owner and admin */}
-            {canModerate && (
+            {canMod && (
                 <>
                     <div className="flex flex-row w-full flex-auto gap-4 items-center justify-center my-2">
                         <DropdownMenu>
@@ -274,34 +287,42 @@ export default function WorkspacePage() {
                                 </Button>
                             </DropdownMenuTrigger>
                             <DropdownMenuContent align="end">
-                                <DropdownMenuItem
-                                className="cursor-pointer"
-                                onClick={() => router.push(`/workspaces/${slug}/posts/new`)}
-                                >
-                                    <SquarePen className="w-4 h-4" />
-                                    <span className="ml-2">{t("addPost")}</span>
-                                </DropdownMenuItem>
-                                <DropdownMenuItem
-                                className="cursor-pointer"
-                                onClick={() => router.push(`/workspaces/${slug}/events/new`)}
-                                >
-                                    <CalendarPlus className="w-4 h-4" />
-                                    <span className="ml-2">{t('addEvent')}</span>
-                                </DropdownMenuItem>
-                                <DropdownMenuItem
-                                className="cursor-pointer"
-                                onClick={() => router.push(`/workspaces/${slug}/homeworks/new`)}
-                                >
-                                    <NotebookPen className="w-4 h-4" />
-                                    <span className="ml-2">{t('addHomework')}</span>
-                                </DropdownMenuItem>
-                                <DropdownMenuItem
-                                className="cursor-pointer"
-                                onClick={() => router.push(`/workspaces/${slug}/files`)}
-                                >
-                                    <FileText className="w-4 h-4" />
-                                    <span className="ml-2">{t('addFile')}</span>
-                                </DropdownMenuItem>
+                                {config.features.posts && (
+                                    <DropdownMenuItem
+                                    className="cursor-pointer"
+                                    onClick={() => router.push(`/workspaces/${slug}/posts/new`)}
+                                    >
+                                        <SquarePen className="w-4 h-4" />
+                                        <span className="ml-2">{t("addPost")}</span>
+                                    </DropdownMenuItem>
+                                )}
+                                {config.features.events && (
+                                    <DropdownMenuItem
+                                    className="cursor-pointer"
+                                    onClick={() => router.push(`/workspaces/${slug}/events/new`)}
+                                    >
+                                        <CalendarPlus className="w-4 h-4" />
+                                        <span className="ml-2">{t('addEvent')}</span>
+                                    </DropdownMenuItem>
+                                )}
+                                {config.features.homework && (
+                                    <DropdownMenuItem
+                                    className="cursor-pointer"
+                                    onClick={() => router.push(`/workspaces/${slug}/homeworks/new`)}
+                                    >
+                                        <NotebookPen className="w-4 h-4" />
+                                        <span className="ml-2">{t('addHomework')}</span>
+                                    </DropdownMenuItem>
+                                )}
+                                {config.features.materials && (
+                                    <DropdownMenuItem
+                                    className="cursor-pointer"
+                                    onClick={() => router.push(`/workspaces/${slug}/files`)}
+                                    >
+                                        <FileText className="w-4 h-4" />
+                                        <span className="ml-2">{t('addFile')}</span>
+                                    </DropdownMenuItem>
+                                )}
                             </DropdownMenuContent>
                         </DropdownMenu>
                         <Button
@@ -349,8 +370,8 @@ export default function WorkspacePage() {
                     <>
                         <FeedList
                         slug={slug}
-                        canModerate={canModerate}
-                        canParticipate={canParticipate}
+                        canModerate={canMod}
+                        canParticipate={canPartic}
                         workspaceActive={workspace.status === 'active'}
                         items={feedItems}
                         />

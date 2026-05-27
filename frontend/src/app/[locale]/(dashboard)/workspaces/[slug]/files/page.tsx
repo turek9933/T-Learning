@@ -10,6 +10,7 @@ import { customToast } from '@/components/CustomToast';
 import WorkspacePending from '@/components/workspace/WorkspacePending';
 import WorkspaceError from '@/components/workspace/WorkspaceError';
 import { useWorkspace } from '@/lib/queries/workspaces';
+import { canModerate } from '@/lib/permissions/client';
 import { useMaterials, useCreateMaterial, useDeleteMaterial } from '@/lib/hooks/material-hooks';
 import { useFileUpload, MAX_FILE_SIZE, formatFileSize } from '@/lib/hooks/file-hooks';
 import { useDateFormat } from '@/lib/utils/date';
@@ -28,7 +29,7 @@ export default function WorkspaceFilesPage() {
     const fileInputRef = useRef<HTMLInputElement>(null);
     const [deletingId, setDeletingId] = useState<string | null>(null);
 
-    const canModerate = workspace?.role === 'owner' || workspace?.role === 'admin';
+    const canMod = canModerate(workspace?.role);
     const isUploading = uploadFile.isPending || createMaterial.isPending;
 
     if (wsPending) return <WorkspacePending />;
@@ -76,7 +77,7 @@ export default function WorkspaceFilesPage() {
             <div className="w-full max-w-4xl space-y-4">
                 <div className="flex items-center justify-between">
                     <h2>{t('title')}</h2>
-                    {canModerate && (
+                    {canMod && (
                         <>
                             <input
                             ref={fileInputRef}
@@ -140,7 +141,7 @@ export default function WorkspaceFilesPage() {
                                     )}
                                     <span>{formatShortDate(m.createdAt)}</span>
                                 </div>
-                                {canModerate && (
+                                {canMod && (
                                     <Button
                                     variant="ghost"
                                     size="icon"

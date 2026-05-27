@@ -3,6 +3,7 @@ import { useTranslations } from 'next-intl';
 import { PageContainer } from '@/components/layout/PageContainer';
 import { useParams } from 'next/navigation';
 import { useWorkspace } from '@/lib/queries/workspaces';
+import { canModerate } from '@/lib/permissions/client';
 import WorkspacePending from '@/components/workspace/WorkspacePending';
 import WorkspaceError from '@/components/workspace/WorkspaceError';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
@@ -303,7 +304,7 @@ export default function WorkspaceEditPage() {
 
 
     const isOwner = workspace.role === 'owner';
-    const isOwnerOrAdmin = isOwner || workspace.role === 'admin';
+    const isOwnerOrAdmin = canModerate(workspace.role);
 
     // if (!isOwnerOrAdmin)
     //     return <WorkspaceError errorMessage={t('errorPermission')} />

@@ -22,8 +22,8 @@
     "light": "Luce",
     "dark": "Scuro",
     "accessible": "Accessibile",
-    "login":"Accedi",
-    "logout":"Esci",
+    "login": "Accedi",
+    "logout": "Esci",
     "toggleMenu": "Attiva menu"
   },
   "sidebar": {
@@ -33,6 +33,12 @@
     "messages": "Messaggi",
     "settings": "Impostazioni",
     "workspaceMain": "Principale",
+    "workspaceChat": "Chat",
+    "workspaceCalendar": "Calendario",
+    "workspaceMaterials": "Materiali",
+    "workspaceHomeworks": "Compiti",
+    "workspaceEvents": "Eventi",
+    "workspacePosts": "Post",
     "workspaceMembers": "Membri",
     "workspaceSettings": "Impostazioni"
   },
@@ -70,13 +76,14 @@
       "inputPlaceholder": "Scrivi un messaggio...",
       "errorFileTooLarge": "Il file é troppo grande. La dimensione massima del file é {size}",
       "errorSendingMessage": "Si è verificato un errore durante l'invio del messaggio",
-      "errorLoadImage": "Si è verificato un errore durante il caricamento dell'immagine"
+      "errorLoadImage": "Si è verificato un errore durante il caricamento dell'immagine",
+      "readOnlyViewer": "Solo visualizzazione — gli osservatori non possono inviare messaggi"
     }
   },
   "auth": {
     "login": {
       "title": "Benvenuto di nuovo",
-      "subtitle": "Accedi al tuo account T-Lerning",
+      "subtitle": "Accedi al tuo account T-Learning",
       "email": "Email",
       "emailPlaceholder": "Inserisci qui la tua email",
       "password": "Password",
@@ -97,7 +104,7 @@
     },
     "register": {
       "title": "Crea un account",
-      "subtitle": "Unisciti alla piattaforma T-Lerning",
+      "subtitle": "Unisciti alla piattaforma T-Learning",
       "firstName": "Nome",
       "firstNamePlaceholder": "Inserisci qui il tuo nome",
       "lastName": "Cognome",
@@ -168,9 +175,9 @@
     "student": "Studente",
     "teacher": "Insegnante",
     "loginTitle": "Bentornato",
-    "loginSubtitle": "Accedi al tuo account T-Lerning",
+    "loginSubtitle": "Accedi al tuo account T-Learning",
     "registerTitle": "Crea un account",
-    "registerSubtitle": "Unisciti alla piattaforma T-Lerning",
+    "registerSubtitle": "Unisciti alla piattaforma T-Learning",
     "resetPasswordTitle": "Reimposta password",
     "resetPasswordSubtitle": "Invieremo un link per reimpostare la password alla tua email",
     "sendResetLink": "Invia link di reimpostazione",
@@ -178,10 +185,11 @@
   },
   "workspace": {
     "list": {
-      "title": "Pulpit",
+      "title": "Zone di lavoro",
       "subtitle": "Qui troverai una lista di tutte le zone di lavoro",
       "createNew": "Crea nuova",
       "emptyTitle": "Nessuna zone di lavoro",
+      "emptySubtitle": "Non hai ancora zone di lavoro, crea una ora!",
       "emptyDescription": "Non hai ancora zone di lavoro, crea una ora!",
       "active": "Attiva",
       "draft": "Bozza",
@@ -194,10 +202,14 @@
       "errorLoad": "Impossibile caricare i dati delle zone di lavoro"
     },
     "tabs": {
-      "main": "Pulpit",
+      "main": "Principale",
       "members": "Membri",
       "settings": "Impostazioni",
       "files": "File"
+    },
+    "typeLabel": {
+      "single": "Lezioni individuali",
+      "group": "Corso di gruppo"
     },
     "main": {
       "addContent": "Aggiungi contenuto",
@@ -206,6 +218,7 @@
       "addHomework": "Aggiungi compito",
       "addFile": "Aggiungi file",
       "addMember": "Aggiungi membro",
+      "openChat": "Apri chat",
       "workspaceDraft": "Bozza zone di lavoro",
       "workspaceDraftInfo": "I membri non hanno accesso al contenuto della bozza",
       "activate": "Attiva",
@@ -257,6 +270,7 @@
       "statusActive": "Attiva",
       "statusArchived": "Archiviata",
       "statusDescription": "Puoi cambiare lo stato e la visibilita della zone di lavoro",
+      "activate": "Attiva",
       "active": "Attiva",
       "archive": "Archivia",
       "restore": "Ripristina",
@@ -266,7 +280,7 @@
       "successStatusArchived": "Lo stato della zone di lavoro è stato cambiato in archiviata",
       "successDelete": "La zone di lavoro è stata eliminata con successo",
       "errorLoad": "Impossibile caricare i dati della zone di lavoro",
-      "errorPermissions": "Non hai i permessi per modificare questa zone di lavoro",
+      "errorPermission": "Non hai i permessi per modificare questa zone di lavoro",
       "errorEdit": "Impossibile modificare la zone di lavoro",
       "errorDelete": "Impossibile eliminare la zone di lavoro"
     },
@@ -315,6 +329,18 @@
       "invite": "Invita",
       "errorUserAlreadyInvited": "L'utente è stato già invitato",
       "errorUserAlreadyMember": "L'utente è già un membro",
+      "resendPrompt": "Inviare un nuovo invito a {email}?",
+      "resendInvite": "Reinvia",
+      "resendCancel": "Annulla",
+      "successResend": "Nuovo invito inviato a {email}",
+      "errorResend": "Impossibile reinviare l'invito",
+      "noMembers": "Nessun membro in questa zona di lavoro",
+      "errorSingleMemberLimit": "Il limite di membri per la zona di lavoro individuale è stato raggiunto (max. 1)",
+      "errorSingleViewerLimit": "Il limite di visualizzatori per la zona di lavoro individuale è stato raggiunto (max. {max})",
+      "error": "Si è verificato un errore durante l'invito dell'utente",
+      "successMarkPaid": "Segnato come pagato",
+      "successMarkUnpaid": "Segnato come non pagato",
+      "errorPayment": "Impossibile aggiornare lo stato del pagamento",
       "errorLoad": "Impossibile caricare i dati dei membri della zone di lavoro",
       "errorPermission": "Non hai i permessi per gestire i membri della zone di lavoro"
     },
@@ -330,7 +356,7 @@
       "placeholderName": "Mia zone di lavoro",
       "slug": "Slug",
       "slugHint": "Fine dell'indirizzo url della zone di lavoro, e.g. my-workspace",
-      "slugPlaceholder": "mia-zone-di-lavoro",
+      "placeholderSlug": "mia-zona-di-lavoro",
       "description": "Descrizione",
       "placeholderDescription": "Inserisci qui la descrizione della zone di lavoro",
       "optional": "Opzionale",
@@ -351,6 +377,11 @@
       "goBack": "Torna alla homepage",
       "error": "Impossibile inviare l'invito",
       "errorInvite": "Impossibile inviare l'invito"
+    },
+    "chat": {
+      "title": "Chat",
+      "errorLoad": "Impossibile caricare i dati della chat",
+      "errorChatLoad": "Impossibile caricare la chat"
     }
   },
   "post": {
@@ -496,8 +527,8 @@
     }
   },
   "breadcrumb": {
-    "dashboard": "Pulpit",
-    "workspaces": "Workspace",
+    "dashboard": "Principale",
+    "workspaces": "Zone di lavoro",
     "new": "Nuovo"
   },
   "toast": {
@@ -511,8 +542,8 @@
     "getStarted": "Inizia",
     "learnMore": "Scopri di più",
     "aboutTitle": "Cos'è T-Learning?",
-    "aboutDescription": "T-Lerning è una Progressive Web App progettata per gestire varie forme di educazione online. La piattaforma combina le funzionalità di un Learning Management System con strumenti di comunicazione, consentendo un insegnamento flessibile sia individuale che di gruppo.",
-    "featuresTitle": "Perché T-Lerning?",
+    "aboutDescription": "T-Learning è una Progressive Web App progettata per gestire varie forme di educazione online. La piattaforma combina le funzionalità di un Learning Management System con strumenti di comunicazione, consentendo un insegnamento flessibile sia individuale che di gruppo.",
+    "featuresTitle": "Perché T-Learning?",
     "feature1Title": "Interfaccia intuitiva",
     "feature1Description": "Semplice da usare, senza funzioni eccessive",
     "feature2Title": "Supporto offline",
@@ -526,7 +557,7 @@
     "feature6Title": "Senza pubblicità",
     "feature6Description": "Concentrati sull'apprendimento, non sulle pubblicità",
     "callToAction": "Pronto per un'esperienza educativa migliore?",
-    "callToActionDescription": "Unisciti alla piattaforma T-Lerning",
+    "callToActionDescription": "Unisciti alla piattaforma T-Learning",
     "register": "Unisciti ora",
     "login": "Continua l'apprendimento",
     "copyright": "Copyright © 2026 T-Learning. Tutti i diritti riservati.",

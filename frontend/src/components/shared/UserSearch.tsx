@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import { useQueryClient } from '@tanstack/react-query';
 import { useUserSearch } from '@/lib/queries/users';
 import { useTranslations } from 'next-intl';
 import { Button } from '@/components/ui/button';
@@ -12,22 +11,13 @@ type UserSearchProps = {
     actionLabel?: string
     actionIcon?: React.ReactNode
     showMail?: boolean
+    disabled?: boolean
 }
 
-export function UserSearch({onSelect, actionLabel, actionIcon, showMail = true}: UserSearchProps) {
+export function UserSearch({onSelect, actionLabel, actionIcon, showMail = true, disabled = false}: UserSearchProps) {
     const t = useTranslations('components.search');
-    const queryClient = useQueryClient();
     const [search, setSearch] = useState('');
     const { data: results = [], isFetching } = useUserSearch(search);
-
-    class AuthError extends Error {
-        code?: string;
-
-        constructor(message: string | undefined, code?: string) {
-            super(message);
-            this.code = code;
-        }
-    }
 
     return (
         <div className="space-y-4">
@@ -40,6 +30,7 @@ export function UserSearch({onSelect, actionLabel, actionIcon, showMail = true}:
                     onChange={e => setSearch(e.target.value)}
                     placeholder={t('searchPlaceholder')}
                     className="w-full font-normal"
+                    disabled={disabled}
                     />
                     <InputGroupAddon>
                         <Search className='w-4 h-4 text-text-secondary' />
@@ -78,6 +69,7 @@ export function UserSearch({onSelect, actionLabel, actionIcon, showMail = true}:
                                         variant="ghost"
                                         className="border"
                                         onClick={() => onSelect(result)}
+                                        disabled={disabled}
                                         >
                                             {actionIcon}
                                             {actionLabel}

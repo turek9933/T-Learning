@@ -8,6 +8,7 @@ import { PageContainer } from '@/components/layout/PageContainer';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { useWorkspace } from '@/lib/queries/workspaces';
+import { canModerate, canParticipate } from '@/lib/permissions/client';
 import { useDateFormat } from '@/lib/utils/date';
 import { useHomework, useMySubmission, useSubmitHomework, useUpdateSubmission, useAllSubmissions } from '@/lib/hooks/homework-hooks';
 import Avatar from '@/components/shared/Avatar';
@@ -142,8 +143,8 @@ export default function HomeworkDetailPage() {
     const { formatDateTime } = useDateFormat();
 
     const { data: workspace } = useWorkspace(slug);
-    const canModerate   = workspace?.role === 'owner' || workspace?.role === 'admin';
-    const canParticipate = workspace?.role === 'owner' || workspace?.role === 'admin' || workspace?.role === 'member';
+    const canMod    = canModerate(workspace?.role);
+    const canPartic = canParticipate(workspace?.role);
 
     const { data: homework,   isPending: hwLoading,  isError: hwError  } = useHomework(slug, id);
     const { data: submission, isPending: subLoading, refetch: refetchSub } = useMySubmission(slug, id);
@@ -288,7 +289,7 @@ export default function HomeworkDetailPage() {
         );
     }
 
-    const showSubmitForm = canParticipate && !canModerate && (!submission || isEditing);
+    const showSubmitForm = canPartic && !canMod && (!submission || isEditing);
 
     return (
         <PageContainer>
@@ -330,7 +331,7 @@ export default function HomeworkDetailPage() {
                 </div>
 
                 {/* Submission */}
-                {canParticipate && !canModerate && (
+                {canPartic && !canMod && (
                     <div className="rounded-xl border border-border bg-bg p-6 space-y-4">
                         {/* Resubmit button */}
                         <div className="flex items-center justify-between">
@@ -446,14 +447,14 @@ export default function HomeworkDetailPage() {
                             </form>
                         )}
 
-                        {!submission && !showSubmitForm && !canModerate && (
+                        {!submission && !showSubmitForm && !canMod && (
                             <p className="text-sm text-text-muted">{t('viewerNoSubmit')}</p>
                         )}
                     </div>
                 )}
 
                 {/* Moderator sees all submissions */}
-                {canModerate && (
+                {canMod && (
                     <ModeratorSubmissions slug={slug} homeworkId={id} t={t} formatDateTime={formatDateTime} />
                 )}
             </div>

@@ -2,6 +2,13 @@ import type { WorkspaceRole } from "@/routes/workspaces.route";
 import { createAccessControl } from "better-auth/plugins/access";
 import { defaultStatements, adminAc } from 'better-auth/plugins/organization/access'
 
+export const SINGLE_WORKSPACE_LIMITS: Record<WorkspaceRole, number> = {
+    owner:  1,
+    member: 1,
+    viewer: 3,
+    admin:  0,
+};
+
 const statement = {
     ...defaultStatements, 
     lesson: ["create", "read", "update", "delete"],

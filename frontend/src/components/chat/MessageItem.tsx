@@ -79,26 +79,54 @@ function FileMessage({ storageKey, fileName, mimeType, fileSize }:
         </div>
     );
 }
-export function MessageItem({ message }: { message: Message }) {
+interface MessageItemProps {
+    message: Message;
+    // If set, the message is rendered in observer mode.
+    // left/right is decided by senderId == leftSenderId
+    // Used by the workspace 1:1 chat so the viewer (observer) sees a stable layout
+    leftSenderId?: string;
+    // When true, render the sender's name above the message (observer mode).
+    showSenderName?: boolean;
+}
+
+export function MessageItem({ message, leftSenderId, showSenderName }: MessageItemProps) {
     const { data: session } = authClient.useSession();
     const isOwn = message.senderId === session?.user.id;
     const isDeleted = !!message.deletedAt;
-    const hasAttachment = message.type !== 'text';    
+    const hasAttachment = message.type !== 'text';
     const t = useTranslations('components.chat');
+
+    const observerMode = leftSenderId !== undefined;
+    const isRight = observerMode
+        ? message.senderId !== leftSenderId
+        : isOwn;
+
+    // Observer mode uses a single neutral colour for both sides
+    // DM mode uses "own = primary, other = bg" colours.
+    const bubbleClasses = isDeleted
+        ? 'bg-bg text-text-muted rounded-md'
+        : observerMode
+            ? `bg-bg text-text ${isRight ? 'rounded-br-sm' : 'rounded-bl-sm'}`
+            : isOwn
+                ? 'bg-primary text-text-contrast rounded-br-sm'
+                : 'bg-bg text-text rounded-bl-sm';
+
+    const fallbackName = message.type === 'image' ? 'image' : 'file';
 
     return (
         <div
         key={message.id}
-        className={`flex mb-2 ${isOwn ? 'justify-end' : 'justify-start'}`}
+        className={`flex flex-col mb-2 ${isRight ? 'items-end' : 'items-start'}`}
         >
+            {showSenderName && message.senderName && (
+                <span className="text-xs text-text-muted px-2">
+                    {message.senderName}
+                </span>
+            )}
             <div className={`
             rounded-2xl px-4 py-2 text-sm break-all
-            ${hasAttachment ? 'max-w-xs' : 'max-w-2/3'} 
-            ${isDeleted
-                ? 'bg-bg text-text-muted rounded-md'
-                : isOwn
-                ? 'bg-primary text-text-contrast rounded-br-sm'
-                : 'bg-bg text-text rounded-bl-sm'}
+            ${hasAttachment ? 'max-w-xs' : 'max-w-2/3'}
+            ${bubbleClasses}
             `}>
                 {isDeleted ? (
                     <span className='italic'>{t('deletedMessage')}</span>
@@ -107,7 +135,7 @@ export function MessageItem({ message }: { message: Message }) {
                 ) : (
                     <FilePreview
                     storageKey={message.content}
-                    name={message.attachment?.name ?? message.type === 'image' ? 'image' : 'file'}
+                    name={message.attachment?.name ?? fallbackName}
                     mimeType={message.attachment?.mimeType || 'application/octet-stream'}
                     size={message.attachment?.size ?? 0}
                     invisibleBg

@@ -22,8 +22,8 @@
     "light": "Jasny",
     "dark": "Ciemny",
     "accessible": "Dostępny",
-    "login":"Zaloguj się",
-    "logout":"Wyloguj się",
+    "login": "Zaloguj się",
+    "logout": "Wyloguj się",
     "toggleMenu": "Przełącz menu"
   },
   "sidebar": {
@@ -33,6 +33,12 @@
     "messages": "Wiadomości",
     "settings": "Ustawienia",
     "workspaceMain": "Pulpit",
+    "workspaceChat": "Czat",
+    "workspaceCalendar": "Kalendarz",
+    "workspaceMaterials": "Materiały",
+    "workspaceHomeworks": "Zadania",
+    "workspaceEvents": "Wydarzenia",
+    "workspacePosts": "Posty",
     "workspaceMembers": "Członkowie",
     "workspaceSettings": "Ustawienia"
   },
@@ -70,7 +76,8 @@
       "inputPlaceholder": "Wpisz wiadomość...",
       "errorFileTooLarge": "Plik jest za duży. Maksymalny rozmiar pliku to {size}",
       "errorSendingMessage": "Podczas wysyłania wiadomości wystąpił błąd",
-      "errorLoadImage": "Podczas ładowania obrazu wystąpił błąd"
+      "errorLoadImage": "Błąd podczas ładowania obrazu",
+      "readOnlyViewer": "Tylko podgląd — obserwatorzy nie mogą wysyłać wiadomości"
     }
   },
   "auth": {
@@ -179,10 +186,11 @@
   "workspace": {
     "list": {
       "title": "Pulpit",
-      "subtitle": "Tutaj znajduje się lista wszystkich przestrzeń roboczych",
+      "subtitle": "Tutaj znajduje się lista wszystkich przestrzeni roboczych",
       "createNew": "Stwórz nową",
       "emptyTitle": "Brak przestrzeni roboczych",
       "emptySubtitle": "Nie masz jeszcze przestrzeni roboczych, stwórz nową teraz!",
+      "emptyDescription": "Nie masz jeszcze przestrzeni roboczych, stwórz nową teraz!",
       "active": "Aktywna",
       "draft": "Szkic",
       "archived": "Archiwum",
@@ -199,6 +207,10 @@
       "members": "Uczestnicy",
       "files": "Pliki"
     },
+    "typeLabel": {
+      "single": "Zajęcia indywidualne",
+      "group": "Kurs grupowy"
+    },
     "main": {
       "addContent": "Dodaj treść",
       "addPost": "Dodaj ogłoszenie",
@@ -206,6 +218,7 @@
       "addHomework": "Dodaj zadanie",
       "addFile": "Dodaj plik",
       "addMember": "Dodaj uczestnika",
+      "openChat": "Otwórz czat",
       "workspaceDraft": "Szkic przestrzeni roboczej",
       "workspaceDraftInfo": "Uczestnicy nie mają dostępu do treści przestrzeni roboczej",
       "activate": "Aktywuj",
@@ -258,6 +271,7 @@
       "statusArchived": "Archiwum",
       "statusDescription": "Możesz zmienić status i widoczność przestrzeni roboczej",
       "activate": "Aktywuj",
+      "active": "Aktywowany",
       "archive": "Archiwizuj",
       "restore": "Przywróć",
       "successEdit": "Ustawienia zostały zaktualizowane",
@@ -315,6 +329,18 @@
       "invite": "Zaproś",
       "errorUserAlreadyInvited": "Użytkownik został już zaproszony",
       "errorUserAlreadyMember": "Użytkownik jest już uczestnikiem przestrzeni roboczej",
+      "resendPrompt": "Wysłać nowe zaproszenie do {email}?",
+      "resendInvite": "Wyślij ponownie",
+      "resendCancel": "Anuluj",
+      "successResend": "Wysłano nowe zaproszenie do {email}",
+      "errorResend": "Nie udało się wysłać nowego zaproszenia",
+      "noMembers": "Brak uczestników w tej przestrzeni roboczej",
+      "errorSingleMemberLimit": "Limit uczestników dla przestrzeni indywidualnej został osiągnięty (maks. 1)",
+      "errorSingleViewerLimit": "Limit obserwatorów dla przestrzeni indywidualnej został osiągnięty (maks. {max})",
+      "error": "Wystąpił błąd podczas zapraszania użytkownika",
+      "successMarkPaid": "Oznaczono jako opłacone",
+      "successMarkUnpaid": "Oznaczono jako nieopłacone",
+      "errorPayment": "Nie udało się zaktualizować statusu płatności",
       "errorLoad": "Nie udało się wczytać danych o uczestnikach przestrzeni roboczej",
       "errorPermission": "Nie masz uprawnienia do zarządzania uczestnikami przestrzeni roboczej"
     },
@@ -351,6 +377,11 @@
       "goBack": "Powrót do strony głównej",
       "error": "Link do dołączenia do przestrzeni roboczej jest nieprawidłowy",
       "errorInvite": "Nie udało się dołączyć do przestrzeni roboczej"
+    },
+    "chat": {
+      "title": "Konwersacja",
+      "errorLoad": "Nie udało się wczytać danych konwersacji przestrzeni roboczej",
+      "errorChatLoad": "Nie udało się wczytać czatu"
     }
   },
   "post": {
@@ -440,7 +471,7 @@
       "successUpdate": "Zadanie zostało zaktualizowane",
       "error": "Nie udało się wysłać odpowiedzi do zadania",
       "errorLoad": "Nie udało się wczytać danych o zadaniu domowym",
-      "errorMaxFiles":"Możesz dodać maksymalnie {max} pliki",
+      "errorMaxFiles": "Możesz dodać maksymalnie {max} pliki",
       "errorFileTooLarge": "Plik {name} przekracza dozwolony rozmiar {max}",
       "errorUpload": "Nie udało się wgrać załączników",
       "moderatorSection": "Złożone rozwiązania",

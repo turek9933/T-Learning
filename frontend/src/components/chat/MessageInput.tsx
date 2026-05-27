@@ -14,7 +14,7 @@ interface PendingFile {
     previewUrl: string | null;
 }
 
-export function MessageInput({ conversationId }: { conversationId: string }) {
+export function MessageInput({ conversationId, readOnly = false }: { conversationId: string; readOnly?: boolean }) {
     const [value, setValue] = useState("");
     const [pendingFile, setPendingFile] = useState<PendingFile | null>(null);
     const t = useTranslations('components.chat');
@@ -96,6 +96,16 @@ export function MessageInput({ conversationId }: { conversationId: string }) {
 
     const isSending = sendFile.isPending;
     const canSend = (value.trim().length > 0 || pendingFile !== null) && !isSending;
+
+    if (readOnly) {
+        return (
+            <div className="border-t border-border p-4">
+                <div className="flex items-center justify-center px-2 bg-bg-muted rounded-lg text-text-muted text-sm">
+                    <span>{t('readOnlyViewer')}</span>
+                </div>
+            </div>
+        );
+    }
 
     return (
         <div className="border-t border-border p-4 flex items-end gap-2">

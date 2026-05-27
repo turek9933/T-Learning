@@ -1,7 +1,24 @@
 'use client';
 import { useTranslations } from 'next-intl';
 import { Link, usePathname } from '@/i18n/routing';
-import { Calendar, ClipboardList, MessageSquare, Settings, LayoutDashboard, Cog, Users, BookOpen } from 'lucide-react';
+import {
+    Calendar, CalendarDays, ClipboardList, MessageSquare, Settings,
+    LayoutDashboard, Cog, Users, BookOpen, FolderOpen, FileText,
+    type LucideIcon,
+} from 'lucide-react';
+import { useWorkspaceData } from '@/lib/hooks/workspace-hooks';
+
+const ICON_MAP: Record<string, LucideIcon> = {
+    BookOpen,
+    MessageSquare,
+    Calendar,
+    CalendarDays,
+    FolderOpen,
+    ClipboardList,
+    Users,
+    Cog,
+    FileText,
+};
 
 const NAV_ITEMS = [
     { key: 'workspaces', href: '/dashboard',    icon: LayoutDashboard },
@@ -11,16 +28,67 @@ const NAV_ITEMS = [
     { key: 'settings',   href: '/settings',     icon: Settings },
 ] as const;
 
-const WORKSPACE_SUB_ITEMS = [
-    { key: 'workspaceMain',       subPath: '',           icon: BookOpen },
-    { key: 'workspaceMembers',    subPath: '/members',   icon: Users },
-    { key: 'workspaceSettings',   subPath: '/settings',  icon: Cog },
-] as const;
-
 function extractWorkspaceSlug(pathname: string): string | null {
     const withoutLocale = pathname.replace(/^\/[a-z]{2}(\/|$)/, '/');
     const match = withoutLocale.match(/^\/workspaces\/([^/]+)(\/|$)/);
     return match ? match[1] : null;
+}
+
+function WorkspaceSubNav({ slug, mobile = false }: { slug: string; mobile?: boolean }) {
+    const t = useTranslations('sidebar');
+    const pathname = usePathname();
+    const { config } = useWorkspaceData(slug);
+
+    function isSubActive(subPath: string) {
+        const path = pathname.replace(/^\/[a-z]{2}(\/|$)/, '/');
+        const pathStart = '/workspaces/' + slug;
+        if (subPath === '') return path === pathStart;
+        return path.startsWith(pathStart + subPath);
+    }
+
+    if (mobile) {
+        return (
+            <>
+                {config.navItems.map(({ key, subPath, iconName }) => {
+                    const Icon = ICON_MAP[iconName] ?? BookOpen;
+                    const subActive = isSubActive(subPath);
+                    return (
+                        <Link
+                        key={key}
+                        href={`/workspaces/${slug}${subPath}`}
+                        className={`
+                            flex flex-1 flex-col items-center justify-center h-full rounded-lg
+                            ${subActive ? 'bg-primary-subtle text-primary border-b-2 border-primary' : 'text-text-muted hover:bg-bg-hover hover:text-text'}
+                        `}>
+                            <Icon className="w-5 h-5" />
+                            <span className="text-xs">{t(key as Parameters<typeof t>[0])}</span>
+                        </Link>
+                    );
+                })}
+            </>
+        );
+    }
+
+    return (
+        <>
+            {config.navItems.map(({ key, subPath, iconName }) => {
+                const Icon = ICON_MAP[iconName] ?? BookOpen;
+                const subActive = isSubActive(subPath);
+                return (
+                    <Link
+                    key={key}
+                    href={`/workspaces/${slug}${subPath}`}
+                    title={t(key as Parameters<typeof t>[0])}
+                    className={`
+                        flex items-center justify-center w-10 h-10 rounded-lg
+                        ${subActive ? 'bg-primary-subtle text-primary border-l-2 border-primary' : 'text-text-muted border-l-1 border-text-muted hover:bg-bg-muted hover:text-text'}
+                    `}>
+                        <Icon className="w-5 h-5" />
+                    </Link>
+                );
+            })}
+        </>
+    );
 }
 
 export function Sidebar() {
@@ -32,18 +100,15 @@ export function Sidebar() {
         const path = pathname.replace(/^\/[a-z]{2}(\/|$)/, '/');
         return path === href || path.startsWith(href + '/');
     }
-    function isSubActive(subPath: string) {
-        if (!slug) return false;
-        
-        const path = pathname.replace(/^\/[a-z]{2}(\/|$)/, '/');
-        const pathStart = '/workspaces/' + slug;
-
-        if (subPath === '') return path === pathStart;
-        return path.startsWith(pathStart + subPath);
-    }
 
     return (
         <>
+        {/* Mobile workspace sub-nav */}
+        {slug && (
+            <nav className="md:hidden flex fixed bottom-16 left-0 right-0 items-center justify-around h-12 bg-bg-muted border-t border-border px-2 z-40">
+                <WorkspaceSubNav slug={slug} mobile />
+            </nav>
+        )}
         {/* Mobile - bottom */}
         <nav className="md:hidden flex fixed bottom-0 left-0 right-0 items-center justify-around h-16 bg-bg border-t border-border px-2 z-50">
             {NAV_ITEMS.map(({ key, href, icon: Icon }) => {
@@ -54,7 +119,7 @@ export function Sidebar() {
                     href={href}
                     className={`
                         flex flex-col items-center justify-center flex-1 h-full rounded-lg
-                        ${active ? 'text-primary' : 'text-text-muted'}
+                        ${active ? 'bg-primary-subtle text-primary border-b-2 border-primary' : 'text-text-muted hover:bg-bg-hover hover:text-text'}
                     `}>
                         <Icon className="w-5 h-5" />
                         <span className="text-xs">{t(key)}</span>
@@ -69,7 +134,6 @@ export function Sidebar() {
                 return (
                    <div key={key} className="flex flex-col items-center w-full">
                         <Link
-                        key={key}
                         href={href}
                         className={`
                             flex items-center justify-center w-10 h-10 rounded-lg
@@ -79,21 +143,7 @@ export function Sidebar() {
                         </Link>
 
                         {key === 'workspaces' && slug && (
-                            WORKSPACE_SUB_ITEMS.map(({ key, subPath, icon: Icon }) => {
-                                const subActive = isSubActive(subPath);
-                                return (
-                                    <Link
-                                    key={key}
-                                    href={`/workspaces/${slug}${subPath}`}
-                                    title={t(key)}
-                                    className={`
-                                        flex items-center justify-center w-10 h-10 rounded-lg
-                                        ${subActive ? 'bg-primary-subtle text-primary border-l-2 border-primary' : 'text-text-muted hover:bg-bg-muted hover:text-text'}
-                                    `}>
-                                        <Icon className="w-5 h-5" />
-                                    </Link>
-                                );
-                            })
+                            <WorkspaceSubNav slug={slug} />
                         )}
                    </div>
                 );

@@ -1,5 +1,5 @@
 'use client';
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { useParams } from 'next/navigation';
 import { useRouter } from '@/i18n/routing';
 import { useTranslations } from 'next-intl';
@@ -7,6 +7,8 @@ import { FileText, Loader2, Paperclip, Pin, X } from 'lucide-react';
 import { PageContainer } from '@/components/layout/PageContainer';
 import { Button } from '@/components/ui/button';
 import { useWorkspace } from '@/lib/queries/workspaces';
+import { canModerate } from '@/lib/permissions/client';
+import { getWorkspaceConfig } from '@/types/workspace';
 import { useCreatePost } from '@/lib/hooks/post-hooks';
 import { useMultiFileUpload, MAX_FILE_SIZE, MAX_FILE_COUNT, formatFileSize } from '@/lib/hooks/file-hooks';
 import { customToast } from '@/components/CustomToast';
@@ -24,7 +26,8 @@ export default function NewPostPage() {
     const router = useRouter();
 
     const { data: workspace, isPending: wsLoading, isError: wsError } = useWorkspace(slug);
-    const canModerate = workspace?.role === 'owner' || workspace?.role === 'admin';
+    const config = getWorkspaceConfig(workspace?.type);
+    const canMod = canModerate(workspace?.role);
 
     const createPost = useCreatePost(slug);
     const uploadFiles = useMultiFileUpload();
@@ -34,12 +37,15 @@ export default function NewPostPage() {
     const [pendingFiles, setPendingFiles] = useState<PendingFile[]>([]);
     const fileInputRef = useRef<HTMLInputElement>(null);
 
+    const postsDisabled = !!workspace && (!config.features.posts || !canMod);
+
+    useEffect(() => {
+        if (postsDisabled) router.replace(`/workspaces/${slug}`);
+    }, [postsDisabled, router, slug]);
+
     if (wsLoading) return <WorkspacePending />;
     if (wsError || !workspace) return <WorkspaceError errorMessage={t('errorLoad')} />;
-    if (!canModerate) {
-        router.replace(`/workspaces/${slug}`);
-        return null;
-    }
+    if (postsDisabled) return null;
 
     const MAX_FILES = MAX_FILE_COUNT.post;
     const MAX_SIZE = MAX_FILE_SIZE.post;

@@ -1,11 +1,14 @@
-import { betterAuth } from "better-auth";
+import { betterAuth, APIError } from "better-auth";
 import { db } from "@/db/index";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
 import * as schema from "@/db/schema";
 import { sendMail } from "@/lib/email";
 import { env } from "@/config/env";
 import { organization } from "better-auth/plugins";
-import { ac, viewer, member, admin, owner } from "@/lib/permissions";
+import { ac, viewer, member, admin, owner, SINGLE_WORKSPACE_LIMITS } from "@/lib/permissions";
+import type { WorkspaceRole } from "@/routes/workspaces.route";
+import { workspaceMembers } from "@/db/schema";
+import { eq, and, count } from "drizzle-orm";
 
 export const auth = betterAuth({
     database: drizzleAdapter(db, {
@@ -137,6 +140,51 @@ export const auth = betterAuth({
                         activeOrganizationId: "activeWorkspaceId",
                     },
                 },
+            },
+
+            // Checks if the user is allowed to create an invitation
+            // 
+            // if organization type is single
+            // - no admin invitations
+            // - one member invitation
+            // - few viewer invitation
+            // Checks if number of role members is less than limit
+            // 
+            // if organization type is group -> skip
+            beforeCreateInvitation: async (data: {
+                invitation: { email: string; role: string; organizationId: string; inviterId: string; [key: string]: unknown };
+                organization: Record<string, unknown>;
+                inviter: Record<string, unknown>;
+            }) => {
+                const invitation = data.invitation;
+                const orgType    = data.organization.type as string | undefined;
+                if (orgType !== 'single') return;
+
+                const role = invitation.role as WorkspaceRole;
+                const limit = SINGLE_WORKSPACE_LIMITS[role] ?? Infinity;
+
+                if (limit === 0) {
+                    throw new APIError('BAD_REQUEST', { message: 'Role not available in individual workspaces' });
+                }
+
+                if (isFinite(limit)) {
+                    const result = await db
+                        .select({ value: count() })
+                        .from(workspaceMembers)
+                        .where(
+                            and(
+                                eq(workspaceMembers.workspaceId, invitation.organizationId),
+                                eq(workspaceMembers.role, role),
+                            )
+                        );
+
+                    const currentCount = result[0]?.value ?? 0;
+                    if (currentCount >= limit) {
+                        throw new APIError('BAD_REQUEST', {
+                            message: `SINGLE_WORKSPACE_LIMIT_${role.toUpperCase()}`,
+                        });
+                    }
+                }
             },
 
             async sendInvitationEmail(data) {
