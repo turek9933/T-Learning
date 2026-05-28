@@ -25,6 +25,10 @@ export const auth = betterAuth({
         modelName: "sessions",
         expiresIn: (Number(env.sessionExpirationDays) ?? 14 ) * 60 * 60 * 24,// Session expires in (SESSION_EXPIRATION_DAYS or 14) days
         updateAge: (Number(env.sessionUpdateDays) ?? 2 ) * 60 * 60 * 24,// Update session age every (SESSION_UPDATE_DAYS or 2) days
+        cookieCache: {
+            enabled: true,
+            maxAge: 5 * 60,// Signed session snapshot kept in cookie for 5 minutes
+        },
     },
     account: { modelName: "accounts" },
     verification: { modelName: "verifications" },

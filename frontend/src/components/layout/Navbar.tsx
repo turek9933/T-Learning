@@ -2,7 +2,7 @@
 import { useTranslations, useLocale } from "next-intl";
 import { Link, usePathname, useRouter } from "@/i18n/routing";
 import { Button } from "@/components/ui/button";
-import { Globe, Moon, Sun, Contrast, Menu, X, LogOut, Check } from "lucide-react";
+import { Globe, Moon, Sun, Contrast, Menu, X, LogOut, Check, Download } from "lucide-react";
 import { useState, useEffect } from "react";
 import { useTheme } from "@/components/ThemeProvider";
 import {
@@ -14,6 +14,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { authClient } from "@/lib/auth-client";
 import Image from "next/image";
+import { useInstallPrompt } from "@/components/pwa/use-install-prompt";
 
 export function Navbar() {
     const t = useTranslations("navbar");
@@ -25,6 +26,7 @@ export function Navbar() {
     const {data: session, isPending} = authClient.useSession();
     const [isMounted, setMounted] = useState(false);
     const mountedSession = isMounted ? session : null;
+    const { canInstall, install } = useInstallPrompt();
 
     useEffect(() => {
         setMounted(true);
@@ -53,7 +55,19 @@ export function Navbar() {
             </Link>
 
             <div className="hidden md:flex items-center gap-3">
-                {mountedSession && (
+                {isMounted && (
+                    <Button
+                    variant="ghost"
+                    size="icon"
+                    onClick={install}
+                    title={t("installApp")}
+                    className="cursor-pointer"
+                    >
+                        <Download className="h-4 w-4" />
+                        <span className="sr-only">{t("installApp")}</span>
+                    </Button>
+                )}
+                {isMounted && (
                     <DropdownMenu>
                         <DropdownMenuTrigger asChild>
                             <Button variant="ghost" size="icon" className="cursor-pointer">
@@ -209,6 +223,23 @@ export function Navbar() {
                             <div className="p-2">
                                 <p className="text-sm font-medium text-text">{mountedSession.user.name}</p>
                                 <p className="text-xs text-text-secondary">{mountedSession.user.email}</p>
+                            </div>
+                        </div>
+                    )}
+                    {isMounted && canInstall && (
+                        <div className="pb-2 border-b border-border-subtle">
+                            <div className="flex items-center justify-between">
+                                <p className="text-sm font-medium text-text-muted px-2">{t("installApp")}</p>
+                                <Button
+                                variant="ghost"
+                                size="icon"
+                                onClick={install}
+                                title={t("installApp")}
+                                className="cursor-pointer"
+                                >
+                                    <Download className="h-4 w-4" />
+                                    <span className="sr-only">{t("installApp")}</span>
+                                </Button>
                             </div>
                         </div>
                     )}

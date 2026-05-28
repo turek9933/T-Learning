@@ -1,8 +1,17 @@
 import { env } from "@/lib/env";
 import type { NextConfig } from "next";
 import createNextIntlPlugin from "next-intl/plugin";
+import withSerwistInit from "@serwist/next";
 
 const withNextIntl = createNextIntlPlugin('./src/i18n/request.ts');
+
+const withSerwist = withSerwistInit({
+  cacheOnNavigation: true,
+  reloadOnOnline: false,
+  swSrc: "src/app/sw.ts",
+  swDest: "public/sw.js",
+  disable: process.env.NODE_ENV === "development",
+});
 
 const nextConfig: NextConfig = {
   /* config options here */
@@ -21,4 +30,4 @@ const nextConfig: NextConfig = {
   allowedDevOrigins: [env.appUrl],
 };
 
-export default withNextIntl(nextConfig);
+export default withSerwist(withNextIntl(nextConfig));

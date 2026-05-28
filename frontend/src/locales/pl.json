@@ -9,12 +9,16 @@
     "typeExam": "Egzamin",
     "homeworkDeadline": "Zadanie"
   },
+  "pwa": {
+    "installApp": "Zainstaluj aplikację"
+  },
   "notFound": {
     "title": "Nie znaleziono",
     "description": "Strona, która szukasz, nie została odnaleziona",
     "button": "Powrót do strony głównej"
   },
   "navbar": {
+    "installApp": "Zainstaluj aplikację",
     "changeLanguage": "Zmień jezyk",
     "changeTheme": "Zmień motyw",
     "changeAvatar": "Zmień avatar",
@@ -77,6 +81,9 @@
       "errorFileTooLarge": "Plik jest za duży. Maksymalny rozmiar pliku to {size}",
       "errorSendingMessage": "Podczas wysyłania wiadomości wystąpił błąd",
       "errorLoadImage": "Błąd podczas ładowania obrazu",
+      "errorLoadConversations": "Nie udało się wczytać konwersacji",
+      "errorFetchMessages": "Nie udało się wczytać wiadomości",
+      "errorFetchOldMessages": "Nie udało się wczytać starszych wiadomości",
       "readOnlyViewer": "Tylko podgląd — obserwatorzy nie mogą wysyłać wiadomości"
     }
   },
