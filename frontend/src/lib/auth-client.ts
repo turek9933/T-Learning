@@ -16,7 +16,33 @@ export const authClient = createAuthClient({
                 admin,
                 member,
                 viewer
-            }
+            },
+            schema: {
+                organization: {
+                    additionalFields: {
+                        type: {
+                            type: 'string',
+                            defaultValue: 'single',
+                            input: true,
+                        },
+                        description: {
+                            type: 'string',
+                            required: false,
+                            input: true,
+                        },
+                        status: {
+                            type: 'string',
+                            defaultValue: 'draft',
+                            input: true,
+                        },
+                        price: {
+                            type: 'number',
+                            required: false,
+                            input: true,
+                        },
+                    },
+                },
+            },
         })
     ],
 })

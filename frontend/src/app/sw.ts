@@ -1,4 +1,3 @@
-// / <reference lib="webworker" />
 import type { PrecacheEntry, SerwistGlobalConfig } from "serwist";
 import { BackgroundSyncQueue, Serwist } from "serwist";
 import { defaultCache } from "@serwist/next/worker";
