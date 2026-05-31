@@ -30,12 +30,14 @@ const DEFAULT_OFFLINE_FALLBACK = "/en/offline";
 
 const serwist = new Serwist({
   precacheEntries: self.__SW_MANIFEST,
-  // precacheOptions: {
-  //   // Whether outdated caches should be removed.
-  //   cleanupOutdatedCaches: true,
-  //   concurrency: 10,
-  //   ignoreURLParametersMatching: [],
-  // },
+  precacheOptions: {
+    // Whether outdated caches should be removed.
+    cleanupOutdatedCaches: true,
+    concurrency: 10,
+    // Ignore the Workbox revision query parameter so precached entries
+    // like "/en/offline?__WB_REVISION__=1" match requests for "/en/offline".
+    ignoreURLParametersMatching: [/^__WB_REVISION__$/],
+  },
   skipWaiting: true,
   clientsClaim: true,
   navigationPreload: false,

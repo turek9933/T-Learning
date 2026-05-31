@@ -14,6 +14,7 @@ const PUBLIC_ROUTES = [
   '/favicon.ico',
   '/contact',
   '/verify-email',
+  '/offline',
 ]
 const AUTH_ROUTES = [
   '/login',

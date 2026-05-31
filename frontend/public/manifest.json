@@ -2,7 +2,7 @@
   "name": "T-Learning",
   "short_name": "T-Learn",
   "description": "Modular teaching platform",
-  "start_url": "/dashboard",
+  "start_url": "/en/dashboard",
   "display": "standalone",
   "id": "/",
   "theme_color": "#128C20",
