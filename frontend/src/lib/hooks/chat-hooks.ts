@@ -29,14 +29,6 @@ export function useCreateConversation() {
     });
 }
 
-export function useConversation(conversationId: string) {
-    const queryClient = useQueryClient();
-
-    const conversations = queryClient.getQueryData<Conversation[]>(['conversations']) || [];
-
-    return conversations.find(c => c.id === conversationId);
-}
-
 export function useConversations() {
     return useQuery({
         queryKey: ['conversations'],
@@ -44,6 +36,11 @@ export function useConversations() {
             fetch(`${env.apiUrl}/api/conversations`, { credentials: 'include' })
                 .then(r => r.json()) as Promise<Conversation[]>,
     });
+}
+
+export function useConversation(conversationId: string) {
+    const { data: conversations } = useConversations();
+    return conversations?.find(c => c.id === conversationId);
 }
 
 export function useMessages(conversationId: string) {

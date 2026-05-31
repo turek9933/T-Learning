@@ -17,11 +17,12 @@ const livvic = Livvic({
   weight: ["100", "400", "500", "700"],
 });
 
-const atkinsonHyperlegible = Atkinson_Hyperlegible({// Support for Polish
-  subsets: ["latin", "latin-ext"],
+const atkinsonHyperlegible = Atkinson_Hyperlegible({
+  subsets: ["latin", "latin-ext"],// Support for Polish
   variable: "--font-accessible",
   display: "swap",
-  weight: ["400", "400", "700", "700"],
+  weight: ["400", "700"],
+  preload: false,
 });
 
 export const metadata: Metadata = {
@@ -74,6 +75,7 @@ export default async function RootLayout({
 }) {
   return (
     <html
+      lang="en"
       suppressHydrationWarning
       className={`${outfit.variable} ${livvic.variable} ${atkinsonHyperlegible.variable}`}
     >

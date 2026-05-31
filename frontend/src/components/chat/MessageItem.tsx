@@ -1,5 +1,5 @@
 import type { Message } from '@/types/chat';
-import { authClient } from '@/lib/auth-client';
+import { useCurrentUserId } from '@/lib/hooks/use-current-user-id';
 import { useTranslations } from 'next-intl';
 import { useFileUrl, getFilePreviewType, formatFileSize } from '@/lib/hooks/file-hooks';
 import { Download, FileIcon, FileTextIcon, Loader2 } from 'lucide-react';
@@ -90,8 +90,8 @@ interface MessageItemProps {
 }
 
 export function MessageItem({ message, leftSenderId, showSenderName }: MessageItemProps) {
-    const { data: session } = authClient.useSession();
-    const isOwn = message.senderId === session?.user.id;
+    const currentUserId = useCurrentUserId();
+    const isOwn = message.senderId === currentUserId;
     const isDeleted = !!message.deletedAt;
     const hasAttachment = message.type !== 'text';
     const t = useTranslations('components.chat');

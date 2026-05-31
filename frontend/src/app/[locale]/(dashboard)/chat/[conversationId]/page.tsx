@@ -1,9 +1,8 @@
+'use client';
+import { useParams } from 'next/navigation';
 import { MessageWindow } from "@/components/chat/MessageWindow";
 
-export default async function ConversationPage({ params }: { params: Promise<{ conversationId: string }> }) {
-    const { conversationId } = await params;
-
-    return (
-        <MessageWindow conversationId={conversationId} />
-    )
+export default function ConversationPage() {
+    const { conversationId } = useParams<{ conversationId: string }>();
+    return <MessageWindow conversationId={conversationId} />;
 }

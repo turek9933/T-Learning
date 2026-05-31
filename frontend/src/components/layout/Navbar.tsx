@@ -15,6 +15,7 @@ import {
 import { authClient } from "@/lib/auth-client";
 import Image from "next/image";
 import { useInstallPrompt } from "@/components/pwa/use-install-prompt";
+import { ConnectionIndicator } from "@/components/pwa/ConnectionIndicator";
 
 export function Navbar() {
     const t = useTranslations("navbar");
@@ -55,7 +56,8 @@ export function Navbar() {
             </Link>
 
             <div className="hidden md:flex items-center gap-3">
-                {isMounted && (
+                {isMounted && <ConnectionIndicator />}
+                {isMounted && canInstall && (
                     <Button
                     variant="ghost"
                     size="icon"
@@ -186,20 +188,22 @@ export function Navbar() {
                 )}
             </div>
 
-            {/* Hamburger */}
-            <Button
-            variant="ghost"
-            size="icon"
-            className="md:hidden"
-            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            >
+            {/* Mobile: connection indicator + hamburger */}
+            <div className="md:hidden flex items-center gap-2">
+                {isMounted && <ConnectionIndicator />}
+                <Button
+                variant="ghost"
+                size="icon"
+                onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+                >
                 {mobileMenuOpen ? (
                     <X className="h-6 w-6" />
                 ) : (
                     <Menu className="h-6 w-6" />
                 )}
                 <span className="sr-only">{t("toggleMenu")}</span>
-            </Button>
+                </Button>
+            </div>
         </div>
 
         {mobileMenuOpen && (

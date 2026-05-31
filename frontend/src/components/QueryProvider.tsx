@@ -1,5 +1,21 @@
 'use client';
-import { QueryClient, QueryClientProvider, isServer } from '@tanstack/react-query';
+import { environmentManager, QueryClient } from '@tanstack/react-query';
+import { PersistQueryClientProvider } from '@tanstack/react-query-persist-client';
+import { createAsyncStoragePersister } from '@tanstack/query-async-storage-persister';
+import { get, set, del } from 'idb-keyval';
+
+// Whitelist of query key prefixes that are safe to keep in cache in IDB.
+// Excluded: session/auth, chat messages, presigned file URLs.
+const PERSISTABLE_KEYS = new Set([
+    'workspaces',
+    'workspace',
+    'posts',
+    'feed',
+    'materials',
+    'events',
+    'homeworks',
+    'comments',
+]);
 
 function makeQueryClient() {
     return new QueryClient({
@@ -8,8 +24,8 @@ function makeQueryClient() {
                 // fresh data timeout 5 min
                 staleTime: 5 * 60 * 1000,
 
-                // garbage collection timeout 10 min
-                gcTime: 10 * 60 * 1000,
+                // garbage collection timeout 24h — must be >= persister maxAge
+                gcTime: 24 * 60 * 60 * 1000,
 
                 // retry 1 time on network error
                 retry: 1,
@@ -21,19 +37,49 @@ function makeQueryClient() {
 let browserQueryClient: QueryClient | undefined = undefined;
 
 function getQueryClient() {
-    if (isServer) {
-        return makeQueryClient();
-    }
+    if (environmentManager.isServer()) return makeQueryClient();
     if (!browserQueryClient) browserQueryClient = makeQueryClient();
     return browserQueryClient;
 }
+
+// idb-keyval storage adapter,
+// methods match AsyncStorage interface
+const idbStorage = {
+    getItem: (key: string) => get<string>(key).then((v) => v ?? null),
+    setItem: (key: string, value: string) => set(key, value),
+    removeItem: (key: string) => del(key),
+};
+
+const persister = createAsyncStoragePersister({
+    storage: idbStorage,
+    key: 't-learning-query-cache',
+    throttleTime: 1000,
+});
 
 export function QueryProvider({ children }: { children: React.ReactNode }) {
     const queryClient = getQueryClient();
 
     return (
-        <QueryClientProvider client={queryClient}>
+        <PersistQueryClientProvider
+        client={queryClient}
+        persistOptions={{
+            persister,
+            maxAge: 24 * 60 * 60 * 1000,// 24h
+            buster: 'v1',// Increase this to invalidate all queries
+            dehydrateOptions: {
+                // Only dehydrate queries for whitelisted keys
+                shouldDehydrateQuery: (query) => {
+                    const root = query.queryKey[0];
+                    return (
+                        typeof root === 'string'
+                        && PERSISTABLE_KEYS.has(root)
+                        && query.state.status === 'success'
+                    );
+                },
+            },
+        }}
+        >
             {children}
-        </QueryClientProvider>
+        </PersistQueryClientProvider>
     );
 }

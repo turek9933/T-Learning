@@ -1,5 +1,11 @@
 @import "tailwindcss";
 
+/*
+CALENDAR has its own CSS file
+/src/components/calendar/calendar.css
+*/
+
+
 @custom-variant dark (&:where(.dark, .dark *));
 @custom-variant accessible (&:where(.accessible, .accessible *));
 
@@ -340,74 +346,6 @@
     outline: 2px solid var(--primary-default);
     outline-offset: 2px;
   }
-}
-
-/* FullCalendar theme */
-.fc {
-  --fc-border-color: var(--border-default);
-  --fc-page-bg-color: transparent;
-  --fc-today-bg-color: var(--primary-subtle);
-  --fc-neutral-bg-color: var(--bg-muted);
-  --fc-neutral-text-color: var(--text-muted);
-  --fc-small-font-size: 0.75rem;
-  color: var(--text-primary);
-  font-family: inherit;
-}
-
-.fc .fc-col-header-cell-cushion,
-.fc .fc-daygrid-day-number,
-.fc .fc-timegrid-slot-label-cushion {
-  color: var(--text-secondary);
-  font-size: 0.75rem;
-  font-weight: 500;
-  text-decoration: none;
-}
-
-.fc .fc-daygrid-day-number {
-  padding: 4px 6px;
-}
-
-.fc .fc-more-link {
-  color: var(--text-secondary);
-  font-size: 0.7rem;
-}
-.fc .fc-more-link:hover {
-  color: var(--text-link-hover);
-  text-decoration: underline;
-}
-
-/* Remove FC's default event padding so eventContent fills the pill */
-.fc .fc-event-main {
-  padding: 0;
-}
-.fc .fc-daygrid-event {
-  margin-bottom: 1px;
-}
-
-.fc-popover {
-  background-color: var(--bg-card) !important;
-  border-color: var(--border-default) !important;
-  border-radius: 0.5rem !important;
-}
-.fc-popover-header {
-  background-color: var(--bg-muted) !important;
-  color: var(--text-primary) !important;
-  border-radius: 0.5rem 0.5rem 0 0 !important;
-  padding: 6px 10px !important;
-}
-.fc-popover-body {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-}
-
-.fc .fc-timegrid-now-indicator-line {
-  border-color: var(--primary-default);
-}
-
-.fc .fc-timegrid-now-indicator-arrow {
-  border-top-color: var(--primary-default);
-  border-bottom-color: var(--primary-default);
 }
 
 @layer utilities {

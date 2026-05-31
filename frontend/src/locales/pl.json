@@ -9,8 +9,12 @@
     "typeExam": "Egzamin",
     "homeworkDeadline": "Zadanie"
   },
-  "pwa": {
-    "installApp": "Zainstaluj aplikację"
+  "offline": {
+    "title": "Brak połączenia",
+    "description": "Wygląda na to, że straciłeś połączenie z internetem. Możesz wciąż przeglądać treści załadowane wcześniej.",
+    "goToDashboard": "Przejdź do pulpitu",
+    "goToCalendar": "Przejdź do kalendarza",
+    "hint": "Aplikacja odświeży się automatycznie po przywróceniu połączenia."
   },
   "notFound": {
     "title": "Nie znaleziono",
@@ -85,6 +89,12 @@
       "errorFetchMessages": "Nie udało się wczytać wiadomości",
       "errorFetchOldMessages": "Nie udało się wczytać starszych wiadomości",
       "readOnlyViewer": "Tylko podgląd — obserwatorzy nie mogą wysyłać wiadomości"
+    },
+    "indicator": {
+      "online": "Online",
+      "offline": "Offline",
+      "successOnline": "Połączenie zostało przywrócone",
+      "warningOffline": "Brak połączenia — część funkcji może być niedostępna"
     }
   },
   "auth": {

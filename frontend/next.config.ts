@@ -11,13 +11,18 @@ const withSerwist = withSerwistInit({
   swSrc: "src/app/sw.ts",
   swDest: "public/sw.js",
   disable: process.env.NODE_ENV === "development",
+  // Precache the offline fallback page for every locale.
+  additionalPrecacheEntries: [
+    { url: "/en/offline", revision: "1" },
+    { url: "/pl/offline", revision: "1" },
+    { url: "/it/offline", revision: "1" },
+  ],
 });
 
 const nextConfig: NextConfig = {
-  /* config options here */
   reactCompiler: true,
   images: {
-    // formats: ['image/avif', 'image/webp'],
+    formats: ['image/avif', 'image/webp'],
     remotePatterns: [
       {
         protocol: "https",
