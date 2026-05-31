@@ -2,7 +2,6 @@ import createMiddleware from 'next-intl/middleware';
 import { routing } from '@/i18n/routing';
 import { NextRequest, NextResponse } from 'next/server';
 import { getSessionCookie } from 'better-auth/cookies';
-import { env } from './lib/env';
 
 const i18nMiddleware = createMiddleware(routing);
 
@@ -15,6 +14,7 @@ const PUBLIC_ROUTES = [
   '/favicon.ico',
   '/contact',
   '/verify-email',
+  '/offline',
 ]
 const AUTH_ROUTES = [
   '/login',
@@ -39,27 +39,12 @@ function isAuthRoute(pathname: string) {
   return AUTH_ROUTES.some((route) => route === path || path.startsWith(route + '/'));
 }
 
-async function validateSession(request: NextRequest) {
-  const sessionCookie = getSessionCookie(request);
-  
-  if (!sessionCookie) return false;
-  
-  try {
-    const res = await fetch(
-      `${env.apiUrl}/api/auth/get-session`,
-      {
-        headers: {
-          cookie: request.headers.get('cookie') ?? '',
-        },
-      }
-    );
-    
-    const session = await res.json();
-
-    return !!session?.user;
-  } catch {
-    return false;
-  }
+// Check if signed session cookie is present
+// Cookies are refreshed on every API call
+// Expired or incorrect cookies pass middleware,
+// but fail the first API call and log out the user.
+function hasSessionCookie(request: NextRequest) {
+  return !!getSessionCookie(request);
 }
 
 export default async function middleware(request: NextRequest) {
@@ -75,10 +60,10 @@ export default async function middleware(request: NextRequest) {
   if (isPublicRoute(pathname))
     return response ?? NextResponse.next();
 
-  const validSession = await validateSession(request);
+  const hasSession = hasSessionCookie(request);
 
   if (isAuthRoute(pathname)) {
-    if (validSession) {
+    if (hasSession) {
       return NextResponse.redirect(
         new URL(`/${local}/dashboard`, request.url),
         { headers: response?.headers },
@@ -86,8 +71,8 @@ export default async function middleware(request: NextRequest) {
     }
     return response ?? NextResponse.next()
   }
-  
-  if (!validSession) {
+
+  if (!hasSession) {
     const loginUrl = new URL(`/${local}/login`, request.url);
     loginUrl.searchParams.set('callbackUrl', pathname);
     return NextResponse.redirect(

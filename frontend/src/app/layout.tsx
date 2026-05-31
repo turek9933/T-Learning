@@ -17,27 +17,34 @@ const livvic = Livvic({
   weight: ["100", "400", "500", "700"],
 });
 
-const atkinsonHyperlegible = Atkinson_Hyperlegible({// Support for Polish
-  subsets: ["latin", "latin-ext"],
+const atkinsonHyperlegible = Atkinson_Hyperlegible({
+  subsets: ["latin", "latin-ext"],// Support for Polish
   variable: "--font-accessible",
   display: "swap",
-  weight: ["400", "400", "700", "700"],
+  weight: ["400", "700"],
+  preload: false,
 });
 
 export const metadata: Metadata = {
   title: {
-    default: "T-Learning - Modułowa platforma do nauczania online",
+    default: "T-Learning",
     template: "%s | T-Learning",
   },
   description:
-    "Lekka, intuicyjna aplikacja PWA do zarządzania nauczaniem online",
+    "Modular platform for online learning. An intuitive, lightweight, and efficient alternative to complex educational platforms.",
   keywords: [
+    "T-Learning",
+    "learning platform",
     "platforma edukacyjna",
+    "learning management system",
+    "online education",
+    "edukacja online",
     "nauczanie online",
     "e-learning",
     "LMS",
     "progressive web app",
     "nauka zdalna",
+    "remote learning",
   ],
   authors: [{ name: "Tomasz Turek" }],
   creator: "Tomasz Turek",
@@ -47,10 +54,11 @@ export const metadata: Metadata = {
   
   openGraph: {
     type: "website",
-    locale: "pl_PL",
-    title: "T-Learning - Modułowa platforma do nauczania online",
+    locale: "en_US",
+    alternateLocale: ["pl_PL", "it_IT"],
+    title: "T-Learning",
     description:
-      "Lekka, intuicyjna aplikacja PWA do zarządzania nauczaniem online.",
+      "Modular platform for online learning. An intuitive, lightweight, and efficient alternative to complex educational platforms.",
     siteName: "T-Learning",
   },
   
@@ -67,6 +75,7 @@ export default async function RootLayout({
 }) {
   return (
     <html
+      lang="en"
       suppressHydrationWarning
       className={`${outfit.variable} ${livvic.variable} ${atkinsonHyperlegible.variable}`}
     >
@@ -78,6 +87,10 @@ export default async function RootLayout({
         <meta name="apple-mobile-web-app-title" content="T-Learning" />
         <meta name="format-detection" content="telephone=no" />
         <meta name="mobile-web-app-capable" content="yes" />
+        <meta name="theme-color" content="#128C20" />
+        <link rel="apple-touch-icon" href="/icons/180-180.png" />
+        <link rel="icon" type="image/png" sizes="32x32" href="/icons/32-32.png" />
+        <link rel="icon" type="image/png" sizes="16x16" href="/icons/16-16.png" />
       </head>
       <body className="antialiased font-body">
         <Providers>

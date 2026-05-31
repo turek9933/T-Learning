@@ -56,6 +56,7 @@ function WorkspaceSubNav({ slug, mobile = false }: { slug: string; mobile?: bool
                         <Link
                         key={key}
                         href={`/workspaces/${slug}${subPath}`}
+                        prefetch={false}
                         className={`
                             flex flex-1 flex-col items-center justify-center h-full rounded-lg
                             ${subActive ? 'bg-primary-subtle text-primary border-b-2 border-primary' : 'text-text-muted hover:bg-bg-hover hover:text-text'}
@@ -78,6 +79,7 @@ function WorkspaceSubNav({ slug, mobile = false }: { slug: string; mobile?: bool
                     <Link
                     key={key}
                     href={`/workspaces/${slug}${subPath}`}
+                    prefetch={false}
                     title={t(key as Parameters<typeof t>[0])}
                     className={`
                         flex items-center justify-center w-10 h-10 rounded-lg
@@ -117,6 +119,7 @@ export function Sidebar() {
                     <Link
                     key={key}
                     href={href}
+                    prefetch={false}
                     className={`
                         flex flex-col items-center justify-center flex-1 h-full rounded-lg
                         ${active ? 'bg-primary-subtle text-primary border-b-2 border-primary' : 'text-text-muted hover:bg-bg-hover hover:text-text'}
@@ -135,6 +138,7 @@ export function Sidebar() {
                    <div key={key} className="flex flex-col items-center w-full">
                         <Link
                         href={href}
+                        prefetch={false}
                         className={`
                             flex items-center justify-center w-10 h-10 rounded-lg
                             ${active ? 'bg-primary-subtle text-primary border-l-2 border-primary' : 'text-text-muted hover:bg-bg-muted hover:text-text'}

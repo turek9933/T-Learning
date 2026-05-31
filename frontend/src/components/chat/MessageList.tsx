@@ -3,6 +3,7 @@ import { useMessages, useWsEvent } from "@/lib/hooks/chat-hooks";
 import React, { useCallback, useEffect, useRef } from "react";
 import { MessageItem } from "@/components/chat/MessageItem";
 import { useTranslations } from "next-intl";
+import { customToast } from "@/components/CustomToast";
 
 export function MessageList({
     conversationId,
@@ -19,10 +20,11 @@ export function MessageList({
     leftSenderId?: string,
     showSenderName?: boolean,
 }) {
-    const { data, fetchNextPage, hasNextPage, isFetchingNextPage } = useMessages(conversationId);
+    const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isError } = useMessages(conversationId);
     const bottomRef = useRef<HTMLDivElement>(null);
     const prevLengthRef = useRef(0);
     const loadingOlderRef = useRef(false);
+    const isInitialLoadRef = useRef(true);
     const t = useTranslations('components.chat');
 
     const allMessages = data?.pages.slice().reverse().flatMap(page => [...page].reverse()) ?? []
@@ -34,6 +36,9 @@ export function MessageList({
         if (currentLength > prevLength) {
             if (loadingOlderRef.current) {
                 loadingOlderRef.current = false;
+            } else if (isInitialLoadRef.current) {
+                isInitialLoadRef.current = false;
+                bottomRef.current?.scrollIntoView({ behavior: 'instant' });
             } else {
                 bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
             }
@@ -53,6 +58,9 @@ export function MessageList({
         if (e.currentTarget.scrollTop < 50 && hasNextPage && !isFetchingNextPage) {
             loadingOlderRef.current = true;
             fetchNextPage();
+            if (isError) {
+                customToast.error(t('errorFetchOldMessages'));
+            }
         }
     }, [fetchNextPage, hasNextPage, isFetchingNextPage]);
 

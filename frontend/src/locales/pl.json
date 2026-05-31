@@ -9,12 +9,20 @@
     "typeExam": "Egzamin",
     "homeworkDeadline": "Zadanie"
   },
+  "offline": {
+    "title": "Brak połączenia",
+    "description": "Wygląda na to, że straciłeś połączenie z internetem. Możesz wciąż przeglądać treści załadowane wcześniej.",
+    "goToDashboard": "Przejdź do pulpitu",
+    "goToCalendar": "Przejdź do kalendarza",
+    "hint": "Aplikacja odświeży się automatycznie po przywróceniu połączenia."
+  },
   "notFound": {
     "title": "Nie znaleziono",
     "description": "Strona, która szukasz, nie została odnaleziona",
     "button": "Powrót do strony głównej"
   },
   "navbar": {
+    "installApp": "Zainstaluj aplikację",
     "changeLanguage": "Zmień jezyk",
     "changeTheme": "Zmień motyw",
     "changeAvatar": "Zmień avatar",
@@ -77,7 +85,16 @@
       "errorFileTooLarge": "Plik jest za duży. Maksymalny rozmiar pliku to {size}",
       "errorSendingMessage": "Podczas wysyłania wiadomości wystąpił błąd",
       "errorLoadImage": "Błąd podczas ładowania obrazu",
+      "errorLoadConversations": "Nie udało się wczytać konwersacji",
+      "errorFetchMessages": "Nie udało się wczytać wiadomości",
+      "errorFetchOldMessages": "Nie udało się wczytać starszych wiadomości",
       "readOnlyViewer": "Tylko podgląd — obserwatorzy nie mogą wysyłać wiadomości"
+    },
+    "indicator": {
+      "online": "Online",
+      "offline": "Offline",
+      "successOnline": "Połączenie zostało przywrócone",
+      "warningOffline": "Brak połączenia — część funkcji może być niedostępna"
     }
   },
   "auth": {

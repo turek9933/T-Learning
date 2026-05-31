@@ -1,4 +1,5 @@
 'use client';
+import '@/components/calendar/calendar.css';
 import { useState, useMemo, useRef } from 'react';
 import { useLocale, useTranslations } from 'next-intl';
 import { useParams } from 'next/navigation';

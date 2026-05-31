@@ -14,7 +14,15 @@
     "description": "The page you are looking for has not been found",
     "button": "Return to the main page"
   },
+  "offline": {
+    "title": "You are offline",
+    "description": "It looks like you have lost your internet connection. You can still browse content that was previously loaded.",
+    "goToDashboard": "Go to dashboard",
+    "goToCalendar": "Go to calendar",
+    "hint": "The app will automatically refresh once your connection returns."
+  },
   "navbar": {
+    "installApp": "Install app",
     "changeLanguage": "Change language",
     "changeTheme": "Change theme",
     "changeAvatar": "Change avatar",
@@ -77,7 +85,16 @@
       "errorFileTooLarge": "File is too large. Maximum file size is {size}",
       "errorSendingMessage": "Error accurred while sending a message",
       "errorLoadImage": "Error accurred while loading an image",
+      "errorLoadConversations": "Failed to load a conversation",
+      "errorFetchMessages": "Failed to load messages",
+      "errorFetchOldMessages": "Failed to load older messages",
       "readOnlyViewer": "Read-only — viewers cannot send messages"
+    },
+    "indicator": {
+      "online": "Online",
+      "offline": "Offline",
+      "successOnline": "You are back online",
+      "warningOffline": "You are offline — some features may be limited"
     }
   },
   "auth": {

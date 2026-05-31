@@ -8,7 +8,7 @@ import { useTranslations } from "next-intl";
 import { ConversationItem } from "./ConversationItem";
 
 export function ConversationList() {
-    const { data: conversations = [], isLoading } = useConversations();
+    const { data: conversations = [], isLoading, isError } = useConversations();
     const createConversation = useCreateConversation();
     const router = useRouter();
     const t = useTranslations('components.chat');
@@ -33,6 +33,8 @@ export function ConversationList() {
                 ? conversations.map((conv) => (
                     <ConversationItem key={conv.id} conversation={conv} />
                 ))
+                : isError
+                ? <p className="p-4 text-sm text-error">{t('errorLoadConversations')}</p>
                 : <p className="p-4 text-sm text-text-muted">{t('noConversations')}</p>}
             </div>
         </div>

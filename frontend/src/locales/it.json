@@ -14,7 +14,15 @@
     "description": "La pagina che stai cercando non esiste",
     "button": "Torna alla homepage"
   },
+  "offline": {
+    "title": "Sei offline",
+    "description": "Sembra che tu abbia perso la connessione a internet. Puoi comunque sfogliare i contenuti caricati in precedenza.",
+    "goToDashboard": "Vai alla dashboard",
+    "goToCalendar": "Vai al calendario",
+    "hint": "L'app si aggiornerà automaticamente quando la connessione tornerà."
+  },
   "navbar": {
+    "installApp": "Installa l'app",
     "changeLanguage": "Cambia lingua",
     "changeTheme": "Cambia tema",
     "changeAvatar": "Cambia avatar",
@@ -77,7 +85,16 @@
       "errorFileTooLarge": "Il file é troppo grande. La dimensione massima del file é {size}",
       "errorSendingMessage": "Si è verificato un errore durante l'invio del messaggio",
       "errorLoadImage": "Si è verificato un errore durante il caricamento dell'immagine",
+      "errorLoadConversations": "Si è verificato un errore durante il caricamento della conversazione",
+      "errorLoadMessages": "Si è verificato un errore durante il caricamento dei messaggi",
+      "errorLoadOldMessages": "Si è verificato un errore durante il caricamento dei messaggi precedenti",
       "readOnlyViewer": "Solo visualizzazione — gli osservatori non possono inviare messaggi"
+    },
+    "indicator": {
+      "online": "Online",
+      "offline": "Offline",
+      "successOnline": "Connessione ripristinata",
+      "warningOffline": "Sei offline — alcune funzioni potrebbero essere limitate"
     }
   },
   "auth": {
