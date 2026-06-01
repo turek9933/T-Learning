@@ -28,7 +28,7 @@ export function useCreateHomework(slug: string) {
         mutationFn: (data: CreateHomeworkData) => createHomework(slug, data),
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ['feed', slug] });
-            queryClient.invalidateQueries({ queryKey: ['homeworks', slug] });
+            queryClient.invalidateQueries({ queryKey: ['homeworks'] });
         },
     });
 }

@@ -108,6 +108,8 @@ const serwist = new Serwist({
     // - NOT to /api/auth/*;
     // - NOT to /api/conversations/:id/messages;
     // - to /api/*
+    // NetworkFirst: when online, ALWAYS hit the network — for TanStack `invalidateQueries` to accually serve fresh data.
+    // Cache is kept as offline fallback.
     {
       matcher: ({ url, request }) => {
         if (request.method !== "GET") return false;
@@ -116,8 +118,9 @@ const serwist = new Serwist({
         if (/^\/api\/conversations\/[^/]+\/messages\/?$/.test(url.pathname)) return false;
         return url.pathname.startsWith("/api/");
       },
-      handler: new StaleWhileRevalidate({
+      handler: new NetworkFirst({
         cacheName: "api-data",
+        networkTimeoutSeconds: 4,
         plugins: [
           new CacheableResponsePlugin({ statuses: [0, 200] }),
           new ExpirationPlugin({ maxEntries: 100, maxAgeSeconds: 6* 60 * 60 }),// 6 hours
