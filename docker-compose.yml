@@ -1,0 +1,9 @@
+# Wrapper for docker-compose files from backend/ and frontend/
+# Both can work on their own.
+#   cd backend  && docker compose up
+#   cd frontend && docker compose up
+include:
+  - path: ./backend/docker-compose.yml
+    env_file: ./backend/.env
+  - path: ./frontend/docker-compose.yml
+    env_file: ./frontend/.env

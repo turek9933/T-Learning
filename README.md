@@ -5,61 +5,77 @@ Modułowa platforma PWA do zarządzania nauczaniem online.
 ## Spis treści
 
 - [Wymagania](#wymagania)
-- [Instalacja](#instalacja)
+- [Uruchamianie lokalnie](#uruchamianie-lokalnie)
+  - [Wariant 1 — pełny stack (root)](#wariant-1--pełny-stack-root)
+  - [Wariant 2 — backend i frontend osobno](#wariant-2--backend-i-frontend-osobno)
+- [Struktura projektu](#struktura-projektu)
 
-### Wymagania
-- Bun >= 1.0
-- Docker & Docker Compose
+## Wymagania
 
-### Instalacja
-1. Sklonuj repozytorium i zainstaluj zależności:
+- Docker Engine 20.10+ oraz Docker Compose v2 (podkomenda `docker compose`)
+- Bun >= 1.0 (jeśli chcesz uruchamiać poza Dockerem)
+
+## Uruchamianie lokalnie
+
+1. Sklonuj repozytorium:
 ```bash
 git clone https://github.com/turek9933/T-Learning.git
-cd t-learning
-bun install
-cd frontend && bun install
-cd ../backend && bun install
+cd T-Learning
 ```
 
-2. Uruchom bazę danych i wiadro danych:
+2. Skonfiguruj zmienne środowiskowe (DWA pliki):
 ```bash
-#TODO Arcyskomplikowane komend
+cp backend/.env.example backend/.env
+cp frontend/.env.example frontend/.env
 ```
+Uzupełnij zmienne środowiskowe (Google OAuth, Resend, BetterAuth) — niektóre wartości można zostawić z `.example`.
 
-3. Dodaj pliki ze zmiennymi środowiskowymi:
+**Spójność portów:** Zmienne frontendu: `PORT`, `NEXT_PUBLIC_APP_URL`, `NEXT_PUBLIC_API_URL`,`NEXT_PUBLIC_WS_URL` oraz backendu: `PORT`,`BETTER_AUTH_URL`, `APP_URL`, `CORS_ORIGIN` muszą wskazywać na te same porty.
+
+### Wariant 1 — całość razem
+
+`docker-compose.yml` w katalogu głównym łączy oba człony przez `include:` i każdy z nich ładuje swój `.env`:
+
 ```bash
-# Backend
-# Edytuj backend/.env
-
-# Frontend
-# Edytuj frontend/.env
+docker compose up -d --build
+# → frontend:        http://localhost:${PORT}                (domyślnie 3000)
+# → backend API:     http://localhost:${PORT}                (domyślnie 3001)
+# → MinIO console:   http://localhost:${MINIO_CONSOLE_PORT}  (domyślnie 9001)
 ```
 
+Migracje DB stosują się automatycznie (`backend-migrate` job uruchamia się raz przed startem backendu).
 
-4. Uruchom aplikacje (2 terminale):
-
-Terminal 1 - Backend:
+Stop i czyszczenie:
 ```bash
-cd backend
-bun dev
+docker compose down            # zatrzymaj
+docker compose down -v         # zatrzymaj i usuń volumy (czysta DB + MinIO)
 ```
 
-Terminal 2 - Frontend:
+### Wariant 2 — backend i frontend osobno
+
+Każdy człon ma własny `docker-compose.yml` i może działać niezależnie (np. deploy na różnych hostach):
+
 ```bash
-cd frontend
-bun dev
+# Backend osobno (Postgres + migrate + MinIO + Elysia.js):
+cd backend && docker compose up -d --build
+
+# Frontend osobno (Next.js)
+cd frontend && docker compose up -d --build
 ```
 
-Aplikacje dostępne domyślnie na:
-- Frontend: http://localhost:19000
-- Backend API: http://localhost:19001
-- MinIO Console: http://localhost:19002
-
+Frontend nie ma żadnej zależności od backendu na poziomie sieci kontenerów — komunikacja idzie przez przeglądarkę, więc backend może być pod dowolnym osiągalnym adresem.
 
 ## Struktura projektu
+
 ```
-t-learning/
-├── frontend/          # Next.js PWA
-├── backend/           # Elysia.js
-└── docker-compose.yml
+T-Learning/
+├── backend/
+│   ├── docker-compose.yml      # Postgres + migrate + MinIO + Elysia.js migrate
+│   ├── Dockerfile
+│   └── ...
+├── frontend/
+│   ├── docker-compose.yml      # Next.js (standalone)
+│   ├── Dockerfile
+│   └── ...
+└── docker-compose.yml          # Połącznie - uruchamia frontend i backend
 ```

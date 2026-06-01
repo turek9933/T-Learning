@@ -9,15 +9,32 @@ function parseEnpoint(endpoint: string): { host: string; port: number; useSSL: b
     return { host, port, useSSL };
 }
 
-const { host, port, useSSL } = parseEnpoint(env.minioEndpoint);
+// internalEndpoint is not recognized by browser, used for backend <-> MinIO communication
+const internalEndpoint = parseEnpoint(env.minioEndpoint);
+// publicEndpoint is recognized by browser, used for presigned URL generation
+const publicEndpoint = parseEnpoint(env.minioPublicUrl);
 
+// Explicit region prevents the SDK from doing GetBucketLocation HTTP lookup
+const REGION = 'us-east-1';
+
+// Internal client: backend <-> MinIO (e.g. minio:9000).
 export const minioClient = new minio.Client({
-    endPoint: host,
-    port: port,
-    useSSL: useSSL,
+    endPoint: internalEndpoint.host,
+    port: internalEndpoint.port,
+    useSSL: internalEndpoint.useSSL,
     accessKey: env.minioRootUser,
     secretKey: env.minioRootPassword,
-    // pathStyle: env.minioForcePathStyle
+    region: REGION,
+});
+
+// Public client: used ONLY for presigned URL generation. URLs must be browser-resolvable.
+const minioPublicClient = new minio.Client({
+    endPoint: publicEndpoint.host,
+    port: publicEndpoint.port,
+    useSSL: publicEndpoint.useSSL,
+    accessKey: env.minioRootUser,
+    secretKey: env.minioRootPassword,
+    region: REGION,
 });
 
 export const storageKeys = {
@@ -33,9 +50,10 @@ export const storageKeys = {
         `conversations/${conversationId}/${fileId}`,
 };
 
-// Generates a presigned URL for a file that expires in minioPresignedExpiry seconds
+// Generates a presigned URL for a file that expires in minioPresignedExpiry seconds.
+// Uses minioPublicClient so the URL is browser-resolvable.
 export async function getPresignedGetUrl(storageKey: string): Promise<string> {
-    return minioClient.presignedGetObject(
+    return minioPublicClient.presignedGetObject(
         env.minioBucket,
         storageKey,
         Number(env.minioPresignedExpiry)
@@ -44,7 +62,7 @@ export async function getPresignedGetUrl(storageKey: string): Promise<string> {
 
 // Generates a presigned URL for a file that expires in minioPresignedExpiry seconds and is limited to maxSizeBytes
 export async function getPresignedPutUrl(storageKey: string, maxSizeBytes: number = 20 * 1024 * 1024): Promise<string> {
-    return minioClient.presignedPutObject(
+    return minioPublicClient.presignedPutObject(
         env.minioBucket,
         storageKey,
         Number(env.minioPresignedExpiry)

@@ -193,7 +193,8 @@ export const auth = betterAuth({
 
             async sendInvitationEmail(data) {
                 const invitationLink = `${env.appUrl}/invite/${data.id}`;
-                console.log('[invite]:', invitationLink);
+                // '[invite]' is grepped by `bun invites` for local access during testing.
+                console.log(`[invite] ${data.email} -> ${invitationLink}`);
                 await sendMail({
                     to: data.email,
                     subject: `Invitation to ${data.organization.name}`,

@@ -30,7 +30,7 @@ export function useCreateEvent(slug: string) {
         mutationFn: (data: CreateEventData) => createEvent(slug, data),
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ['feed', slug] });
-            queryClient.invalidateQueries({ queryKey: ['events', slug] });
+            queryClient.invalidateQueries({ queryKey: ['events'] });
         },
     });
 }

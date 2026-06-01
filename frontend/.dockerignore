@@ -1,0 +1,17 @@
+node_modules
+.next
+out
+
+.env
+.env.*
+!.env.example
+
+.git
+.gitignore
+.dockerignore
+
+Dockerfile
+*.log
+.DS_Store
+tsconfig.tsbuildinfo
+tailwind.config.ts.old

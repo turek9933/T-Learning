@@ -4,6 +4,7 @@ import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useQueryClient } from '@tanstack/react-query';
 import { authClient } from '@/lib/auth-client';
 import { customToast } from '@/components/CustomToast';
 import { useValidationSchemas, WorkspaceFormData } from '@/lib/validation';
@@ -29,6 +30,7 @@ function generateSlug(name: string): string {
 export default function NewWorkspaceForm() {
     const t = useTranslations('workspace.new');
     const router = useRouter();
+    const queryClient = useQueryClient();
     const { workspaceSchema } = useValidationSchemas();
 
     const [slugEdited, setSlugEdited] = useState(false);
@@ -80,6 +82,8 @@ export default function NewWorkspaceForm() {
             return;
         }
 
+        // Invalidate the user's workspace list so the dashboard refreshes with the new workspace.
+        queryClient.invalidateQueries({ queryKey: ['workspaces', 'me'] })
         customToast.success(t('successCreate'));
         router.push(`/workspaces/${workspace?.slug}`);
     };
