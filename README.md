@@ -65,7 +65,27 @@ cd frontend && docker compose up -d --build
 
 Frontend nie ma żadnej zależności od backendu na poziomie sieci kontenerów — komunikacja idzie przez przeglądarkę, więc backend może być pod dowolnym osiągalnym adresem.
 
+## Linki do zaproszeń
+
+Po wysłaniu zaproszenia (Dashboard → Members → Invite) link pojawia się w logach backendu. Aby go wyświetlić w konsoli należy podejrzeć logi kontenera backendu po tagu [invite]:
+
+```bash
+docker compose logs -f backend | grep -F '[invite]'
+```
+lub
+```bash
+cd backend && bun invites
+```
+Przykładowy log to:
+> [invite] email@example.com -> http://localhost:3001/invite/<id>
+
+Szczegółowa lista komend deweloperskich i bazodanowych:
+- [backend/README.md](backend/README.md) — komendy backendu, DB, Docker, invites
+- [frontend/README.md](frontend/README.md) — komendy frontendu, Service Worker, Docker
+
 ## Struktura projektu
+
+W katalogach `/backend` oraz `/frontend` znajdują się dedykowane pliki `README.md`, które traktują o bardziej szczegółowych informacjach - skupiają się też na dedukowanych komendach niezbędnych do wygodnego developmentu.
 
 ```
 T-Learning/
