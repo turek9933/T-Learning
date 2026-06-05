@@ -67,17 +67,17 @@ Frontend nie ma żadnej zależności od backendu na poziomie sieci kontenerów �
 
 ## Linki do zaproszeń
 
-Po wysłaniu zaproszenia (Dashboard → Members → Invite) link pojawia się w logach backendu. Aby go wyświetlić w konsoli należy podejrzeć logi kontenera backendu po tagu [invite]:
+Po wysłaniu zaproszenia (Dashboard → Members → Invite) link pojawia się w logach backendu. Aby go wyświetlić w konsoli należy podejrzeć logi kontenera backendu po tagu [sendMail]:
 
 ```bash
-docker compose logs -f backend | grep -F '[invite]'
+docker compose logs -f backend | grep -F '[sendMail]'
 ```
 lub
 ```bash
-cd backend && bun invites
+cd backend && bun mails
 ```
 Przykładowy log to:
-> [invite] email@example.com -> http://localhost:3001/invite/<id>
+> [sendMail][invite] email@example.com:   http://localhost:3001/invite/<id>
 
 Szczegółowa lista komend deweloperskich i bazodanowych:
 - [backend/README.md](backend/README.md) — komendy backendu, DB, Docker, invites

@@ -10,6 +10,7 @@ import { Link } from "@/i18n/routing";
 import { Button } from "@/components/ui/button";
 import { Mail, MoveLeft } from "lucide-react";
 import { env } from "@/lib/env";
+import { useLocale } from "next-intl";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm, type FieldErrors } from "react-hook-form";
 import { useValidationSchemas, ForgotPasswordFormData } from "@/lib/validation";
@@ -26,6 +27,7 @@ interface ForgotPasswordData {
 }
 
 export default function ForgotPasswordForm({ titleProp, subtitleProp, emailProp, emailPlaceholderProp, submitProp, successProp, errorProp, goBackProp }: ForgotPasswordData) {
+    const locale = useLocale();
     const { forgotPasswordSchema } = useValidationSchemas();
     const {
       register,
@@ -44,7 +46,7 @@ export default function ForgotPasswordForm({ titleProp, subtitleProp, emailProp,
     const onSubmit = async (data: ForgotPasswordFormData) => {
       const { error } = await authClient.requestPasswordReset({
         email: data.email,
-        redirectTo: `${env.appUrl}/`,
+        redirectTo: `${env.appUrl}/${locale}/reset-password`,
       });
       if (error) {
         customToast.error(errorProp);

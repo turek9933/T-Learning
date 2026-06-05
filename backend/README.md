@@ -124,12 +124,12 @@ bun docker:rebuild
 # Zatrzymanie i usunięcie volumów (wyczyszczenie DB i MinIO)
 bun docker:clean
 
-# Filtruje logi backendu po tagu [invite].
+# Filtruje logi backendu po tagu [sendMail].
 # Przydatne do testów lokalnych.
-bun invites
+bun mails
 ```
 
-> **Zaproszenia:** Po wysłaniu zaproszenia (Dashboard -> Members -> Invite) link pojawi się w terminalu z `bun invites` w formacie `[invite] email@example.com -> http://localhost:${PORT}/invite/<id>`.
+> **Zaproszenia:** Po wysłaniu zaproszenia (Dashboard -> Members -> Invite) link pojawi się w terminalu z `bun mails` w formacie `[sendMail][invite] email@example.com:     http://localhost:${PORT}/invite/<id>`.
 
 Produkcja (poza Dockerem)
 

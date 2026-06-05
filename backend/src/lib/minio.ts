@@ -1,6 +1,8 @@
 import { env } from '@/config/env';
 import * as minio from 'minio';
 
+export const AVATARS_BUCKET = 'avatars';
+
 function parseEnpoint(endpoint: string): { host: string; port: number; useSSL: boolean } {
     const url = new URL(endpoint);
     const useSSL = url.protocol === 'https:';
@@ -78,3 +80,15 @@ export async function deleteMultipleObjects(storageKey: string[]): Promise<void>
     await minioClient.removeObjects(env.minioBucket, storageKey);
 }
 
+export function getAvatarPublicUrl(userId: string): string {
+    const base = env.minioPublicUrl.replace(/\/$/, '');
+    return `${base}/${AVATARS_BUCKET}/${userId}.webp`;
+}
+
+export async function getAvatarPresignedPutUrl(userId: string): Promise<string> {
+    return minioPublicClient.presignedPutObject(
+        AVATARS_BUCKET,
+        `${userId}.webp`,
+        Number(env.minioPresignedExpiry)
+    );
+}

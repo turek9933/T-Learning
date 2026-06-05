@@ -28,6 +28,7 @@
     "docker:rebuild": "docker compose up -d --build",
     "docker:clean": "docker compose down -v && docker system prune -f",
     "invites": "docker compose logs -f backend | grep -F '[invite]'",
+    "mails": "docker compose logs -f backend | grep -F '[sendMail]'",
     "typecheck": "tsc --noEmit",
     "clean": "rm -rf dist node_modules",
     "setup": "bun install && bun db:push"

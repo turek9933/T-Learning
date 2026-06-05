@@ -16,34 +16,42 @@ export default function VerifyEmailView() {
   const router = useRouter();
   const searchParams = useSearchParams();
 
-  const [status, setStatus] = useState<"pending" | "success" | "error">("pending");
+  const status = searchParams.get("status");
+  const email = searchParams.get("email");
+  const token = searchParams.get("token");
+
+  const isEmailChange = status === "email-change";
+  const [verifyStatus, setVerifyStatus] = useState<"pending" | "success" | "error">(isEmailChange ? "success" : "pending");
   const [timeLeft, setTimeLeft] = useState(-1);
 
   useEffect(() => {
-    const token = searchParams.get("token");
+    if (isEmailChange) return;
+
     if (!token) {
+      setVerifyStatus("error");
       customToast.error(t("error"));
-      setStatus("error");
       return;
     }
+
     authClient.verifyEmail({ query: { token } })
-      .then(({ error }) => {
-        if (error) {
-          console.error(error);
-          setStatus("error");
-          customToast.error(t("errorVerify"));
-          setTimeLeft(-1);
-        } else {
-          setStatus("success");
-          setTimeLeft(5);
-        }
-      });
+    .then(({ error }) => {
+      if (error) {
+        console.error(error);
+        setVerifyStatus("error");
+        customToast.error(t("errorVerify"));
+        setTimeLeft(-1);
+      } else {
+        setVerifyStatus("success");
+        setTimeLeft(5);
+      }
+    });
   }, []);
 
   useEffect(() => {
+    if (timeLeft < 0) return;
     const interval = setInterval(() => {
       if (timeLeft > 0) {
-        setTimeLeft(timeLeft - 1);
+        setTimeLeft((prev) => prev - 1);
       }
       if (timeLeft === 0) {
         router.push("/");
@@ -53,42 +61,52 @@ export default function VerifyEmailView() {
   }, [timeLeft]);
 
   return (
-  <PageContainer sidebar={false}>
-    <div className="w-full max-w-md">
-      <div className="mb-8 text-center">
-        <Banner />
-        <h2 className="text-2xl font-title font-bold text-text">
-          {t("title")}
-        </h2>
-      </div>
+    <PageContainer sidebar={false}>
+      <div className="w-full max-w-md">
+        <div className="mb-8 text-center">
+          <Banner />
+          <h2>
+            {isEmailChange ? t("emailChangeTitle") : t("title")}
+          </h2>
+        </div>
 
-      <div className="bg-bg rounded-xl p-8 text-center">
-        <p className={`text-lg
-          ${status === "success" ? "text-text" : // success
-          status === "error" ? "text-error font-bold" : // error
-          "text-text-muted"}`}> {/* pending */}
-          {t(status)}
-        </p>
-      </div>
+        <div className="bg-bg rounded-xl p-8 text-center">
+          {isEmailChange ? (
+            <>
+              <p className="text-lg text-text">{t("changeSent")}</p>
+              {email && (
+                <p className="text-md text-text-muted">
+                  {t("changeSentDescription", { email })}
+                </p>
+              )}
+            </>
+          ) : (
+            <p className={`text-lg
+              ${status === "success" ? "text-text" : // success
+              status === "error" ? "text-error font-bold" : // error
+              "text-text-muted"}`} // pending
+            >
+              {t(verifyStatus)}
+            </p>
+          )}
+        </div>
 
-      <div className="mt-6 text-center items-center">
-        {
-          status === "success" ? (
-          <p className="text-sm text-text">
-            {t("redirectTimer", {seconds: timeLeft})}
-          </p>
-          ) : (<></>)
-        }
-        <Link
-        href="/"
-        className="text-sm text-text-link hover:text-text-link-hover rounded py-2"
-        >
-          <MoveLeft className="inline w-4 h-4" />
-          {"\t"}
-          {t("goBack")}
-        </Link>
+        <div className="mt-6 text-center items-center">
+          {verifyStatus === "success" && !isEmailChange && timeLeft >= 0 && (
+            <p className="text-sm text-text">
+              {t("redirectTimer", { seconds: timeLeft })}
+            </p>
+          )}
+          <Link
+            href="/"
+            className="text-sm text-text-link hover:text-text-link-hover rounded py-2 inline-flex items-center gap-1"
+          >
+            <MoveLeft className="inline w-4 h-4" />
+            {"\t"}
+            {t("goBack")}
+          </Link>
+        </div>
       </div>
-    </div>
-  </PageContainer>
+    </PageContainer>
   );
 }
