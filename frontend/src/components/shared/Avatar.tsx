@@ -5,10 +5,12 @@ export default function Avatar({
     avatarUrl,
     name,
     size = 7,
+    unoptimized = false,
 }: {
     avatarUrl?: string | null;
     name?: string | null;
     size?: number;
+    unoptimized?: boolean;
 }) {
     const imageSize = size * 4;
     if (avatarUrl) {
@@ -19,6 +21,7 @@ export default function Avatar({
             width={imageSize}
             height={imageSize}
             className="rounded-full object-cover"
+            unoptimized={unoptimized}
             />
         );
     } else if (name) {

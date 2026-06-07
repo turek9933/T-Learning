@@ -1,9 +1,12 @@
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { env } from '@/lib/env';
 
-type UploadContext = 'post' | 'homework' | 'submission' | 'material' | 'chat';
+type UploadContext = 'avatar' | 'post' | 'homework' | 'submission' | 'material' | 'chat';
+
+export const AVATAR_ALLOWED_TYPES = ['image/jpeg', 'image/png', 'image/webp'];
 
 export const MAX_FILE_SIZE: Record<UploadContext, number> = {
+    avatar:     2 * 1024 * 1024,// 5MB
     post:       10 * 1024 * 1024,// 10MB
     homework:   20 * 1024 * 1024,// 20MB
     submission: 20 * 1024 * 1024,// 20MB
@@ -13,6 +16,7 @@ export const MAX_FILE_SIZE: Record<UploadContext, number> = {
 
 
 export const MAX_FILE_COUNT: Record<UploadContext, number> = {
+    avatar:     1,
     post:       5,
     homework:   10,
     submission: 5,

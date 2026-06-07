@@ -19,7 +19,34 @@ export const auth = betterAuth({
         modelName: "users",
         fields: {
             image: "avatarUrl"
-        }
+        },
+        changeEmail: {
+            enabled: true,
+            updateEmailWithoutVerification: false,
+            sendChangeEmailConfirmation: async ({ user, newEmail, url, token }, request) => {
+                const frontendUrl = new URL(`${env.appUrl}/verify-email`);
+                frontendUrl.searchParams.set('status', 'change-email');
+                frontendUrl.searchParams.set('email', encodeURIComponent(newEmail));
+                const urlWithCallback = new URL(url);
+                urlWithCallback.searchParams.set('callbackURL', frontendUrl.toString());
+                console.log(`[sendMail][change-email-confirmation] ${user.email} -> ${newEmail}:\t`, urlWithCallback.toString());
+                await sendMail({
+                    to: user.email,
+                    subject: "Confirm new email address",
+                    html: `
+                    <h1>Confirm new email</h1>
+                    <p>Hi,</p>
+                    <p>Click <a href="${urlWithCallback.toString()}">here</a> to confirm your new email address: ${newEmail}</p>
+                    <p>After this you will receive one more email with verification. Mail will be sent to ${newEmail}</p>
+                    <p><a href="${urlWithCallback.toString()}">${urlWithCallback.toString()}</a></p>
+                    <p>If you didn't request email change, you can ignore this message</p>
+                    `,
+                });
+            },
+        },
+        deleteUser: {
+            enabled: true,
+        },
     },
     session: {
         modelName: "sessions",
@@ -36,7 +63,7 @@ export const auth = betterAuth({
         enabled: true,
         minPasswordLength: Number(env.passwordMinLenght) ?? 10,
         sendResetPassword: async ({ user, url, token }) => {
-            console.log('[reset-password]:', url);
+            console.log(`[sendMail][reset-password] ${user.email}:\t`, url);
             await sendMail({
                 to: user.email,
                 subject: "Reset password",
@@ -45,26 +72,26 @@ export const auth = betterAuth({
                 <p>Hi ${user.name},</p>
                 <p>Click <a href="${url}">here</a> to reset your password or paste link from below. Link expires in 1 hour</p>
                 <p><a href="${url}">${url}</a></p>
-                <p>If you didn't request this, you can ignore this email</p>
+                <p>If you didn't request password reset, you can ignore this email</p>
                 `,
             });
         },
         resetPasswordTokenExpiresIn: 3600,
     },
     emailVerification: {
-        sendVerificationEmail: async ({ user, url, token }, request) => {
-            const urlWithCallback = new URL(url);
-            urlWithCallback.searchParams.set('callbackURL', `${env.appUrl}/verify-email?token=${token}`);
-            console.log('[verify-email]:', urlWithCallback);
+        sendVerificationEmail: async ({ user, url, token }) => {
+            const frontendUrl = new URL(`${env.appUrl}/verify-email`);
+            frontendUrl.searchParams.set('token', token);
+            console.log(`[sendMail][verify-email] ${user.email}:`, frontendUrl.toString());
             await sendMail({
                 to: user.email,
                 subject: "Verify email",
                 html: `
                 <h1>Verify email</h1>
                 <p>Hi ${user.name},</p>
-                <p>Click <a href="${urlWithCallback.toString()}">here</a> to verify your email or paste link from below</p>
-                <p><a href="${urlWithCallback.toString()}">${urlWithCallback.toString()}</a></p>
-                <p>If you didn't request this, you can ignore this email</p>
+                <p>Click <a href="${frontendUrl.toString()}">here</a> to verify your email or paste link from below</p>
+                <p><a href="${frontendUrl.toString()}">${frontendUrl.toString()}</a></p>
+                <p>If you didn't request email verification, you can ignore this email</p>
                 `,
             });
         },
@@ -194,7 +221,7 @@ export const auth = betterAuth({
             async sendInvitationEmail(data) {
                 const invitationLink = `${env.appUrl}/invite/${data.id}`;
                 // '[invite]' is grepped by `bun invites` for local access during testing.
-                console.log(`[invite] ${data.email} -> ${invitationLink}`);
+                console.log(`[sendMail][invite] ${data.email}:\t${invitationLink}`);
                 await sendMail({
                     to: data.email,
                     subject: `Invitation to ${data.organization.name}`,

@@ -2,7 +2,7 @@
 import { useTranslations, useLocale } from "next-intl";
 import { Link, usePathname, useRouter } from "@/i18n/routing";
 import { Button } from "@/components/ui/button";
-import { Globe, Moon, Sun, Contrast, Menu, X, LogOut, Check, Download } from "lucide-react";
+import { Globe, Moon, Sun, Contrast, Menu, X, LogOut, Check, Download, UserCog2Icon } from "lucide-react";
 import { useState, useEffect } from "react";
 import { useTheme } from "@/components/ThemeProvider";
 import {
@@ -13,7 +13,7 @@ import {
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { authClient } from "@/lib/auth-client";
-import Image from "next/image";
+import Avatar from "@/components/shared/Avatar";
 import { useInstallPrompt } from "@/components/pwa/use-install-prompt";
 import { ConnectionIndicator } from "@/components/pwa/ConnectionIndicator";
 
@@ -143,20 +143,14 @@ export function Navbar() {
                             <Button
                             variant="ghost"
                             size="icon"
-                            className="h-7 w-7 p-0 rounded-full">
-                                {mountedSession.user.image ? (
-                                    <Image
-                                    src={mountedSession.user.image}
-                                    alt={mountedSession.user.name ?? ""}
-                                    width={28}
-                                    height={28}
-                                    className="rounded-full object-cover"
-                                    />
-                                ) : (
-                                    <div className="h-7 w-7 rounded-full bg-primary hover:bg-primary-hover flex items-center justify-center text-text-contrast text-sm font-bold cursor-pointer">
-                                        {mountedSession.user.name?.charAt(0).toUpperCase()}
-                                    </div>
-                                )}
+                            className="h-7 w-7 p-0 rounded-full"
+                            >
+                                <Avatar
+                                avatarUrl={mountedSession.user.image}
+                                name={mountedSession.user.name}
+                                size={7}
+                                unoptimized
+                                />
                             </Button>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end">
@@ -166,9 +160,13 @@ export function Navbar() {
                             </div>
                             <DropdownMenuSeparator className="bg-text"/>
                             <DropdownMenuItem asChild className="cursor-pointer">
-                                <p>
-                                    {t("changeAvatar")}{/* //TODO */}
-                                </p>
+                                <Link 
+                                href="/settings"
+                                className="text-text gap-2 cursor-pointer hover:bg-bg-hover focus:bg-bg-hover focus:text-text-contrast"
+                                >
+                                    {t("accountSettings")}
+                                    <UserCog2Icon className="h-4 w-4" />
+                                </Link>
                             </DropdownMenuItem>
                             <DropdownMenuSeparator className="bg-text"/>
                             <DropdownMenuItem
@@ -211,19 +209,19 @@ export function Navbar() {
                 <div className="container py-4 space-y-4">
                     {mountedSession && (
                         <div className="flex items-center gap-3 px-2 py-1 border-border border-b">
-                            {mountedSession.user.image ? (
-                                <Image
-                                src={mountedSession.user.image}
-                                alt={mountedSession.user.name ?? ""}
-                                width={28}
-                                height={28}
-                                className="rounded-full object-cover"
+                            <Button
+                            variant="ghost"
+                            size="icon"
+                            className="h-8 w-8 p-0 rounded-full cursor-pointer"
+                            onClick={() => router.push("/settings")}
+                            >
+                                <Avatar
+                                avatarUrl={mountedSession.user.image}
+                                name={mountedSession.user.name}
+                                size={7}
+                                unoptimized
                                 />
-                            ) : (
-                                <div className="h-7 w-7 rounded-full bg-primary flex items-center justify-center text-text-contrast text-sm font-bold">
-                                    {mountedSession.user.name?.charAt(0).toUpperCase()}
-                                </div>
-                            )}
+                            </Button>
                             <div className="p-2">
                                 <p className="text-sm font-medium text-text">{mountedSession.user.name}</p>
                                 <p className="text-xs text-text-secondary">{mountedSession.user.email}</p>
@@ -305,30 +303,17 @@ export function Navbar() {
                     </div>
 
                     {mountedSession ? (
-                        <div className="space-y-2">
-                            <p className="text-sm font-medium text-text-muted px-2">
-                                {t("accountSettings")}
-                            </p>
-                            <Button
-                            variant="ghost"
-                            className="w-full justify-start cursor-pointer"
-                            //TODO
-                            onClick={() => console.log("[Navbar]: changeAvatar")}
-                            >
-                                {t("changeAvatar")}
-                            </Button>
-                            <Button
-                            variant="ghost"
-                            className="w-full bg-bg-card hover:bg-bg-hover focus:bg-bg-hover text-text cursor-pointer"
-                            size="lg"
-                            onClick={() => {
-                                setMobileMenuOpen(false);
-                                handleSignOut();
-                            }}>
-                                <LogOut className="mr-2 h-4 w-4" />
-                                {t("logout")}
-                            </Button>
-                        </div>
+                        <Button
+                        variant="ghost"
+                        className="w-full bg-bg-card hover:bg-bg-hover focus:bg-bg-hover text-text cursor-pointer"
+                        size="lg"
+                        onClick={() => {
+                            setMobileMenuOpen(false);
+                            handleSignOut();
+                        }}>
+                            <LogOut className="mr-2 h-4 w-4" />
+                            {t("logout")}
+                        </Button>
                     ) : (
                         <Button asChild className="w-full bg-bg-card hover:bg-bg-hover text-text" size="lg">
                             <Link href="/login" onClick={() => setMobileMenuOpen(false)}>

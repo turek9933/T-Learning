@@ -52,7 +52,9 @@ services:
         mc alias set local http://minio:$${MINIO_PORT} $${MINIO_ROOT_USER} $${MINIO_ROOT_PASSWORD};
         mc mb --ignore-existing local/$${MINIO_BUCKET};
         mc anonymous set private local/$${MINIO_BUCKET};
-        echo 'MinIO bucket ready.';
+        mc mb --ignore-existing local/avatars;
+        mc anonymous set public local/avatars;
+        echo 'MinIO buckets (${MINIO_BUCKET} and avatars) are ready.';
       "
 
   backend-migrate:

@@ -19,6 +19,8 @@ const withSerwist = withSerwistInit({
   ],
 });
 
+const minioUrl = new URL(env.minioPublicUrl);
+
 const nextConfig: NextConfig = {
   output: 'standalone',
   reactCompiler: true,
@@ -30,7 +32,13 @@ const nextConfig: NextConfig = {
         hostname: "lh3.googleusercontent.com",
         port: "",
         pathname: '/*/**',
-      }
+      },
+      {
+        protocol: minioUrl.protocol.replace(':', '') as 'http' | 'https',
+        hostname: minioUrl.hostname,
+        port: minioUrl.port,
+        pathname: '/**',
+      },
     ],
   },
   allowedDevOrigins: [env.appUrl],
