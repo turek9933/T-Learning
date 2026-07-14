@@ -2,7 +2,7 @@ import { Elysia } from "elysia";
 import { auth } from "@/auth/config";
 
 export const authRoute = new Elysia({ name: "better-auth" })
-    .mount(auth.handler)
+    .all("/api/auth/*", ({ request }) => auth.handler(request))
     .macro({
         auth: {
             async resolve({ status, request: { headers } }) {

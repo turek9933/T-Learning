@@ -107,8 +107,18 @@ export const auth = betterAuth({
     baseURL: env.betterAuthUrl,
     trustedOrigins: [
         env.appUrl,
+        `${env.appUrl}/dashboard`,
+        `${env.appUrl}/pl/dashboard`,
+        `${env.appUrl}/en/dashboard`,
+        `${env.appUrl}/it/dashboard`,
         ...env.corsOrigin.split(',').map(origin => origin.trim()),
     ],
+    advanced: {
+        crossSubDomainCookies: {
+            enabled: true,
+            domain: '.tomaszturek.fit',
+        },
+    },
     plugins: [
         organization({
             ac,

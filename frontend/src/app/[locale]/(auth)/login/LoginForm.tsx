@@ -70,7 +70,7 @@ export default function LoginForm() {
         fetchOptions: {
           onSuccess: () => {
             customToast.success(t("loginSuccess"));
-            router.push(callbackUrl.startsWith('/') ? callbackUrl : '/dashboard');
+            router.push(callbackUrl.startsWith('/') ? callbackUrl : env.appUrl);
           },
           onError: (context) => {
             switch (context.error.code) {
