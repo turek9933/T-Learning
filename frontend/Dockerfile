@@ -30,7 +30,7 @@ WORKDIR /app
 # Turns off dev mode and disables telemetry during runtime.
 ENV NODE_ENV=production \
     NEXT_TELEMETRY_DISABLED=1 \
-    PORT=3000 \
+    PORT=3001 \
     HOSTNAME=0.0.0.0
 
 # Create nextjs user and group - run as non-root
@@ -43,5 +43,5 @@ COPY --from=build --chown=nextjs:nodejs /app/.next/static ./.next/static
 
 # Switch to nextjs user
 USER nextjs
-EXPOSE 3000
+EXPOSE 3001
 CMD ["node", "server.js"]

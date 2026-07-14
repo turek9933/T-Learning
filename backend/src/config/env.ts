@@ -16,7 +16,7 @@ const required = [
     "BETTER_AUTH_URL",
     "SESSION_EXPIRATION_DAYS",
     "SESSION_UPDATE_DAYS",
-    "PASSWORD_MIN_LENGHT",
+    "PASSWORD_MIN_LENGTH",
     "GOOGLE_CLIENT_ID",
     "GOOGLE_CLIENT_SECRET",
     "MINIO_ROOT_USER",
@@ -28,10 +28,6 @@ const required = [
     "MINIO_BUCKET",
     "MINIO_FORCE_PATH_STYLE",
     "MINIO_PRESIGNED_EXPIRY",
-    "STRIPE_SECRET_KEY",
-    "STRIPE_WEBHOOK_SECRET",
-    "ONESIGNAL_APP_ID",
-    "ONESIGNAL_REST_API_KEY",
 ] as const;
 
 for (const key of required) {
@@ -58,7 +54,7 @@ export const env = {
     betterAuthUrl: process.env.BETTER_AUTH_URL!,
     sessionExpirationDays: process.env.SESSION_EXPIRATION_DAYS!,
     sessionUpdateDays: process.env.SESSION_UPDATE_DAYS!,
-    passwordMinLenght: process.env.PASSWORD_MIN_LENGHT!,
+    passwordMinLength: process.env.PASSWORD_MIN_LENGTH!,
     googleClientId: process.env.GOOGLE_CLIENT_ID!,
     googleClientSecret: process.env.GOOGLE_CLIENT_SECRET!,
     minioRootUser: process.env.MINIO_ROOT_USER!,
@@ -70,8 +66,4 @@ export const env = {
     minioBucket: process.env.MINIO_BUCKET!,
     minioForcePathStyle: process.env.MINIO_FORCE_PATH_STYLE!,
     minioPresignedExpiry: process.env.MINIO_PRESIGNED_EXPIRY!,
-    stripeSecretKey: process.env.STRIPE_SECRET_KEY!,
-    stripeWebhookSecret: process.env.STRIPE_WEBHOOK_SECRET!,
-    onesignalAppId: process.env.ONESIGNAL_APP_ID!,
-    onesignalRestApiKey: process.env.ONESIGNAL_REST_API_KEY!,
 }

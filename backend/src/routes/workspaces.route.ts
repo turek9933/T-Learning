@@ -62,8 +62,6 @@ async function loadWorkspaceChatParticipants(
 
     if (!row) return null;
 
-    console.log(row);
-
     return {
         participantA: { id: row.aId, name: row.aName, avatarUrl: row.aAvatarUrl, role: row.aRole as WorkspaceRole },
         participantB: { id: row.bId, name: row.bName, avatarUrl: row.bAvatarUrl, role: row.bRole as WorkspaceRole },
@@ -348,7 +346,6 @@ export const workspaceRoute = new Elysia({ prefix: '/api/workspaces' })
         }
 
         const participants = await loadWorkspaceChatParticipants(workspace.id, conv.participantAId, conv.participantBId);
-        console.log(participants);
 
         if (!participants) return status(500, { message: 'Workspace chat participants missing' });
 

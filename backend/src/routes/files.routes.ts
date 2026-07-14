@@ -13,11 +13,11 @@ import {
 import { getUserRole } from '@/routes/workspaces.route';
 
 const MAX_SIZE = {
-    post:       10 * 1024 * 1024,// 10 MB
-    homework:   20 * 1024 * 1024,// 20 MB
+    post: 10 * 1024 * 1024,// 10 MB
+    homework: 20 * 1024 * 1024,// 20 MB
     submission: 20 * 1024 * 1024,// 20 MB
-    material:   50 * 1024 * 1024,// 50 MB
-    chat:       10 * 1024 * 1024,// 10 MB
+    material: 50 * 1024 * 1024,// 50 MB
+    chat: 10 * 1024 * 1024,// 10 MB
 } as const;
 
 type UploadContext = keyof typeof MAX_SIZE;
@@ -103,18 +103,18 @@ export const fileRoute = new Elysia({ prefix: '/api/files' })
         };
     }, {
         body: t.Object({
-            context:     t.Union([
+            context: t.Union([
                 t.Literal('post'),
                 t.Literal('homework'),
                 t.Literal('submission'),
                 t.Literal('material'),
                 t.Literal('chat'),
             ]),
-            contextId:   t.String(),
+            contextId: t.String(),
             secondaryId: t.Optional(t.String()),
-            mimeType:    t.String(),
-            size:        t.Number(),
-            fileName:    t.String(),
+            mimeType: t.String(),
+            size: t.Number(),
+            fileName: t.String(),
         }),
     })
 
@@ -139,22 +139,8 @@ export const fileRoute = new Elysia({ prefix: '/api/files' })
     })
 
     // GET /api/files/max-size
-    .get('/max-size', async ({ query, status }) => {
-        const context = query.context;
-        if (!context) return status(400, { message: 'context is required' });
-        return { maxSize: MAX_SIZE[context as UploadContext] };
-    }, {
-        query: t.Object({
-            context: t.Union([
-                t.Literal('post'),
-                t.Literal('homework'),
-                t.Literal('submission'),
-                t.Literal('material'),
-                t.Literal('chat'),
-            ]),
-        }),
-    })
-    .get('/max-size', async ({ status }) => {
+    // Returns all maximum file sizes
+    .get('/max-size', async () => {
         return MAX_SIZE;
     })
 
@@ -169,7 +155,7 @@ export const fileRoute = new Elysia({ prefix: '/api/files' })
         }
 
         await deleteObject(storageKey);
-        
+
         return status(200, { message: 'File deleted' });
     }, {
         body: t.Object({

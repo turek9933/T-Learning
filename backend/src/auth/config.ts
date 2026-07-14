@@ -50,8 +50,8 @@ export const auth = betterAuth({
     },
     session: {
         modelName: "sessions",
-        expiresIn: (Number(env.sessionExpirationDays) ?? 14 ) * 60 * 60 * 24,// Session expires in (SESSION_EXPIRATION_DAYS or 14) days
-        updateAge: (Number(env.sessionUpdateDays) ?? 2 ) * 60 * 60 * 24,// Update session age every (SESSION_UPDATE_DAYS or 2) days
+        expiresIn: (Number(env.sessionExpirationDays) ?? 14) * 60 * 60 * 24,// Session expires in (SESSION_EXPIRATION_DAYS or 14) days
+        updateAge: (Number(env.sessionUpdateDays) ?? 2) * 60 * 60 * 24,// Update session age every (SESSION_UPDATE_DAYS or 2) days
         cookieCache: {
             enabled: true,
             maxAge: 5 * 60,// Signed session snapshot kept in cookie for 5 minutes
@@ -61,7 +61,7 @@ export const auth = betterAuth({
     verification: { modelName: "verifications" },
     emailAndPassword: {
         enabled: true,
-        minPasswordLength: Number(env.passwordMinLenght) ?? 10,
+        minPasswordLength: Number(env.passwordMinLength) ?? 10,
         sendResetPassword: async ({ user, url, token }) => {
             console.log(`[sendMail][reset-password] ${user.email}:\t`, url);
             await sendMail({
@@ -109,13 +109,17 @@ export const auth = betterAuth({
         env.appUrl,
         ...env.corsOrigin.split(',').map(origin => origin.trim()),
     ],
-    plugins : [
+    plugins: [
         organization({
             ac,
             roles: { owner, admin, member, viewer },
-            
+
             allowUserToCreateOrganization: async ({ user }) => {
-                return true;//TODO check if user is allowed to create organization
+                //TODO in the future check if user can create organization
+                // Currently all users can create workspaces
+                // The `can_create_workspaces` field exists on the users table
+                // for future per-user restrictions.
+                return true;
             },
 
             schema: {
@@ -183,12 +187,12 @@ export const auth = betterAuth({
             // 
             // if organization type is group -> skip
             beforeCreateInvitation: async (data: {
-                invitation: { email: string; role: string; organizationId: string; inviterId: string; [key: string]: unknown };
+                invitation: { email: string; role: string; organizationId: string; inviterId: string;[key: string]: unknown };
                 organization: Record<string, unknown>;
                 inviter: Record<string, unknown>;
             }) => {
                 const invitation = data.invitation;
-                const orgType    = data.organization.type as string | undefined;
+                const orgType = data.organization.type as string | undefined;
                 if (orgType !== 'single') return;
 
                 const role = invitation.role as WorkspaceRole;

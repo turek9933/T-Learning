@@ -1,5 +1,5 @@
 services:
-  frontend:
+  t-learning-frontend:
     build:
       context: .
       secrets:
@@ -7,9 +7,9 @@ services:
     container_name: t-learning-frontend
     restart: unless-stopped
     environment:
-      PORT: ${PORT:-3000}
+      PORT: ${PORT:-3001}
     ports:
-      - "${PORT:-3000}:${PORT:-3000}"
+      - "${PORT:-3001}:${PORT:-3001}"
 
 secrets:
   frontend_env:

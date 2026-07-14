@@ -19,5 +19,5 @@ COPY package.json bun.lock tsconfig.json drizzle.config.ts ./
 COPY drizzle ./drizzle
 COPY src ./src
 
-EXPOSE 3001
+EXPOSE 3002
 CMD ["bun", "src/index.ts"]
