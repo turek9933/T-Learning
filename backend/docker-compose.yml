@@ -25,6 +25,7 @@ services:
     environment:
       MINIO_ROOT_USER: ${MINIO_ROOT_USER}
       MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD}
+      MINIO_API_CORS_ALLOW_ORIGIN: ${MINIO_CORS_ORIGINS}
     ports:
       - "${MINIO_PORT:-3012}:9000"
       - "${MINIO_CONSOLE_PORT:-9001}:9001"
@@ -46,15 +47,12 @@ services:
       MINIO_ROOT_USER: ${MINIO_ROOT_USER}
       MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD}
       MINIO_BUCKET: ${MINIO_BUCKET}
-      MINIO_CORS_ORIGINS: ${MINIO_CORS_ORIGINS}
     entrypoint: /bin/sh -c "
-        mc alias set local  http://t-learning-minio:9000 $${MINIO_ROOT_USER} $${MINIO_ROOT_PASSWORD};
+        mc alias set local http://t-learning-minio:9000 $${MINIO_ROOT_USER} $${MINIO_ROOT_PASSWORD};
         mc mb --ignore-existing local/$${MINIO_BUCKET};
         mc anonymous set private local/$${MINIO_BUCKET};
-        printf '{\"CORSRules\":[{\"AllowedOrigins\":%s,\"AllowedMethods\":[\"GET\",\"PUT\",\"POST\",\"DELETE\",\"HEAD\"],\"AllowedHeaders\":[\"*\"],\"ExposeHeaders\":[\"ETag\"],\"MaxAgeSeconds\":3600}]}' \"$${MINIO_CORS_ORIGINS}\" | mc admin bucket cors import local/$${MINIO_BUCKET} /dev/stdin;
         mc mb --ignore-existing local/avatars;
         mc anonymous set public local/avatars;
-        printf '{\"CORSRules\":[{\"AllowedOrigins\":%s,\"AllowedMethods\":[\"GET\",\"PUT\",\"POST\",\"DELETE\",\"HEAD\"],\"AllowedHeaders\":[\"*\"],\"ExposeHeaders\":[\"ETag\"],\"MaxAgeSeconds\":3600}]}' \"$${MINIO_CORS_ORIGINS}\" | mc admin bucket cors import local/avatars /dev/stdin;
         echo 'MinIO buckets (${MINIO_BUCKET} and avatars) are ready.';
       "
 
